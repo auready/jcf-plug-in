@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+#if(${TABLE_COMMENT})
+<!-- ${TABLE_COMMENT} TABLE SQL-MAP -->
+#end
+#macro( comma )
+#foreach( ${column} in ${COLUMNS} )
+#if( $velocityCount == 1 )
+${column.COLUMN_NAME}#if( $velocityHasNext ),#end#if(${column.COLUMN_COMMENTS})	/* ${column.COLUMN_COMMENTS} */#end
+#else
+         ${column.COLUMN_NAME}#if( $velocityHasNext ),#end#if(${column.COLUMN_COMMENTS})	/* ${column.COLUMN_COMMENTS} */#end
+#end
+
+#end
+#end
+#macro ( where )
+#foreach( ${column} in ${COLUMNS} )
+#if ( ${column.PK} )
+#if( $velocityCount == 1 )
+WHERE ${column.COLUMN_NAME} = ${SHARP}${column.COLUMN_NAME_CAMEL}${SHARP}
+#else
+          AND ${column.COLUMN_NAME} = ${SHARP}${column.COLUMN_NAME_CAMEL}${SHARP}
+#end
+#else
+#if( $velocityCount == 1 )
+WHERE <isNotNull property="${column.COLUMN_NAME_CAMEL}" >  ${column.COLUMN_NAME} = #${column.COLUMN_NAME_CAMEL}# </isNotNull>
+#else
+        <isNotNull property="${column.COLUMN_NAME_CAMEL}" prepend="AND" >  ${column.COLUMN_NAME} = #${column.COLUMN_NAME_CAMEL}# </isNotNull>
+#end        
+#end
+#end
+#end
+
+#macro ( wherePK )
+#foreach( ${column} in ${COLUMNS} )
+#if ( ${column.PK} )
+#if( $velocityCount == 1 )
+${column.COLUMN_NAME} = ${SHARP}${column.COLUMN_NAME_CAMEL}${SHARP}
+#else
+          AND ${column.COLUMN_NAME} = ${SHARP}${column.COLUMN_NAME_CAMEL}${SHARP}
+#end
+#end
+#end
+#end
+
+<sqlMap namespace="${TABLE_NAME_CAMEL}">
+
+	<typeAlias alias="${TABLE_NAME_CAMEL}TDO" type="${PACKAGE}.model.${TABLE_NAME_PASCAL}TDO" />
+    
+	<resultMap id="${TABLE_NAME_CAMEL}TDO-resultMap" class="${TABLE_NAME_CAMEL}TDO">
+#foreach( ${column} in ${COLUMNS} )
+		<result column="${column.COLUMN_NAME}" property="${column.COLUMN_NAME_CAMEL}" />
+#end
+	</resultMap>
+	    	
+	<statement id="select001" parameterClass="map" resultMap="${TABLE_NAME_CAMEL}TDO-resultMap">
+	SELECT #comma()
+	FROM ${SCHEMA}.${TABLENAME}
+	<dynamic>
+	#where()
+	</dynamic>
+	</statement>
+	
+	<statement id="select002" parameterClass="map" resultClass="columnNameCamelCaseMap">
+	SELECT #comma()
+	FROM ${SCHEMA}.${TABLENAME}
+	<dynamic>
+	#where()
+	</dynamic>
+	</statement>
+	
+
+	<statement id="insert001" parameterClass="${TABLE_NAME_CAMEL}TDO">
+	<![CDATA[
+	INSERT INTO ${SCHEMA}.${TABLENAME}
+	(
+         #comma()
+	)
+	VALUES
+	(
+#foreach( ${column} in ${COLUMNS} )
+#if ( ${column.COLUMN_NAME} == 'FRST_REGS_DTM' || ${column.COLUMN_NAME} == 'LAST_REGS_DTM' )
+	       SYSDATE#if( $velocityHasNext ),#end
+
+#else
+	       ${SHARP}${column.COLUMN_NAME_CAMEL}${SHARP}#if( $velocityHasNext ),#end
+
+#end
+#end
+	)	
+	]]>
+	</statement>
+	
+
+	<statement id="update001" parameterClass="${TABLE_NAME_CAMEL}TDO">
+	UPDATE ${SCHEMA}.${TABLENAME} 
+	SET 
+	<dynamic>
+	LAST_REGS_DTM =	SYSDATE
+#foreach( ${column} in ${COLUMNS} )
+#if (!(${column.PK} || ${column.COLUMN_NAME} == 'FRST_REGS_DTM' || ${column.COLUMN_NAME} == 'FRST_REGS_USR_NO' || ${column.COLUMN_NAME} == 'LAST_REGS_DTM'))
+        <isNotNull property="${column.COLUMN_NAME_CAMEL}" prepend="," >  ${column.COLUMN_NAME} = ${SHARP}${column.COLUMN_NAME_CAMEL}${SHARP} </isNotNull>
+#end
+#end
+	</dynamic>
+	
+	WHERE #wherePK()
+	
+	</statement>
+	
+	<statement id="delete001" parameterClass="${TABLE_NAME_CAMEL}TDO">
+	DELETE FROM ${SCHEMA}.${TABLENAME}
+	#if ( ${IS_PK_EXIST} == 'N' )
+	#where()
+	#else
+	WHERE #wherePK()
+	#end
+	</statement>
+ 	
+</sqlMap>

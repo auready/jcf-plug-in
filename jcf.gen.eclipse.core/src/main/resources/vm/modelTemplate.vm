@@ -1,0 +1,21 @@
+package ${PACKAGE}.model;
+/**
+ * <p> ${TABLE_COMMENT} TDO </p>
+ * @author
+ * @version 1.0
+ */
+
+public class ${TABLE_NAME_PASCAL}Model {
+ #foreach( ${column} in ${COLUMNS} )
+    private String ${column.COLUMN_NAME_CAMEL}; /* ${column.COLUMN_COMMENT} */
+ #end
+
+ #foreach( ${column} in ${COLUMNS} )
+    public String get${column.COLUMN_NAME_PASCAL}() {
+       return ${column.COLUMN_NAME_CAMEL};
+    }
+    public void set${column.COLUMN_NAME_PASCAL}( String ${column.COLUMN_NAME_CAMEL}) {
+       this.${column.COLUMN_NAME_CAMEL} = ${column.COLUMN_NAME_CAMEL};
+    }
+ #end
+}

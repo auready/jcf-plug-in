@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            name="JCF Category"
+            id="jcf.gen.eclipse.core.commands.category">
+      </category>
+      <command
+            name="Source Generator"
+            categoryId="jcf.gen.eclipse.core.commands.category"
+            id="jcf.gen.eclipse.core.commands.sampleCommand">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            commandId="jcf.gen.eclipse.core.commands.sampleCommand"
+            class="jcf.gen.eclipse.core.handlers.JcfGenHandler">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="jcf.gen.eclipse.core.commands.sampleCommand"
+            contextId="org.eclipse.ui.contexts.window"
+            sequence="M1+0"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               label="JCF"
+               mnemonic="M"
+               id="jcf.gen.eclipse.core.menus.sampleMenu">
+            <command
+                  commandId="jcf.gen.eclipse.core.commands.sampleCommand"
+                  mnemonic="S"
+                  id="jcf.gen.eclipse.core.menus.sampleCommand">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="jcf.gen.eclipse.core.toolbars.sampleToolbar">
+            <command
+                  commandId="jcf.gen.eclipse.core.commands.sampleCommand"
+                  icon="icons/sample.gif"
+                  tooltip="JCF Code Generator"
+                  id="jcf.gen.eclipse.core.toolbars.sampleCommand">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="jcf.gen.eclipse.core.preference.JcfGenPreferencePage"
+            id="jcf.gen.eclipse.core.codegen"
+            name="JCF">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="jcf.gen.eclipse.core.preference.JcfGenPreferenceInitializer">
+      </initializer>
+   </extension>
+
+</plugin>

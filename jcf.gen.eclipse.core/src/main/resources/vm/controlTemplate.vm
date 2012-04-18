@@ -1,0 +1,132 @@
+package ${PACKAGE}.controller;
+
+import java.util.List;
+import java.util.Map;
+
+import jcf.ux.xframe.mvc.GridData;
+import jcf.ux.xframe.mvc.XFrameRequest;
+import jcf.ux.xframe.mvc.XFrameResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import ${PACKAGE}.model.${TABLE_NAME_PASCAL}TDO;
+import ${PACKAGE}.service.${UC_NAME}Service;
+
+
+
+/**
+ * <p> Controller </p>
+ * @author 
+ * @version 1.0
+ */
+@Controller
+public class ${UC_NAME}Controller {
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(${UC_NAME}Controller.class);
+	@Autowired
+	${UC_NAME}Service ${UC_NAME_CAMEL}Service;
+
+	/**
+	 * <p> ${TABLENAME} SEARCH LIST </p>
+	 * @param request XframeRequest
+	 * @param response XframeResponse
+	 * URL : /${REQUEST_URL}/${UC_NAME_CAMEL}/selectList.do
+	 */
+	@RequestMapping
+	public void selectList(XFrameRequest request, XFrameResponse response){
+	    Map<String, ?> requestMap = null;
+	    if(!request.isEmpty("ds_input"))
+	       requestMap = request.getMap("ds_input", 0);
+		
+		List<${TABLE_NAME_PASCAL}TDO> selectList = ${UC_NAME_CAMEL}Service.selectList(requestMap);
+		response.setList("ds_output", selectList);
+	}
+
+	/**
+	 * <p> ${TABLENAME} SEARCH LIST MAP </p>
+	 * @param request XframeRequest
+	 * @param response XframeResponse
+	 * URL : /${REQUEST_URL}/${UC_NAME_CAMEL}/selectListMap.do
+	 */
+	@RequestMapping
+	public void selectListMap(XFrameRequest request, XFrameResponse response){
+	    Map<String, ?> requestMap = null;
+	    if(!request.isEmpty("ds_input"))
+	       requestMap = request.getMap("ds_input", 0);
+		
+		List selectList = ${UC_NAME_CAMEL}Service.selectListMap(requestMap);
+		response.setMapList("ds_output", selectList);
+	}
+	
+	/**
+	 * <p> ${TABLENAME} SAVE LIST </p>
+	 * @param request XframeRequest
+	 * @param response XframeResponse
+	 * URL : /${REQUEST_URL}/${UC_NAME_CAMEL}/saveList.do
+	 */
+	@RequestMapping
+	public void saveList(XFrameRequest request, XFrameResponse response){
+		GridData<${TABLE_NAME_PASCAL}TDO> gridData  = null;
+	    if(request.isEmpty("ds_output"))
+	       throw new BusinessException("");
+	    
+		gridData = request.getGridData("ds_output", ${TABLE_NAME_PASCAL}TDO.class);
+		${UC_NAME_CAMEL}Service.saveList(gridData);
+	}
+	
+		/**
+	 * <p> ${TABLENAME} INSERT </p>
+	 * @param request XframeRequest
+	 * @param response XframeResponse
+	 * URL : /${REQUEST_URL}/${UC_NAME_CAMEL}/insert.do
+	 */
+	@RequestMapping
+	public void insert(XFrameRequest request, XFrameResponse response){
+		${TABLE_NAME_PASCAL}TDO ${TABLE_NAME_CAMEL}TDO = null;
+	    if(request.isEmpty("ds_${TABLE_NAME_CAMEL}"))
+	       throw new BusinessException("");
+	       
+	    ${TABLE_NAME_CAMEL}TDO = (${TABLE_NAME_PASCAL}TDO)request.getMap("ds_${TABLE_NAME_CAMEL}", 0);
+	    
+		${UC_NAME_CAMEL}Service.insert(${TABLE_NAME_CAMEL}TDO);
+	}
+	
+		/**
+	 * <p> ${TABLENAME} UPDATE </p>
+	 * @param request XframeRequest
+	 * @param response XframeResponse
+	 * URL : /${REQUEST_URL}/${UC_NAME_CAMEL}/update.do
+	 */
+	@RequestMapping
+	public void update(XFrameRequest request, XFrameResponse response){
+		${TABLE_NAME_PASCAL}TDO ${TABLE_NAME_CAMEL}TDO = null;
+	    if(request.isEmpty("ds_${TABLE_NAME_CAMEL}"))
+	       throw new BusinessException("");
+	       
+	    ${TABLE_NAME_CAMEL}TDO = (${TABLE_NAME_PASCAL}TDO)request.getMap("ds_${TABLE_NAME_CAMEL}", 0);
+	    
+		${UC_NAME_CAMEL}Service.update(${TABLE_NAME_CAMEL}TDO);
+	}
+	
+		/**
+	 * <p> ${TABLENAME} DELETE </p>
+	 * @param request XframeRequest
+	 * @param response XframeResponse
+	 * URL : /${REQUEST_URL}/${UC_NAME_CAMEL}/saveList.do
+	 */
+	@RequestMapping
+	public void delete(XFrameRequest request, XFrameResponse response){
+		${TABLE_NAME_PASCAL}TDO ${TABLE_NAME_CAMEL}TDO = null;
+	    if(request.isEmpty("ds_${TABLE_NAME_CAMEL}"))
+	       throw new BusinessException("");
+	       
+	    ${TABLE_NAME_CAMEL}TDO = (${TABLE_NAME_PASCAL}TDO)request.getMap("ds_${TABLE_NAME_CAMEL}", 0);
+	    
+		${UC_NAME_CAMEL}Service.delete(${TABLE_NAME_CAMEL}TDO);
+	}
+}
