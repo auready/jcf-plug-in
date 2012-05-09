@@ -13,9 +13,11 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.VelocityException;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.ui.velocity.VelocityEngineFactory;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import jcf.gen.eclipse.core.Constants;
+import jcf.gen.eclipse.core.JcfGeneratorPlugIn;
 import jcf.gen.eclipse.core.utils.FileUtils;
 import jcf.gen.eclipse.core.utils.MessageUtil;
 import jcf.gen.eclipse.core.utils.StrUtils;
@@ -23,10 +25,12 @@ import jcf.gen.eclipse.core.utils.StrUtils;
 public abstract class AbstractSourceGenerator implements SourceGenerator {
 	
 	public AbstractSourceGenerator() {
-		ClassPathXmlApplicationContext classPathXmlApplicationContext 
-				= new ClassPathXmlApplicationContext("/config/applicationContext-generator.xml", AbstractSourceGenerator.class);
-		classPathXmlApplicationContext.getAutowireCapableBeanFactory()
-				.autowireBeanProperties(this, AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE, true);
+//		ClassPathXmlApplicationContext classPathXmlApplicationContext 
+//				= new ClassPathXmlApplicationContext("/config/applicationContext-generator.xml", AbstractSourceGenerator.class);
+//		classPathXmlApplicationContext.getAutowireCapableBeanFactory()
+//				.autowireBeanProperties(this, AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE, true);
+		
+		init();
 	}
 	
 	public abstract String getVmFileName();
@@ -34,6 +38,20 @@ public abstract class AbstractSourceGenerator implements SourceGenerator {
 	public abstract String getFileName(Map<String,Object> infoModel);
 
 	public abstract String getPackagePath(String basePackPath);
+	
+	protected void init() {
+		try {
+			VelocityEngineFactory vef = new VelocityEngineFactory();
+			
+			vef.setResourceLoaderPath("file:" + JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(Constants.VM_DIRECTORY));
+			setVelocityEngine(vef.createVelocityEngine());
+			
+		} catch (VelocityException ve) {
+			throw new VelocityException(ve.toString());
+		} catch (IOException ioe) {
+			throw new VelocityException(ioe.toString());
+		}
+	}
 	
 	protected String getSeperator() {
 		Properties properties = System.getProperties();
@@ -54,7 +72,7 @@ public abstract class AbstractSourceGenerator implements SourceGenerator {
 		this.velocityEngine = velocityEngine;
 	}
 	
-	public void generatorFile(String srcPath, String packageName, String userCaseName, Map<String, Object> model) {		
+	public void generatorFile(String srcPath, String packageName, String userCaseName, Map<String, Object> model) {
 		if (StringUtils.isNotEmpty(userCaseName)) {
 			model.put(Constants.UC_NAME, userCaseName);
 			model.put(Constants.UC_NAME_CAMEL, StringUtils.uncapitalize(userCaseName));

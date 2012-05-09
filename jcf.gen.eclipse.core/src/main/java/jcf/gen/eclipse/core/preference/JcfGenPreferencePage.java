@@ -43,35 +43,17 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 //		dbGroup.setLayout(new GridLayout(1, false));
 //		dbGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
-		FileFieldEditor ffe = new FileFieldEditor(Constants.DB_PROPERTY_FILE, "Db property file", parent);
-		addField(ffe);
-//		
-//		Group srcGroup = new Group(parent, SWT.NONE);
-//		
-//		srcGroup.setText("Source Info");
-//		srcGroup.setLayout(new GridLayout(1, false));
-//		srcGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-//		
-		DirectoryFieldEditor dfe = new DirectoryFieldEditor(Constants.SOURCE_DIRECTORY, "Source path", parent);
-		addField(dfe);
+		FileFieldEditor dbPropery = new FileFieldEditor(Constants.DB_PROPERTY_FILE, "Db property file", parent);
+		addField(dbPropery);
 		
-//		addField(new StringFieldEditor("test", "sample", getFieldEditorParent()));
+		DirectoryFieldEditor srcDir = new DirectoryFieldEditor(Constants.SOURCE_DIRECTORY, "Source path", parent);
+		addField(srcDir);
+		
+		DirectoryFieldEditor vmDir = new DirectoryFieldEditor(Constants.VM_DIRECTORY, "Template path", parent);
+		addField(vmDir);
 	}
 	
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 	}
-	
-//	protected Control createContents(Composite parent) {
-//		Composite composite = new Composite(parent, SWT.NONE);
-//		
-//		FileFieldEditor ffe = new FileFieldEditor(Constants.DB_PROPERTY_FILE, "Db property file", parent);
-//		addField(ffe);
-//		
-//		DirectoryFieldEditor dfe = new DirectoryFieldEditor(Constants.SOURCE_DIRECTORY, "Source path", parent);
-//		addField(dfe);
-//		
-//		return composite;
-//	}
-
 }

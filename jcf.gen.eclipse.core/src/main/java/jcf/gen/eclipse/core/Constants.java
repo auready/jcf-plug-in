@@ -3,6 +3,7 @@ package jcf.gen.eclipse.core;
 public class Constants {
 	public static final String DB_PROPERTY_FILE = "DB_PROPERTY_FILE";
 	public static final String SOURCE_DIRECTORY = "SOURCE_DIRECTORY";
+	public static final String VM_DIRECTORY = "VM_DIRECTORY";
 	
 	public static final String PK_COL = "PK";
 	public static final String TABLENAME = "TABLENAME";

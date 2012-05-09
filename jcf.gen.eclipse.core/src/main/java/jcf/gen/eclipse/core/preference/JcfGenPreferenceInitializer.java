@@ -14,6 +14,8 @@ public class JcfGenPreferenceInitializer extends AbstractPreferenceInitializer {
 
 		store.setDefault(Constants.DB_PROPERTY_FILE, "");
 		store.setDefault(Constants.SOURCE_DIRECTORY, "");
+		
+		store.setDefault(Constants.VM_DIRECTORY, "");
 	}
 
 }

@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,7 +88,11 @@ public class DefaultLuncher {
 		
 		this.run(srcPath, packageName, userCaseName, model);
 		
-		logger.info("File create");
+		MessageBox msg = new MessageBox(Display.getCurrent().getActiveShell(), SWT.ICON_INFORMATION | SWT.OK);
+		
+		msg.setText("JCF");
+		msg.setMessage("JCF Source Generate");
+		msg.open();
 	}
 	
 	private void run(String srcPath, String packageName, String userCaseName, Map<String, Object> model) {
