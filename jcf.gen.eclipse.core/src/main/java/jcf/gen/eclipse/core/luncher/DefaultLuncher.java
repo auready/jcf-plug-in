@@ -18,6 +18,7 @@ import jcf.gen.eclipse.core.generator.service.ServiceGenerator;
 import jcf.gen.eclipse.core.generator.model.ModelGenerator;
 import jcf.gen.eclipse.core.jdbc.model.TableColumns;
 import jcf.gen.eclipse.core.Constants;
+import jcf.gen.eclipse.core.JcfGeneratorPlugIn;
 import jcf.gen.eclipse.core.utils.ColumnNameCamelCaseMap;
 
 public class DefaultLuncher {
@@ -95,15 +96,30 @@ public class DefaultLuncher {
 		msg.open();
 	}
 	
+	private boolean isGenerateFile(String category) {
+		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getBoolean(category);
+	}
+	
 	private void run(String srcPath, String packageName, String userCaseName, Map<String, Object> model) {
-		ModelGenerator modelGenerator = new ModelGenerator();
-		SqlMapGenerator sqlMapGenerator = new SqlMapGenerator();
-		ServiceGenerator serviceGenerator = new ServiceGenerator();
-		ControlGenerator controlGenerator = new ControlGenerator();
+		if (this.isGenerateFile(Constants.CONTROLLER_FILE)) {
+			ControlGenerator controlGenerator = new ControlGenerator();		
+			controlGenerator.generatorFile(srcPath, packageName, userCaseName, model);
+		}
 		
-		modelGenerator.generatorFile(srcPath, packageName, userCaseName, model);
-		sqlMapGenerator.generatorFile(srcPath, packageName, userCaseName, model);
-		serviceGenerator.generatorFile(srcPath, packageName, userCaseName, model);
-		controlGenerator.generatorFile(srcPath, packageName, userCaseName, model);
+		if (this.isGenerateFile(Constants.SERVICE_FILE)) {
+			ServiceGenerator serviceGenerator = new ServiceGenerator();
+			serviceGenerator.generatorFile(srcPath, packageName, userCaseName, model);
+		}
+		
+		
+		if (this.isGenerateFile(Constants.MODEL_FILE)) {
+			ModelGenerator modelGenerator = new ModelGenerator();
+			modelGenerator.generatorFile(srcPath, packageName, userCaseName, model);
+		}
+		
+		if (this.isGenerateFile(Constants.SQLMAP_FILE)) {
+			SqlMapGenerator sqlMapGenerator = new SqlMapGenerator();
+			sqlMapGenerator.generatorFile(srcPath, packageName, userCaseName, model);
+		}
 	}
 }

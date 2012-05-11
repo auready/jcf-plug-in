@@ -43,7 +43,7 @@ public abstract class AbstractSourceGenerator implements SourceGenerator {
 		try {
 			VelocityEngineFactory vef = new VelocityEngineFactory();
 			
-			vef.setResourceLoaderPath("file:" + JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(Constants.VM_DIRECTORY));
+			vef.setResourceLoaderPath("file:" + JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(Constants.TEMPLATE_DIRECTORY));
 			setVelocityEngine(vef.createVelocityEngine());
 			
 		} catch (VelocityException ve) {

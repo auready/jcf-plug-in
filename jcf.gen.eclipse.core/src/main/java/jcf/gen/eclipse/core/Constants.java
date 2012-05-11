@@ -2,8 +2,19 @@ package jcf.gen.eclipse.core;
 
 public class Constants {
 	public static final String DB_PROPERTY_FILE = "DB_PROPERTY_FILE";
+	
+	public static final String DB_DRIVER_CLASS = "DB_DRIVER_CLASS";
+	public static final String DB_URL="DB_URL";
+	public static final String DB_USERNAME = "DB_USERNAME";
+	public static final String DB_PASSWORD = "DB_PASSWORD";
+	
+	public static final String TEMPLATE_DIRECTORY = "TEMPLATE_DIRECTORY";
 	public static final String SOURCE_DIRECTORY = "SOURCE_DIRECTORY";
-	public static final String VM_DIRECTORY = "VM_DIRECTORY";
+	
+	public static final String CONTROLLER_FILE = "CONTROLLER_FILE";
+	public static final String SERVICE_FILE = "SERVICE_FILE";
+	public static final String MODEL_FILE = "MODEL_FILE";
+	public static final String SQLMAP_FILE = "SQLMAP_FILE";
 	
 	public static final String PK_COL = "PK";
 	public static final String TABLENAME = "TABLENAME";

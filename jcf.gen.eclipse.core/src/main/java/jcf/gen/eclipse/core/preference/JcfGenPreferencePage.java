@@ -1,13 +1,17 @@
 package jcf.gen.eclipse.core.preference;
 
+import java.io.File;
+
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
+import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -32,25 +36,127 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 
 	@Override
 	protected void createFieldEditors() {
-		Composite parent = getFieldEditorParent();
+		Composite main = getFieldEditorParent();
 		
-//		parent.setLayout(new GridLayout(1, true));
-//		parent.setLayoutData(new GridData());
+		GridLayoutFactory.swtDefaults().margins(0, 0).applyTo(main);
+		
+//		FileFieldEditor dbPropery = new FileFieldEditor(Constants.DB_PROPERTY_FILE, "Db property file", parent);
+//		addField(dbPropery);
+		
+		Group dbGroup = new Group(main, SWT.NONE);
+		
+		dbGroup.setText(MessageUtil.getMessage("preference.group.db"));
+		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(dbGroup);
+		
+//		StringFieldEditor driverClassNameEditor = new StringFieldEditor(Constants.DB_DRIVER_CLASS, 
+//				MessageUtil.getMessage("preference.db.driver.name"), dbGroup);
+//		driverClassNameEditor.getLabelControl(dbGroup).setToolTipText(MessageUtil.getMessage("preference.db.driver.name.tooltip"));
+//		addField(driverClassNameEditor);
 //		
-//		Group dbGroup = new Group(parent, SWT.NONE);
+//		StringFieldEditor driverUrlEditor = new StringFieldEditor(Constants.DB_URL, 
+//				MessageUtil.getMessage("preference.db.driver.url"), dbGroup);
+//		driverUrlEditor.getLabelControl(dbGroup).setToolTipText(MessageUtil.getMessage("preference.db.driver.url.tooltip"));
+//		addField(driverUrlEditor);
 //		
-//		dbGroup.setText("DataBase Info");
-//		dbGroup.setLayout(new GridLayout(1, false));
-//		dbGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+//		StringFieldEditor driverUsernameEditor = new StringFieldEditor(Constants.DB_USERNAME, 
+//				MessageUtil.getMessage("preference.db.driver.username"), dbGroup);
+//		addField(driverUsernameEditor);
+//		
+//		StringFieldEditor driverPasswordEditor = new StringFieldEditor(Constants.DB_PASSWORD, 
+//				MessageUtil.getMessage("preference.db.driver.password"), dbGroup);
+//		addField(driverPasswordEditor);
 		
-		FileFieldEditor dbPropery = new FileFieldEditor(Constants.DB_PROPERTY_FILE, "Db property file", parent);
-		addField(dbPropery);
+		FileFieldEditor dbFileEditor = 
+				new FileFieldEditor(Constants.DB_PROPERTY_FILE, 
+						MessageUtil.getMessage("preference.db.file"), dbGroup);
 		
-		DirectoryFieldEditor srcDir = new DirectoryFieldEditor(Constants.SOURCE_DIRECTORY, "Source path", parent);
-		addField(srcDir);
+		addField(dbFileEditor);
 		
-		DirectoryFieldEditor vmDir = new DirectoryFieldEditor(Constants.VM_DIRECTORY, "Template path", parent);
-		addField(vmDir);
+		updateMargin(dbGroup);
+		
+		Group templateGroup = new Group(main, SWT.COLOR_DARK_GRAY);
+		
+		templateGroup.setText(MessageUtil.getMessage("preference.group.template"));
+		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(templateGroup);
+		
+		DirectoryFieldEditor templateEditor = 
+				new DirectoryFieldEditor(Constants.TEMPLATE_DIRECTORY, 
+						MessageUtil.getMessage("preference.template.path"), templateGroup) {
+			@Override
+			protected boolean doCheckState() {
+				String fileName = getTextControl().getText().trim();
+				
+				if ((fileName.length() == 0) && isEmptyStringAllowed()) {
+					return true;
+				}
+				
+				File file = new File(fileName);
+				
+				return (!file.exists()) || (file.isDirectory());
+			}
+			
+			@Override
+			protected void createControl(Composite parent) {
+				super.setValidateStrategy(VALIDATE_ON_KEY_STROKE);
+				super.createControl(parent);
+				
+			}
+		};
+		
+		updateMargin(templateGroup);
+		
+		templateEditor.setEmptyStringAllowed(false);
+		templateEditor.getLabelControl(templateGroup).setToolTipText(MessageUtil.getMessage("preference.template.path.tooltip"));
+		
+		addField(templateEditor);
+		
+		Group srcGroup = new Group(main, SWT.COLOR_DARK_GRAY);
+		
+		srcGroup.setText(MessageUtil.getMessage("preference.group.source"));
+		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(srcGroup);
+		
+		DirectoryFieldEditor srcEditor = 
+				new DirectoryFieldEditor(Constants.SOURCE_DIRECTORY, 
+						MessageUtil.getMessage("preference.source.path"), srcGroup) {
+			@Override
+			protected void createControl(Composite parent) {
+				super.setValidateStrategy(VALIDATE_ON_KEY_STROKE);
+				super.createControl(parent);
+			}
+		};
+		
+		updateMargin(srcGroup);
+		
+		srcEditor.setEmptyStringAllowed(true);
+		srcEditor.getLabelControl(srcGroup).setToolTipText(MessageUtil.getMessage("preference.source.path.tooltip"));
+		
+		addField(srcEditor);
+		
+		Group vmFileGroup = new Group(main, SWT.COLOR_DARK_GRAY);
+		
+		vmFileGroup.setText(MessageUtil.getMessage("preference.group.velocity"));
+		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(vmFileGroup);
+		
+		addField(new BooleanFieldEditor(Constants.CONTROLLER_FILE, 
+				MessageUtil.getMessage("preference.velocity.controller"), vmFileGroup));
+		
+		addField(new BooleanFieldEditor(Constants.SERVICE_FILE, 
+				MessageUtil.getMessage("preference.velocity.service"), vmFileGroup));
+		
+		addField(new BooleanFieldEditor(Constants.MODEL_FILE, 
+				MessageUtil.getMessage("preference.velocity.model"), vmFileGroup));
+		
+		addField(new BooleanFieldEditor(Constants.SQLMAP_FILE, 
+				MessageUtil.getMessage("preference.velocity.sqlmap"), vmFileGroup));
+		
+		updateMargin(vmFileGroup);
+	}
+	
+	private void updateMargin(Group group) {
+		GridLayout layout = (GridLayout) group.getLayout();
+		
+		layout.marginWidth = 5;
+		layout.marginHeight = 5;
 	}
 	
 	public void createControl(Composite parent) {
