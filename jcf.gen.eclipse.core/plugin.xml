@@ -65,6 +65,12 @@
             id="jcf.gen.eclipse.core.codegen"
             name="JCF">
       </page>
+      <page
+      		class="jcf.gen.eclipse.core.preference.JcfLicensePreferencePage"
+            id="jcf.gen.eclipse.core.codegen.preference.licensePreferencePage"
+            name="License"
+            category="jcf.gen.eclipse.core.codegen">
+      </page>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
