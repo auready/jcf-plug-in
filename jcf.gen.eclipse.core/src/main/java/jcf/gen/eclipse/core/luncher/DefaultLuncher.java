@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jcf.gen.eclipse.core.generator.controller.ControlGenerator;
+import jcf.gen.eclipse.core.generator.dao.GroovyGenerator;
 import jcf.gen.eclipse.core.generator.dao.SqlMapGenerator;
 import jcf.gen.eclipse.core.generator.service.ServiceGenerator;
 import jcf.gen.eclipse.core.generator.model.ModelGenerator;
@@ -120,6 +121,11 @@ public class DefaultLuncher {
 		if (this.isGenerateFile(Constants.SQLMAP_FILE)) {
 			SqlMapGenerator sqlMapGenerator = new SqlMapGenerator();
 			sqlMapGenerator.generatorFile(srcPath, packageName, userCaseName, model);
+		}
+		
+		if (this.isGenerateFile(Constants.GROOVY_FILE)) {
+			GroovyGenerator groovyGenerator = new GroovyGenerator();
+			groovyGenerator.generatorFile(srcPath, packageName, userCaseName, model);
 		}
 	}
 }

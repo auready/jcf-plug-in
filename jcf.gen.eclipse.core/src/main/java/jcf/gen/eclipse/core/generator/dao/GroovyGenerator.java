@@ -16,7 +16,7 @@ public class GroovyGenerator extends AbstractSourceGenerator {
 	@Override
 	public String getPackagePath(String basePackPath) {
 		return new StringBuilder(basePackPath).append(getSeperator())
-		.append("dao").toString();
+				.append("dao").toString();
 	}
 
 	@Override

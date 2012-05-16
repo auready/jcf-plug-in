@@ -15,6 +15,7 @@ public class Constants {
 	public static final String SERVICE_FILE = "SERVICE_FILE";
 	public static final String MODEL_FILE = "MODEL_FILE";
 	public static final String SQLMAP_FILE = "SQLMAP_FILE";
+	public static final String GROOVY_FILE = "GROOVY_FILE";
 	
 	public static final String PK_COL = "PK";
 	public static final String TABLENAME = "TABLENAME";

@@ -149,6 +149,9 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		addField(new BooleanFieldEditor(Constants.SQLMAP_FILE, 
 				MessageUtil.getMessage("preference.velocity.sqlmap"), vmFileGroup));
 		
+		addField(new BooleanFieldEditor(Constants.GROOVY_FILE, 
+				MessageUtil.getMessage("preference.velocity.groovy"), vmFileGroup));
+		
 		updateMargin(vmFileGroup);
 	}
 	
