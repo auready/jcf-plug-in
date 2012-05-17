@@ -40,39 +40,18 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		
 		GridLayoutFactory.swtDefaults().margins(0, 0).applyTo(main);
 		
-//		FileFieldEditor dbPropery = new FileFieldEditor(Constants.DB_PROPERTY_FILE, "Db property file", parent);
-//		addField(dbPropery);
-		
-		Group dbGroup = new Group(main, SWT.NONE);
-		
-		dbGroup.setText(MessageUtil.getMessage("preference.group.db"));
-		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(dbGroup);
-		
-//		StringFieldEditor driverClassNameEditor = new StringFieldEditor(Constants.DB_DRIVER_CLASS, 
-//				MessageUtil.getMessage("preference.db.driver.name"), dbGroup);
-//		driverClassNameEditor.getLabelControl(dbGroup).setToolTipText(MessageUtil.getMessage("preference.db.driver.name.tooltip"));
-//		addField(driverClassNameEditor);
+//		Group dbGroup = new Group(main, SWT.NONE);
 //		
-//		StringFieldEditor driverUrlEditor = new StringFieldEditor(Constants.DB_URL, 
-//				MessageUtil.getMessage("preference.db.driver.url"), dbGroup);
-//		driverUrlEditor.getLabelControl(dbGroup).setToolTipText(MessageUtil.getMessage("preference.db.driver.url.tooltip"));
-//		addField(driverUrlEditor);
+//		dbGroup.setText(MessageUtil.getMessage("preference.group.db"));
+//		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(dbGroup);
 //		
-//		StringFieldEditor driverUsernameEditor = new StringFieldEditor(Constants.DB_USERNAME, 
-//				MessageUtil.getMessage("preference.db.driver.username"), dbGroup);
-//		addField(driverUsernameEditor);
+//		FileFieldEditor dbFileEditor = 
+//				new FileFieldEditor(Constants.DB_PROPERTY_FILE, 
+//						MessageUtil.getMessage("preference.db.file"), dbGroup);
 //		
-//		StringFieldEditor driverPasswordEditor = new StringFieldEditor(Constants.DB_PASSWORD, 
-//				MessageUtil.getMessage("preference.db.driver.password"), dbGroup);
-//		addField(driverPasswordEditor);
-		
-		FileFieldEditor dbFileEditor = 
-				new FileFieldEditor(Constants.DB_PROPERTY_FILE, 
-						MessageUtil.getMessage("preference.db.file"), dbGroup);
-		
-		addField(dbFileEditor);
-		
-		updateMargin(dbGroup);
+//		addField(dbFileEditor);
+//		
+//		updateMargin(dbGroup);
 		
 		Group templateGroup = new Group(main, SWT.COLOR_DARK_GRAY);
 		

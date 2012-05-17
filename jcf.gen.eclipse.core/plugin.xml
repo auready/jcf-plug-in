@@ -66,10 +66,16 @@
             name="JCF">
       </page>
       <page
+            category="jcf.gen.eclipse.core.codegen"
+            class="jcf.gen.eclipse.core.preference.JcfConnectionPreferencePage"
+            id="jcf.gen.eclipse.core.codegen.preference.connectionPreferencePage"
+            name="Connection">
+      </page>
+      <page
+      		category="jcf.gen.eclipse.core.codegen"
       		class="jcf.gen.eclipse.core.preference.JcfLicensePreferencePage"
             id="jcf.gen.eclipse.core.codegen.preference.licensePreferencePage"
-            name="License"
-            category="jcf.gen.eclipse.core.codegen">
+            name="License">
       </page>
    </extension>
    <extension

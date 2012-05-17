@@ -33,8 +33,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import jcf.gen.eclipse.core.JcfGeneratorPlugIn;
-import jcf.gen.eclipse.core.jdbc.DbManager;
 import jcf.gen.eclipse.core.jdbc.model.TableColumns;
+import jcf.gen.eclipse.core.jdbc.DatabaseService;
 import jcf.gen.eclipse.core.luncher.DefaultLuncher;
 import jcf.gen.eclipse.core.utils.ColumnNameCamelCaseMap;
 import jcf.gen.eclipse.core.Constants;
@@ -45,7 +45,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	private Text txtPackageName = null;
 	private Text txtUserCase = null;
 	
-	private DbManager dbManager = null;
+	private DatabaseService databaseService;
 	
 	private Map<String, Object> argument = new HashMap<String, Object>();
 	private Set<String> delArgument = new HashSet<String>();
@@ -89,6 +89,8 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		container.setLayout(new GridLayout(1, true));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		this.databaseService = new DatabaseService();
 		
 		this.createDbGroup(container);
 		
@@ -146,10 +148,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		if (StringUtils.isNotEmpty(dbFilePath)) {
 			comboTabName.setEnabled(true);
 						
-			dbManager = new DbManager();
-			
-			dbManager.init(dbFilePath);
-			String[] dbTableNames = dbManager.getTableNames();
+			String[] dbTableNames = databaseService.getTableNames();
 			
 			comboTabName.setItems(dbTableNames);
 		}
@@ -167,7 +166,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 				userCaseName = camelCaseTableName;
 				
 				//Table Contents Change
-				List<TableColumns> list = dbManager.getColumnList(tableName);
+				List<TableColumns> list = databaseService.getColumnList(tableName);
 				
 				tableViewer.getTable().setEnabled(true);
 				tableViewer.setInput(list);
@@ -359,7 +358,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	}
 	
 	private String getDbPropertyFilePath() {
-		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(Constants.DB_PROPERTY_FILE);
+		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(Constants.DB_URL);
 	}
 	
 	private String getSourceDiretory() {
