@@ -49,6 +49,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	
 	private Map<String, Object> argument = new HashMap<String, Object>();
 	private Set<String> delArgument = new HashSet<String>();
+	private Map<String, Boolean> template = new HashMap<String, Boolean>();
 	
 	private TableViewer tableViewer;
 	
@@ -93,6 +94,8 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		this.databaseService = new DatabaseService();
 		
 		this.createDbGroup(container);
+		
+		this.createTemplateGroup(container);
 		
 		this.createCodeGroup(container);
 		
@@ -212,7 +215,68 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 				}
 			}
 		});
+	}
+	
+	private String[] category = {Constants.CONTROLLER_FILE, Constants.SERVICE_FILE, Constants.MODEL_FILE, Constants.SQLMAP_FILE, Constants.GROOVY_FILE};
+	
+	protected void createTemplateGroup(Composite parent) {
+		final Group groupInfo = new Group(parent, SWT.NONE);
 		
+		groupInfo.setText(MessageUtil.getMessage("group.template.setting.title"));
+		groupInfo.setLayout(new GridLayout(5, false));
+		groupInfo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		// Initialize
+		for (int i = 0, len = category.length; i < len; i++) {
+			template.put(category[i], isCheckedTemplate(category[i]));
+		}
+		
+		final Button[] btnTemplate = new Button[5];
+		
+		btnTemplate[0] = new Button(groupInfo, SWT.CHECK);
+		btnTemplate[0].setText(category[0].substring(0, category[0].indexOf("_")).toLowerCase());
+		btnTemplate[0].setSelection(isCheckedTemplate(category[0]));
+		btnTemplate[0].addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				template.put(category[0], btnTemplate[0].getSelection());
+			}
+		});
+		
+		btnTemplate[1] = new Button(groupInfo, SWT.CHECK);
+		btnTemplate[1].setText(category[1].substring(0, category[1].indexOf("_")).toLowerCase());
+		btnTemplate[1].setSelection(isCheckedTemplate(category[1]));
+		btnTemplate[1].addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				template.put(category[1], btnTemplate[1].getSelection());
+			}
+		});
+		
+		btnTemplate[2] = new Button(groupInfo, SWT.CHECK);
+		btnTemplate[2].setText(category[2].substring(0, category[2].indexOf("_")).toLowerCase());
+		btnTemplate[2].setSelection(isCheckedTemplate(category[2]));
+		btnTemplate[2].addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				template.put(category[2], btnTemplate[2].getSelection());
+			}
+		});
+		
+		btnTemplate[3] = new Button(groupInfo, SWT.CHECK);
+		btnTemplate[3].setText(category[3].substring(0, category[3].indexOf("_")).toLowerCase());
+		btnTemplate[3].setSelection(isCheckedTemplate(category[3]));
+		btnTemplate[3].addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				template.put(category[3], btnTemplate[3].getSelection());
+			}
+		});
+		
+		btnTemplate[4] = new Button(groupInfo, SWT.CHECK);
+		btnTemplate[4].setText(category[4].substring(0, category[4].indexOf("_")).toLowerCase());
+		btnTemplate[4].setSelection(isCheckedTemplate(category[4]));
+		btnTemplate[4].addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				template.put(category[4], btnTemplate[4].getSelection());
+			}
+		});
 	}
 	
 	protected void createCodeGroup(Composite parent) {
@@ -260,9 +324,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		if (StringUtils.isNotEmpty(sourceDir)) {
 			txtSrcFolder.setText(sourceDir);
-			txtSrcFolder.setEditable(false);
-			
-			btnSelectDir.setEnabled(false);
 			
 			srcPath = sourceDir;
 		}
@@ -356,6 +417,10 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		return gridData;
 	}
+
+	private boolean isCheckedTemplate(String category) {
+		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getBoolean(category);
+	}
 	
 	private String getDbPropertyFilePath() {
 		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(Constants.DB_URL);
@@ -366,8 +431,9 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	}
 	
 	private void generateSourceCode() {
-		DefaultLuncher luncher = new DefaultLuncher();
+		argument.put(Constants.TEMPLATE, template);
 		
+		DefaultLuncher luncher = new DefaultLuncher();
 		luncher.execute(srcPath, packageName, userCaseName, argument, delArgument);
 	}
 }

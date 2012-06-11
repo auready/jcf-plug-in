@@ -15,6 +15,7 @@ public class Constants {
 	public static final String TEMPLATE_DIRECTORY = "TEMPLATE_DIRECTORY";
 	public static final String SOURCE_DIRECTORY = "SOURCE_DIRECTORY";
 	
+	public static final String TEMPLATE = "TEMPLATE";
 	public static final String CONTROLLER_FILE = "CONTROLLER_FILE";
 	public static final String SERVICE_FILE = "SERVICE_FILE";
 	public static final String MODEL_FILE = "MODEL_FILE";

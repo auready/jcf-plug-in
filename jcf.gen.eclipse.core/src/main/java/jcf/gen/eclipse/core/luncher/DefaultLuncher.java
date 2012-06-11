@@ -88,6 +88,8 @@ public class DefaultLuncher {
 		String isPkExist = hasPrimaryKeyInList(list) ? Constants.IS_PK_EXIST_Y : Constants.IS_PK_EXIST_N;
 		model.put(Constants.IS_PK_EXIST, isPkExist);
 		
+		template = (HashMap<String, Boolean>) arg.get(Constants.TEMPLATE);
+		
 		this.run(srcPath, packageName, userCaseName, model);
 		
 		MessageBox msg = new MessageBox(Display.getCurrent().getActiveShell(), SWT.ICON_INFORMATION | SWT.OK);
@@ -97,33 +99,35 @@ public class DefaultLuncher {
 		msg.open();
 	}
 	
-	private boolean isGenerateFile(String category) {
-		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getBoolean(category);
+	private Map<String, Boolean> template;
+	
+	private boolean createTemplateFile(String category) {
+		return template.get(category);
 	}
 	
 	private void run(String srcPath, String packageName, String userCaseName, Map<String, Object> model) {
-		if (this.isGenerateFile(Constants.CONTROLLER_FILE)) {
+		if (createTemplateFile(Constants.CONTROLLER_FILE)) {
 			ControlGenerator controlGenerator = new ControlGenerator();		
 			controlGenerator.generatorFile(srcPath, packageName, userCaseName, model);
 		}
 		
-		if (this.isGenerateFile(Constants.SERVICE_FILE)) {
+		if (createTemplateFile(Constants.SERVICE_FILE)) {
 			ServiceGenerator serviceGenerator = new ServiceGenerator();
 			serviceGenerator.generatorFile(srcPath, packageName, userCaseName, model);
 		}
 		
 		
-		if (this.isGenerateFile(Constants.MODEL_FILE)) {
+		if (createTemplateFile(Constants.MODEL_FILE)) {
 			ModelGenerator modelGenerator = new ModelGenerator();
 			modelGenerator.generatorFile(srcPath, packageName, userCaseName, model);
 		}
 		
-		if (this.isGenerateFile(Constants.SQLMAP_FILE)) {
+		if (createTemplateFile(Constants.SQLMAP_FILE)) {
 			SqlMapGenerator sqlMapGenerator = new SqlMapGenerator();
 			sqlMapGenerator.generatorFile(srcPath, packageName, userCaseName, model);
 		}
 		
-		if (this.isGenerateFile(Constants.GROOVY_FILE)) {
+		if (createTemplateFile(Constants.GROOVY_FILE)) {
 			GroovyGenerator groovyGenerator = new GroovyGenerator();
 			groovyGenerator.generatorFile(srcPath, packageName, userCaseName, model);
 		}
