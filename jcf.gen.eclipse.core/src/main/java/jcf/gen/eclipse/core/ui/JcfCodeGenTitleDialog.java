@@ -91,7 +91,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		container.setLayout(new GridLayout(1, true));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		this.databaseService = new DatabaseService();
+		if (this.isDbEnvEnable()) this.databaseService = new DatabaseService();
 		
 		this.createDbGroup(container);
 		
@@ -146,9 +146,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		comboTabName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboTabName.setEnabled(false);
 		
-		String dbFilePath = this.getDbPropertyFilePath();
-		
-		if (StringUtils.isNotEmpty(dbFilePath)) {
+		if (this.isDbEnvEnable()) {
 			comboTabName.setEnabled(true);
 						
 			String[] dbTableNames = databaseService.getTableNames();
@@ -422,8 +420,10 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getBoolean(category);
 	}
 	
-	private String getDbPropertyFilePath() {
-		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(Constants.DB_URL);
+	private boolean isDbEnvEnable() {
+		String dbPass = JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(Constants.DB_PASSWORD);
+		
+		return StringUtils.isNotEmpty(dbPass);
 	}
 	
 	private String getSourceDiretory() {
