@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JCF-DEV
 Bundle-SymbolicName: jcf.gen.eclipse.core; singleton:=true
-Bundle-Version: 1.0.5.20120517
+Bundle-Version: 1.0.7.20120629
 Bundle-Activator: jcf.gen.eclipse.core.JcfGeneratorPlugIn
 Bundle-Vendor: DISC
 Require-Bundle: org.eclipse.ui,
@@ -15,6 +15,7 @@ Bundle-ClassPath: .,
  lib/commons-collections-3.2.1.jar,
  lib/commons-logging-1.1.1.jar,
  lib/ojdbc14-10.2.0.4.0.jar,
+ lib/mysql-connector-java-5.1.20.jar,
  lib/log4j-1.2.16.jar,
  lib/slf4j-api-1.6.4.jar,
  lib/slf4j-jdk14-1.6.4.jar,

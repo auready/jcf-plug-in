@@ -2,8 +2,8 @@ package jcf.gen.eclipse.core;
 
 public class Constants {
 	public static final String DB_CATEGORY_RADIO = "DB_CATEGORY_RADIO";
-	public static final String DB_ORACLE = "oracle";
-	public static final String DB_MSSQL = "mssql";
+	public static final String DB_ORACLE = "ORACLE";
+	public static final String DB_MYSQL = "MYSQL";
 	
 	public static final String DB_PROPERTY_FILE = "DB_PROPERTY_FILE";
 	
