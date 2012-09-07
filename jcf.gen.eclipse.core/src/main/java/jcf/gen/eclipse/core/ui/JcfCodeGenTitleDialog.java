@@ -163,7 +163,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 				
 				String camelCaseTableName = camelCaseStr.tableNameConvert(tableName);
 				
-				txtUserCase.setText(camelCaseTableName); 
+				txtUserCase.setText(camelCaseTableName);
 				userCaseName = camelCaseTableName;
 				
 				//Table Contents Change
@@ -361,13 +361,15 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if (txtUserCase.getText().length() > 0) {
-					String first = txtUserCase.getText().substring(0, 1);
+					userCaseName = txtUserCase.getText();
 					
-					if (first.toUpperCase() != first) {
-						setMessage("Usercase Name start with an uppercase letter");
-					} else {
-						setMessage("Source Code Sample Generator");
-					}
+//					String first = txtUserCase.getText().substring(0, 1);
+//					
+//					if (first.toUpperCase() != first) {
+//						setMessage("Usercase Name start with an uppercase letter");
+//					} else {
+//						setMessage("Source Code Sample Generator");
+//					}
 				}
 			}
 			

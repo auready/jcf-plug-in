@@ -21,6 +21,7 @@ import jcf.gen.eclipse.core.jdbc.model.TableColumns;
 import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.JcfGeneratorPlugIn;
 import jcf.gen.eclipse.core.utils.ColumnNameCamelCaseMap;
+import jcf.gen.eclipse.core.utils.DbUtils;
 
 public class DefaultLuncher {
 	
@@ -59,7 +60,7 @@ public class DefaultLuncher {
 				map.put(Constants.COL_COLUMN_NAME, col.getColumnName());
 				map.put(Constants.COL_COLUMN_COMMENT, col.getColumnCommnet());
 				map.put(Constants.COL_PK, col.getPk());
-				map.put(Constants.COL_DATA_TYPE, col.getDataType());
+				map.put(Constants.COL_DATA_TYPE, DbUtils.convertToDataType(col.getDataType()));
 				map.put(Constants.COL_DATA_LENGTH, col.getDataLength());
 				map.put(Constants.COL_CHAR_LENGTH, col.getCharLength());
 				map.put(Constants.COL_DATA_PRECISION, col.getDataPrecision());

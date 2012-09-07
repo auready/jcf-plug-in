@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JCF-DEV
 Bundle-SymbolicName: jcf.gen.eclipse.core; singleton:=true
-Bundle-Version: 1.0.7.20120629
+Bundle-Version: 1.0.8.20120907
 Bundle-Activator: jcf.gen.eclipse.core.JcfGeneratorPlugIn
 Bundle-Vendor: DISC
 Require-Bundle: org.eclipse.ui,
