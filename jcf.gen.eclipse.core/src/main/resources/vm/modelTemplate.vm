@@ -1,20 +1,31 @@
 package ${PACKAGE}.model;
+
+${IMPORT_MATH_CLASS}
+
 /**
  * <p> ${TABLE_COMMENT} TDO </p>
  * @author
  * @version 1.0
  */
+public class ${TABLENAME}Model {
+    private String rowStatus;        /* rowStatus */
 
-public class ${TABLE_NAME_PASCAL}Model {
  #foreach( ${column} in ${COLUMNS} )
-    private String ${column.COLUMN_NAME_CAMEL}; /* ${column.COLUMN_COMMENT} */
+    private ${column.COLUMN_DATA_TYPE} ${column.COLUMN_NAME_CAMEL}; /* ${column.COLUMN_COMMENT} */
  #end
 
+    public String getRowStatus() {
+        return rowStatus;
+    }
+    public void setRowStatus(String rowStatus) {
+        this.rowStatus = rowStatus;
+    }
+
  #foreach( ${column} in ${COLUMNS} )
-    public String get${column.COLUMN_NAME_PASCAL}() {
+    public ${column.COLUMN_DATA_TYPE} get${column.COLUMN_NAME_PASCAL}() {
        return ${column.COLUMN_NAME_CAMEL};
     }
-    public void set${column.COLUMN_NAME_PASCAL}( String ${column.COLUMN_NAME_CAMEL}) {
+    public void set${column.COLUMN_NAME_PASCAL}( ${column.COLUMN_DATA_TYPE} ${column.COLUMN_NAME_CAMEL}) {
        this.${column.COLUMN_NAME_CAMEL} = ${column.COLUMN_NAME_CAMEL};
     }
  #end

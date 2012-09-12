@@ -43,36 +43,36 @@ ${column.COLUMN_NAME} = ${SHARP}${column.COLUMN_NAME_CAMEL}${SHARP}
 #end
 #end
 
-<sqlMap namespace="${TABLE_NAME_CAMEL}">
+<sqlMap namespace="${TABLENAME}">
 
-	<typeAlias alias="${TABLE_NAME_CAMEL}TDO" type="${PACKAGE}.model.${TABLE_NAME_PASCAL}TDO" />
+	<typeAlias alias="${TABLENAME}Model" type="${PACKAGE}.model.${TABLENAME}Model" />
     
-	<resultMap id="${TABLE_NAME_CAMEL}TDO-resultMap" class="${TABLE_NAME_CAMEL}TDO">
+	<resultMap id="${TABLE_NAME_CAMEL}ResultMap" class="${TABLENAME}Model">
 #foreach( ${column} in ${COLUMNS} )
 		<result column="${column.COLUMN_NAME}" property="${column.COLUMN_NAME_CAMEL}" />
 #end
 	</resultMap>
 	    	
-	<statement id="select001" parameterClass="map" resultMap="${TABLE_NAME_CAMEL}TDO-resultMap">
+	<statement id="find01" parameterClass="map" resultMap="${TABLE_NAME_CAMEL}ResultMap">
 	SELECT #comma()
-	FROM ${SCHEMA}.${TABLENAME}
+	FROM ${TABLENAME}
 	<dynamic>
 	#where()
 	</dynamic>
 	</statement>
 	
-	<statement id="select002" parameterClass="map" resultClass="columnNameCamelCaseMap">
+	<statement id="find02" parameterClass="map" resultClass="camelCaseMap">
 	SELECT #comma()
-	FROM ${SCHEMA}.${TABLENAME}
+	FROM ${TABLENAME}
 	<dynamic>
 	#where()
 	</dynamic>
 	</statement>
 	
 
-	<statement id="insert001" parameterClass="${TABLE_NAME_CAMEL}TDO">
+	<statement id="insert01" parameterClass="${TABLENAME}Model">
 	<![CDATA[
-	INSERT INTO ${SCHEMA}.${TABLENAME}
+	INSERT INTO ${TABLENAME}
 	(
          #comma()
 	)
@@ -92,8 +92,8 @@ ${column.COLUMN_NAME} = ${SHARP}${column.COLUMN_NAME_CAMEL}${SHARP}
 	</statement>
 	
 
-	<statement id="update001" parameterClass="${TABLE_NAME_CAMEL}TDO">
-	UPDATE ${SCHEMA}.${TABLENAME} 
+	<statement id="update01" parameterClass="${TABLENAME}Model">
+	UPDATE ${TABLENAME} 
 	SET 
 	<dynamic>
 	LAST_REGS_DTM =	SYSDATE
@@ -108,8 +108,8 @@ ${column.COLUMN_NAME} = ${SHARP}${column.COLUMN_NAME_CAMEL}${SHARP}
 	
 	</statement>
 	
-	<statement id="delete001" parameterClass="${TABLE_NAME_CAMEL}TDO">
-	DELETE FROM ${SCHEMA}.${TABLENAME}
+	<statement id="delete01" parameterClass="${TABLENAME}Model">
+	DELETE FROM ${TABLENAME}
 	#if ( ${IS_PK_EXIST} == 'N' )
 	#where()
 	#else
