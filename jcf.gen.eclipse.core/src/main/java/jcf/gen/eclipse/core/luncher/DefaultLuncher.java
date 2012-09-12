@@ -6,20 +6,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.plaf.basic.BasicScrollPaneUI.HSBChangeListener;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jcf.gen.eclipse.core.generator.controller.ControlGenerator;
+import jcf.gen.eclipse.core.generator.action.ActionGenerator;
 import jcf.gen.eclipse.core.generator.dao.GroovyGenerator;
 import jcf.gen.eclipse.core.generator.dao.SqlMapGenerator;
 import jcf.gen.eclipse.core.generator.service.ServiceGenerator;
 import jcf.gen.eclipse.core.generator.model.ModelGenerator;
 import jcf.gen.eclipse.core.jdbc.model.TableColumns;
 import jcf.gen.eclipse.core.Constants;
-import jcf.gen.eclipse.core.JcfGeneratorPlugIn;
 import jcf.gen.eclipse.core.utils.ColumnNameCamelCaseMap;
 import jcf.gen.eclipse.core.utils.DbUtils;
 
@@ -41,13 +42,15 @@ public class DefaultLuncher {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void execute(String srcPath, String packageName, String userCaseName, Map<String, Object> arg, Set<String> delArg) {
+	public void execute(String srcPath, String packageName, String userCaseName, String baseUrl, Map<String, Object> arg, Set<String> delArg) {
 		ColumnNameCamelCaseMap columnNameCamelCase = new ColumnNameCamelCaseMap();
 		
 		String tableName = (String) arg.get(Constants.TABLENAME);
 		List<TableColumns> columnList = (List<TableColumns>) arg.get(Constants.COLUMNS);
 		
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		
+		boolean hasNumberType = false;
 		
 		for (TableColumns col : columnList) {
 			String colName = col.getColumnName();
@@ -60,7 +63,7 @@ public class DefaultLuncher {
 				map.put(Constants.COL_COLUMN_NAME, col.getColumnName());
 				map.put(Constants.COL_COLUMN_COMMENT, col.getColumnCommnet());
 				map.put(Constants.COL_PK, col.getPk());
-				map.put(Constants.COL_DATA_TYPE, DbUtils.convertToDataType(col.getDataType()));
+				map.put(Constants.COLUMN_DATA_TYPE, DbUtils.convertToDataType(col.getDataType()));
 				map.put(Constants.COL_DATA_LENGTH, col.getDataLength());
 				map.put(Constants.COL_CHAR_LENGTH, col.getCharLength());
 				map.put(Constants.COL_DATA_PRECISION, col.getDataPrecision());
@@ -71,6 +74,10 @@ public class DefaultLuncher {
 				map.put(Constants.COL_DATA_DEFAULT, col.getDataDefault());
 				map.put(Constants.COLUMN_NAME_CAMEL, columnNameCamelCase.camelCaseConverter(col.getColumnName()));
 				map.put(Constants.COLUMN_NAME_PASCAL, columnNameCamelCase.pascalCaseConverter(col.getColumnName()));
+				
+				if (!hasNumberType) {
+					if (DbUtils.hasNumberType(col.getDataType())) hasNumberType = true;
+				}
 				
 				list.add(map);
 			}
@@ -85,6 +92,8 @@ public class DefaultLuncher {
 		model.put(Constants.SHARP, "#");
 		model.put(Constants.DOLLOR, "$");
 		model.put(Constants.TABLE_COMMENT, (list.get(0)).get(Constants.COL_TABLE_COMMENT));
+		model.put(Constants.REQ_BASE_URL, baseUrl);
+		model.put(Constants.IMPORT_MATH_CLASS, (hasNumberType ? Constants.IMPORT_BIG_DECIMAL : Constants.IMPORT_NULL));
 		
 		String isPkExist = hasPrimaryKeyInList(list) ? Constants.IS_PK_EXIST_Y : Constants.IS_PK_EXIST_N;
 		model.put(Constants.IS_PK_EXIST, isPkExist);
@@ -107,16 +116,15 @@ public class DefaultLuncher {
 	}
 	
 	private void run(String srcPath, String packageName, String userCaseName, Map<String, Object> model) {
-		if (createTemplateFile(Constants.CONTROLLER_FILE)) {
-			ControlGenerator controlGenerator = new ControlGenerator();		
-			controlGenerator.generatorFile(srcPath, packageName, userCaseName, model);
+		if (createTemplateFile(Constants.ACTION_FILE)) {
+			ActionGenerator actionGenerator = new ActionGenerator();		
+			actionGenerator.generatorFile(srcPath, packageName, userCaseName, model);
 		}
 		
 		if (createTemplateFile(Constants.SERVICE_FILE)) {
 			ServiceGenerator serviceGenerator = new ServiceGenerator();
 			serviceGenerator.generatorFile(srcPath, packageName, userCaseName, model);
 		}
-		
 		
 		if (createTemplateFile(Constants.MODEL_FILE)) {
 			ModelGenerator modelGenerator = new ModelGenerator();
@@ -128,9 +136,5 @@ public class DefaultLuncher {
 			sqlMapGenerator.generatorFile(srcPath, packageName, userCaseName, model);
 		}
 		
-		if (createTemplateFile(Constants.GROOVY_FILE)) {
-			GroovyGenerator groovyGenerator = new GroovyGenerator();
-			groovyGenerator.generatorFile(srcPath, packageName, userCaseName, model);
-		}
 	}
 }

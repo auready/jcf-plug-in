@@ -16,11 +16,15 @@ public class Constants {
 	public static final String SOURCE_DIRECTORY = "SOURCE_DIRECTORY";
 	
 	public static final String TEMPLATE = "TEMPLATE";
-	public static final String CONTROLLER_FILE = "CONTROLLER_FILE";
+	public static final String ACTION_FILE = "ACTION_FILE";
 	public static final String SERVICE_FILE = "SERVICE_FILE";
 	public static final String MODEL_FILE = "MODEL_FILE";
 	public static final String SQLMAP_FILE = "SQLMAP_FILE";
 	public static final String GROOVY_FILE = "GROOVY_FILE";
+	
+	public static final String IMPORT_MATH_CLASS = "IMPORT_MATH_CLASS";
+	public static final String IMPORT_NULL = "";
+	public static final String IMPORT_BIG_DECIMAL = "import java.math.BigDecimal;";
 	
 	public static final String PK_COL = "PK";
 	public static final String TABLENAME = "TABLENAME";
@@ -30,6 +34,7 @@ public class Constants {
 	public static final String COLUMN_NAME = "COLUMN_NAME";
 	public static final String COLUMN_NAME_CAMEL = "COLUMN_NAME_CAMEL";
 	public static final String COLUMN_NAME_PASCAL = "COLUMN_NAME_PASCAL";
+	public static final String COLUMN_DATA_TYPE = "COLUMN_DATA_TYPE";
 	public static final String TABLE_COMMENT = "TABLE_COMMENT";
 	public static final String TABLE_NAME_CAMEL = "TABLE_NAME_CAMEL";
 	public static final String TABLE_NAME_PASCAL = "TABLE_NAME_PASCAL";
@@ -41,7 +46,7 @@ public class Constants {
 	public static final String UC_NAME = "UC_NAME";
 	public static final String UC_NAME_CAMEL = "UC_NAME_CAMEL";
 	public static final String PACKAGE_PATH = "PACKAGE_PATH";
-	public static final String REQUEST_URL = "REQUEST_URL";
+	public static final String REQ_BASE_URL = "REQ_BASE_URL";
 	
 	public static final String COL_TABLE_NAME = "TABLE_NAME";
 	public static final String COL_TABLE_COMMENT = "TABLE_COMMENT";

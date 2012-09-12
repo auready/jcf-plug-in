@@ -21,11 +21,10 @@ public class JcfGenPreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(Constants.TEMPLATE_DIRECTORY, System.getProperty("user.home"));
 		store.setDefault(Constants.SOURCE_DIRECTORY, "");
 		
-		store.setDefault(Constants.CONTROLLER_FILE, true);
+		store.setDefault(Constants.ACTION_FILE, true);
 		store.setDefault(Constants.SERVICE_FILE, true);
 		store.setDefault(Constants.MODEL_FILE, true);
 		store.setDefault(Constants.SQLMAP_FILE, true);
-		store.setDefault(Constants.GROOVY_FILE, true);
 	}
 
 }

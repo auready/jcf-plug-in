@@ -116,8 +116,8 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		vmFileGroup.setText(MessageUtil.getMessage("preference.group.velocity"));
 		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(vmFileGroup);
 		
-		addField(new BooleanFieldEditor(Constants.CONTROLLER_FILE, 
-				MessageUtil.getMessage("preference.velocity.controller"), vmFileGroup));
+		addField(new BooleanFieldEditor(Constants.ACTION_FILE, 
+				MessageUtil.getMessage("preference.velocity.action"), vmFileGroup));
 		
 		addField(new BooleanFieldEditor(Constants.SERVICE_FILE, 
 				MessageUtil.getMessage("preference.velocity.service"), vmFileGroup));
@@ -127,9 +127,7 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		
 		addField(new BooleanFieldEditor(Constants.SQLMAP_FILE, 
 				MessageUtil.getMessage("preference.velocity.sqlmap"), vmFileGroup));
-		
-		addField(new BooleanFieldEditor(Constants.GROOVY_FILE, 
-				MessageUtil.getMessage("preference.velocity.groovy"), vmFileGroup));
+
 		
 		updateMargin(vmFileGroup);
 	}

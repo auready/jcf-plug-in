@@ -6,11 +6,15 @@ public class DbUtils {
 		String dataType = "String";
 		
 		if ("NUMBER".equals(colType)) {
-			dataType = "java.math.BigDecimal";
+			dataType = "BigDecimal";
 		} else if ("BLOB".equals(colType)) {
 			dataType = "byte[]";
 		} 
 		
 		return dataType;
+	}
+	
+	public static boolean hasNumberType(String colType) {
+		return "NUMBER".equals(colType);
 	}
 }

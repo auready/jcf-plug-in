@@ -9,7 +9,7 @@ import jcf.gen.eclipse.core.utils.StrUtils;
 public class SqlMapGenerator extends AbstractSourceGenerator {
 
 	public String getFileName(Map<String,Object> infoMap) {
-		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.TABLE_NAME_PASCAL)).append("-sqlMap.xml").toString());
+		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.TABLENAME)).append(".xml").toString());
 	}
 
 	public String getPackagePath(String basePackPath) {

@@ -44,6 +44,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	private Text txtSrcFolder = null;
 	private Text txtPackageName = null;
 	private Text txtUserCase = null;
+	private Text txtBaseUrl = null;
 	
 	private DatabaseService databaseService;
 	
@@ -56,6 +57,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	private String srcPath = "";
 	private String packageName = "";
 	private String userCaseName = "";
+	private String baseUrl = "";
 	
 	public JcfCodeGenTitleDialog(Shell parent) {
 		super(parent);
@@ -66,7 +68,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		super.configureShell(shell);
 		
 		shell.setText(MessageUtil.getMessage("dialog.shell.title"));
-//		shell.setImage(JcfGeneratorPlugIn.getImageDescriptor("icons/sample.gif").createImage());
 	}
 	
 	@Override
@@ -79,11 +80,13 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	
 	@Override
 	protected Point getInitialSize() {
-		return new Point(500, 500);
+		return new Point(500, 560);
 	}
 	
 	@Override
 	protected Control createDialogArea(Composite parent) {
+		setTitleImage(JcfGeneratorPlugIn.getImageDescriptor("icons/snu.png").createImage());
+		
 		Composite area = (Composite) super.createDialogArea(parent);
 		
 		Composite container = new Composite(area, SWT.NONE);
@@ -215,7 +218,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		});
 	}
 	
-	private String[] category = {Constants.CONTROLLER_FILE, Constants.SERVICE_FILE, Constants.MODEL_FILE, Constants.SQLMAP_FILE, Constants.GROOVY_FILE};
+	private String[] category = {Constants.ACTION_FILE, Constants.SERVICE_FILE, Constants.MODEL_FILE, Constants.SQLMAP_FILE, Constants.GROOVY_FILE};
 	
 	protected void createTemplateGroup(Composite parent) {
 		final Group groupInfo = new Group(parent, SWT.NONE);
@@ -229,7 +232,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			template.put(category[i], isCheckedTemplate(category[i]));
 		}
 		
-		final Button[] btnTemplate = new Button[5];
+		final Button[] btnTemplate = new Button[4];
 		
 		btnTemplate[0] = new Button(groupInfo, SWT.CHECK);
 		btnTemplate[0].setText(category[0].substring(0, category[0].indexOf("_")).toLowerCase());
@@ -267,14 +270,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			}
 		});
 		
-		btnTemplate[4] = new Button(groupInfo, SWT.CHECK);
-		btnTemplate[4].setText(category[4].substring(0, category[4].indexOf("_")).toLowerCase());
-		btnTemplate[4].setSelection(isCheckedTemplate(category[4]));
-		btnTemplate[4].addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				template.put(category[4], btnTemplate[4].getSelection());
-			}
-		});
 	}
 	
 	protected void createCodeGroup(Composite parent) {
@@ -362,14 +357,29 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			public void keyReleased(KeyEvent e) {
 				if (txtUserCase.getText().length() > 0) {
 					userCaseName = txtUserCase.getText();
-					
-//					String first = txtUserCase.getText().substring(0, 1);
-//					
-//					if (first.toUpperCase() != first) {
-//						setMessage("Usercase Name start with an uppercase letter");
-//					} else {
-//						setMessage("Source Code Sample Generator");
-//					}
+				}
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+			}
+		});
+		
+		//Base URL
+		Label labelBaseUrl = new Label(groupInfo, SWT.NONE);
+		
+		labelBaseUrl.setLayoutData(this.getLabelLayout());
+		labelBaseUrl.setText(MessageUtil.getMessage("label.code.src.url"));
+		
+		txtBaseUrl = new Text(groupInfo, SWT.BORDER);
+		txtBaseUrl.setLayoutData(this.getTextLayout());
+		
+		txtBaseUrl.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (txtBaseUrl.getText().length() > 0) {
+					baseUrl = txtBaseUrl.getText();
 				}
 			}
 			
@@ -436,6 +446,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		argument.put(Constants.TEMPLATE, template);
 		
 		DefaultLuncher luncher = new DefaultLuncher();
-		luncher.execute(srcPath, packageName, userCaseName, argument, delArgument);
+		luncher.execute(srcPath, packageName, userCaseName, baseUrl, argument, delArgument);
 	}
 }
