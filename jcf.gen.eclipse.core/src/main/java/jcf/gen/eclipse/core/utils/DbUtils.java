@@ -13,4 +13,8 @@ public class DbUtils {
 		
 		return dataType;
 	}
+	
+	public static boolean hasNumberType(String colType) {
+		return "NUMBER".equals(colType);
+	}
 }
