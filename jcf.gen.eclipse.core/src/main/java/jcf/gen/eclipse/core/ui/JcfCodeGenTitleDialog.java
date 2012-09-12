@@ -66,7 +66,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		super.configureShell(shell);
 		
 		shell.setText(MessageUtil.getMessage("dialog.shell.title"));
-//		shell.setImage(JcfGeneratorPlugIn.getImageDescriptor("icons/sample.gif").createImage());
 	}
 	
 	@Override
@@ -84,6 +83,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	
 	@Override
 	protected Control createDialogArea(Composite parent) {
+//		setTitleImage(JcfGeneratorPlugIn.getImageDescriptor("icons/sample.gif").createImage());
 		Composite area = (Composite) super.createDialogArea(parent);
 		
 		Composite container = new Composite(area, SWT.NONE);
