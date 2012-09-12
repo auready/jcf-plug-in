@@ -30,6 +30,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
 import jcf.gen.eclipse.core.JcfGeneratorPlugIn;
@@ -44,18 +46,23 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	private Text txtSrcFolder = null;
 	private Text txtPackageName = null;
 	private Text txtUserCase = null;
+	private Text txtSql = null;
 	
 	private DatabaseService databaseService;
 	
 	private Map<String, Object> argument = new HashMap<String, Object>();
 	private Set<String> delArgument = new HashSet<String>();
-	private Map<String, Boolean> template = new HashMap<String, Boolean>();
+	private Map<String, Boolean> templateArg = new HashMap<String, Boolean>();
 	
+	private TabFolder tabFolder;
 	private TableViewer tableViewer;
 	
 	private String srcPath = "";
 	private String packageName = "";
 	private String userCaseName = "";
+	private String query = "";
+	
+	private String tabName = MessageUtil.getMessage("tab.table.title");
 	
 	public JcfCodeGenTitleDialog(Shell parent) {
 		super(parent);
@@ -91,11 +98,9 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		container.setLayout(new GridLayout(1, true));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		if (this.isDbEnvEnable()) this.databaseService = new DatabaseService();
+		this.databaseService = new DatabaseService();
 		
-		this.createDbGroup(container);
-		
-		this.createTemplateGroup(container);
+		this.createTabContents(container);
 		
 		this.createCodeGroup(container);
 		
@@ -112,6 +117,8 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		generateButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
+				
+				
 				generateSourceCode();
 			}
 		});
@@ -122,6 +129,43 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			public void widgetSelected(SelectionEvent event) {
 				setReturnCode(CANCEL);
 				close();
+			}
+		});
+	}
+	
+	protected void createTabContents(Composite parent) {
+		tabFolder = new TabFolder(parent, SWT.NONE);
+		
+		tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		// Table Base Tab
+		TabItem tableTabItem = new TabItem(tabFolder, SWT.NONE);
+		Composite pageOne = new Composite(tabFolder, SWT.NONE);
+		
+		pageOne.setLayout(new GridLayout(1, false));
+		pageOne.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		tableTabItem.setText(MessageUtil.getMessage("tab.table.title"));
+		tableTabItem.setControl(pageOne);
+		
+		this.createDbGroup(pageOne);
+		this.createTemplateGroup(pageOne);
+		
+		// Query Base Tab
+		TabItem sqlTabItem = new TabItem(tabFolder, SWT.NONE);
+		Composite pageTwo = new Composite(tabFolder, SWT.NONE);
+		
+		pageTwo.setLayout(new GridLayout(1, false));
+		pageTwo.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		sqlTabItem.setText(MessageUtil.getMessage("tab.query.title"));
+		sqlTabItem.setControl(pageTwo);
+		
+		this.createSqlGroup(pageTwo);
+		
+		tabFolder.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				tabName = tabFolder.getSelection()[0].getText();
 			}
 		});
 	}
@@ -146,7 +190,9 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		comboTabName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboTabName.setEnabled(false);
 		
-		if (this.isDbEnvEnable()) {
+		String dbFilePath = this.getDbPropertyFilePath();
+		
+		if (StringUtils.isNotEmpty(dbFilePath)) {
 			comboTabName.setEnabled(true);
 						
 			String[] dbTableNames = databaseService.getTableNames();
@@ -163,7 +209,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 				
 				String camelCaseTableName = camelCaseStr.tableNameConvert(tableName);
 				
-				txtUserCase.setText(camelCaseTableName);
+				txtUserCase.setText(camelCaseTableName); 
 				userCaseName = camelCaseTableName;
 				
 				//Table Contents Change
@@ -213,68 +259,101 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 				}
 			}
 		});
+		
 	}
 	
-	private String[] category = {Constants.CONTROLLER_FILE, Constants.SERVICE_FILE, Constants.MODEL_FILE, Constants.SQLMAP_FILE, Constants.GROOVY_FILE};
+	protected void createSqlGroup(Composite parent) {
+		Group groupSqlInfo = new Group(parent, SWT.NONE);
+		
+		groupSqlInfo.setText(MessageUtil.getMessage("group.sql.setting.title"));
+		groupSqlInfo.setLayout(new GridLayout(1, false));
+		groupSqlInfo.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		Label labelDbTable = new Label(groupSqlInfo, SWT.NONE);
+		
+		labelDbTable.setLayoutData(this.getLabelLayout());
+		labelDbTable.setText(MessageUtil.getMessage("label.sql.text"));
+		
+		txtSql = new Text(groupSqlInfo, SWT.BORDER | SWT.MULTI);
+		
+		txtSql.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		txtSql.addKeyListener(new KeyListener() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (txtSql.getText().length() > 0) {
+					query = txtSql.getText().trim();
+				}
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+			}
+		});
+	}
 	
 	protected void createTemplateGroup(Composite parent) {
-		final Group groupInfo = new Group(parent, SWT.NONE);
+		final Group groupTemplate = new Group(parent, SWT.NONE);
 		
-		groupInfo.setText(MessageUtil.getMessage("group.template.setting.title"));
-		groupInfo.setLayout(new GridLayout(5, false));
-		groupInfo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		groupTemplate.setText("Template");
+		groupTemplate.setLayout(new GridLayout(5, false));
+		groupTemplate.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
-		// Initialize
-		for (int i = 0, len = category.length; i < len; i++) {
-			template.put(category[i], isCheckedTemplate(category[i]));
-		}
+		templateArg.put(Constants.CONTROLLER_FILE, isCheckedTemplate(Constants.CONTROLLER_FILE));
+		templateArg.put(Constants.SERVICE_FILE, isCheckedTemplate(Constants.SERVICE_FILE));
+		templateArg.put(Constants.MODEL_FILE, isCheckedTemplate(Constants.MODEL_FILE));
+		templateArg.put(Constants.SQLMAP_FILE, isCheckedTemplate(Constants.SQLMAP_FILE));
+		templateArg.put(Constants.GROOVY_FILE, isCheckedTemplate(Constants.GROOVY_FILE));
 		
-		final Button[] btnTemplate = new Button[5];
+		final Button[] checkTemplate = new Button[5];
 		
-		btnTemplate[0] = new Button(groupInfo, SWT.CHECK);
-		btnTemplate[0].setText(category[0].substring(0, category[0].indexOf("_")).toLowerCase());
-		btnTemplate[0].setSelection(isCheckedTemplate(category[0]));
-		btnTemplate[0].addSelectionListener(new SelectionAdapter() {
+		checkTemplate[0] = new Button(groupTemplate, SWT.CHECK);
+		checkTemplate[0].setText("Controller");
+		checkTemplate[0].setSelection(isCheckedTemplate(Constants.CONTROLLER_FILE));
+		checkTemplate[0].addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-				template.put(category[0], btnTemplate[0].getSelection());
+				templateArg.put(Constants.CONTROLLER_FILE, checkTemplate[0].getSelection());
 			}
 		});
 		
-		btnTemplate[1] = new Button(groupInfo, SWT.CHECK);
-		btnTemplate[1].setText(category[1].substring(0, category[1].indexOf("_")).toLowerCase());
-		btnTemplate[1].setSelection(isCheckedTemplate(category[1]));
-		btnTemplate[1].addSelectionListener(new SelectionAdapter() {
+		checkTemplate[1] = new Button(groupTemplate, SWT.CHECK);
+		checkTemplate[1].setText("Service");
+		checkTemplate[1].setSelection(isCheckedTemplate(Constants.SERVICE_FILE));
+		checkTemplate[1].addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-				template.put(category[1], btnTemplate[1].getSelection());
+				templateArg.put(Constants.SERVICE_FILE, checkTemplate[1].getSelection());
 			}
 		});
 		
-		btnTemplate[2] = new Button(groupInfo, SWT.CHECK);
-		btnTemplate[2].setText(category[2].substring(0, category[2].indexOf("_")).toLowerCase());
-		btnTemplate[2].setSelection(isCheckedTemplate(category[2]));
-		btnTemplate[2].addSelectionListener(new SelectionAdapter() {
+		checkTemplate[2] = new Button(groupTemplate, SWT.CHECK);
+		checkTemplate[2].setText("Model");
+		checkTemplate[2].setSelection(isCheckedTemplate(Constants.MODEL_FILE));
+		checkTemplate[2].addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-				template.put(category[2], btnTemplate[2].getSelection());
+				templateArg.put(Constants.MODEL_FILE, checkTemplate[2].getSelection());
 			}
 		});
 		
-		btnTemplate[3] = new Button(groupInfo, SWT.CHECK);
-		btnTemplate[3].setText(category[3].substring(0, category[3].indexOf("_")).toLowerCase());
-		btnTemplate[3].setSelection(isCheckedTemplate(category[3]));
-		btnTemplate[3].addSelectionListener(new SelectionAdapter() {
+		checkTemplate[3] = new Button(groupTemplate, SWT.CHECK);
+		checkTemplate[3].setText("Sql-Map");
+		checkTemplate[3].setSelection(isCheckedTemplate(Constants.SQLMAP_FILE));
+		checkTemplate[3].addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-				template.put(category[3], btnTemplate[3].getSelection());
+				templateArg.put(Constants.SQLMAP_FILE, checkTemplate[3].getSelection());
 			}
 		});
 		
-		btnTemplate[4] = new Button(groupInfo, SWT.CHECK);
-		btnTemplate[4].setText(category[4].substring(0, category[4].indexOf("_")).toLowerCase());
-		btnTemplate[4].setSelection(isCheckedTemplate(category[4]));
-		btnTemplate[4].addSelectionListener(new SelectionAdapter() {
+		checkTemplate[4] = new Button(groupTemplate, SWT.CHECK);
+		checkTemplate[4].setText("Groovy");
+		checkTemplate[4].setSelection(isCheckedTemplate(Constants.GROOVY_FILE));
+		checkTemplate[4].addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-				template.put(category[4], btnTemplate[4].getSelection());
+				templateArg.put(Constants.GROOVY_FILE, checkTemplate[4].getSelection());
 			}
 		});
+	}
+	
+	private boolean isCheckedTemplate(String category) {
+		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getBoolean(category);
 	}
 	
 	protected void createCodeGroup(Composite parent) {
@@ -361,15 +440,13 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if (txtUserCase.getText().length() > 0) {
-					userCaseName = txtUserCase.getText();
+					String first = txtUserCase.getText().substring(0, 1);
 					
-//					String first = txtUserCase.getText().substring(0, 1);
-//					
-//					if (first.toUpperCase() != first) {
-//						setMessage("Usercase Name start with an uppercase letter");
-//					} else {
-//						setMessage("Source Code Sample Generator");
-//					}
+					if (first.toUpperCase() != first) {
+						setMessage("Usercase Name start with an uppercase letter");
+					} 
+					
+					userCaseName = txtUserCase.getText();
 				}
 			}
 			
@@ -417,15 +494,9 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		return gridData;
 	}
-
-	private boolean isCheckedTemplate(String category) {
-		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getBoolean(category);
-	}
 	
-	private boolean isDbEnvEnable() {
-		String dbPass = JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(Constants.DB_PASSWORD);
-		
-		return StringUtils.isNotEmpty(dbPass);
+	private String getDbPropertyFilePath() {
+		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(Constants.DB_PROPERTY_FILE);
 	}
 	
 	private String getSourceDiretory() {
@@ -433,9 +504,27 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	}
 	
 	private void generateSourceCode() {
-		argument.put(Constants.TEMPLATE, template);
-		
 		DefaultLuncher luncher = new DefaultLuncher();
-		luncher.execute(srcPath, packageName, userCaseName, argument, delArgument);
+		
+		if (tabName.equals(MessageUtil.getMessage("tab.table.title"))) {
+			argument.put(Constants.TEMPLATE_CHECK, templateArg);
+			
+			luncher.execute(srcPath, packageName, userCaseName, argument, delArgument);
+			
+		} else {
+			templateArg.put(Constants.CONTROLLER_FILE, false);
+			templateArg.put(Constants.SERVICE_FILE, false);
+			templateArg.put(Constants.MODEL_FILE, true);
+			templateArg.put(Constants.SQLMAP_FILE, false);
+			templateArg.put(Constants.GROOVY_FILE, false);
+			
+			argument.put(Constants.TEMPLATE_CHECK, templateArg);
+			
+			List<TableColumns> list = databaseService.getQueryMetaData(query.toUpperCase());
+			
+			argument.put(Constants.COLUMNS, list);
+			
+			luncher.execute(srcPath, packageName, userCaseName, argument);
+		}
 	}
 }

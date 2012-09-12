@@ -54,7 +54,7 @@ public class JcfConnectionPreferencePage extends FieldEditorPreferencePage imple
 		
 		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(dbCategoryGroup);
 		
-		String[][] dbCategory = {{Constants.DB_ORACLE, Constants.DB_ORACLE}, {Constants.DB_MYSQL, Constants.DB_MYSQL}};
+		String[][] dbCategory = {{Constants.DB_ORACLE, Constants.DB_ORACLE}};
 		
 		RadioGroupFieldEditor dbCategoryEditor = new RadioGroupFieldEditor(Constants.DB_CATEGORY_RADIO, 
 				MessageUtil.getMessage("preference.db.category.desc"),

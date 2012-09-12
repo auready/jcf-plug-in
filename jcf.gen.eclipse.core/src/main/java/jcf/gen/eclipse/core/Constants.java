@@ -2,8 +2,8 @@ package jcf.gen.eclipse.core;
 
 public class Constants {
 	public static final String DB_CATEGORY_RADIO = "DB_CATEGORY_RADIO";
-	public static final String DB_ORACLE = "ORACLE";
-	public static final String DB_MYSQL = "MYSQL";
+	public static final String DB_ORACLE = "oracle";
+	public static final String DB_MSSQL = "mssql";
 	
 	public static final String DB_PROPERTY_FILE = "DB_PROPERTY_FILE";
 	
@@ -15,12 +15,13 @@ public class Constants {
 	public static final String TEMPLATE_DIRECTORY = "TEMPLATE_DIRECTORY";
 	public static final String SOURCE_DIRECTORY = "SOURCE_DIRECTORY";
 	
-	public static final String TEMPLATE = "TEMPLATE";
 	public static final String CONTROLLER_FILE = "CONTROLLER_FILE";
 	public static final String SERVICE_FILE = "SERVICE_FILE";
 	public static final String MODEL_FILE = "MODEL_FILE";
 	public static final String SQLMAP_FILE = "SQLMAP_FILE";
 	public static final String GROOVY_FILE = "GROOVY_FILE";
+	
+	public static final String TEMPLATE_CHECK = "TEMPLATE_CHECK";
 	
 	public static final String PK_COL = "PK";
 	public static final String TABLENAME = "TABLENAME";

@@ -13,6 +13,7 @@ import jcf.gen.eclipse.core.jdbc.model.TableColumns;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 
 public class DatabaseService {
 	
@@ -82,6 +83,23 @@ public class DatabaseService {
 			
 			result.add(col);
 		}
+		
+		return result;
+	}
+	
+	public List<TableColumns> getQueryMetaData(final String query) {
+		ArrayList<TableColumns> result = new ArrayList<TableColumns>();
+		
+		SqlRowSetMetaData metaData = (SqlRowSetMetaData) jdbcTemplate.queryForRowSet(query).getMetaData();
+		
+		for (int i = 0; i < metaData.getColumnCount(); i++) {
+			TableColumns col = new TableColumns();
+			
+			col.setColumnName(metaData.getColumnLabel(i + 1));
+			col.setDataType(metaData.getColumnTypeName(i + 1));
+			
+			result.add(col);
+		}	
 		
 		return result;
 	}

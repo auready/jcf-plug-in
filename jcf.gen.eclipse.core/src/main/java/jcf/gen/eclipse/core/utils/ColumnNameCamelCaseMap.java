@@ -79,6 +79,14 @@ public class ColumnNameCamelCaseMap extends AbstractColumnNameConvertMap {
         return newColumnName;
     }
     
+    public String modelCaseConverter(String colName) {
+    	if (colName.indexOf("_") == -1) {
+    		return colName.substring(0, 1).toUpperCase() + colName.substring(1).toLowerCase();
+    	} else {
+    		return this.pascalCaseConverter(colName);
+    	}
+    }
+    
     public String tableNameConvert(String tableName) {
     	String camelCaseName = this.camelCaseConverter(tableName);
     	

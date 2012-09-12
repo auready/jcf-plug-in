@@ -40,18 +40,18 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		
 		GridLayoutFactory.swtDefaults().margins(0, 0).applyTo(main);
 		
-//		Group dbGroup = new Group(main, SWT.NONE);
-//		
-//		dbGroup.setText(MessageUtil.getMessage("preference.group.db"));
-//		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(dbGroup);
-//		
-//		FileFieldEditor dbFileEditor = 
-//				new FileFieldEditor(Constants.DB_PROPERTY_FILE, 
-//						MessageUtil.getMessage("preference.db.file"), dbGroup);
-//		
-//		addField(dbFileEditor);
-//		
-//		updateMargin(dbGroup);
+		Group dbGroup = new Group(main, SWT.NONE);
+		
+		dbGroup.setText(MessageUtil.getMessage("preference.group.db"));
+		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(dbGroup);
+		
+		FileFieldEditor dbFileEditor = 
+				new FileFieldEditor(Constants.DB_PROPERTY_FILE, 
+						MessageUtil.getMessage("preference.db.file"), dbGroup);
+		
+		addField(dbFileEditor);
+		
+		updateMargin(dbGroup);
 		
 		Group templateGroup = new Group(main, SWT.COLOR_DARK_GRAY);
 		
