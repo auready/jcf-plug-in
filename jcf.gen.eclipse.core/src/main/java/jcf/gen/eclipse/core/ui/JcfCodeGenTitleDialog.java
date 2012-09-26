@@ -66,6 +66,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	
 	public JcfCodeGenTitleDialog(Shell parent) {
 		super(parent);
+		setShellStyle(SWT.TITLE | SWT.RESIZE | SWT.CLOSE);
 	}
 	
 	@Override
@@ -86,7 +87,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	
 	@Override
 	protected Point getInitialSize() {
-		return new Point(500, 500);
+		return new Point(550, 600);
 	}
 	
 	@Override
@@ -117,8 +118,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		generateButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-				
-				
 				generateSourceCode();
 			}
 		});
@@ -245,6 +244,13 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		tableViewer = tableColumnViewer.createTableViewer();
 		
 		tableViewer.getTable().setEnabled(false);
+		
+		tableViewer.getTable().addListener(SWT.MeasureItem, new Listener() {
+			public void handleEvent(Event event) {
+				event.height = event.gc.getFontMetrics().getHeight() * 2;
+			}
+		});
+		
 		tableViewer.getTable().addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				if (event.detail == SWT.CHECK) {
