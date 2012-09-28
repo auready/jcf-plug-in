@@ -14,6 +14,7 @@ public class Constants {
 	
 	public static final String TEMPLATE_DIRECTORY = "TEMPLATE_DIRECTORY";
 	public static final String SOURCE_DIRECTORY = "SOURCE_DIRECTORY";
+	public static final String CODE_PACKAGE_NAME = "PACKAGE_NAME";
 	
 	public static final String TEMPLATE = "TEMPLATE";
 	public static final String ACTION_FILE = "ACTION_FILE";

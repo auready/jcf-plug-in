@@ -144,7 +144,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		labelDbTable.setText(MessageUtil.getMessage("label.db.table"));
 		
 		//ComboViewer
-		final Combo comboTabName = new Combo(groupDbInfo, SWT.READ_ONLY);
+		final Combo comboTabName = new Combo(groupDbInfo, SWT.DROP_DOWN);
 		
 		comboTabName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboTabName.setEnabled(false);
@@ -162,7 +162,9 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ColumnNameCamelCaseMap camelCaseStr = new ColumnNameCamelCaseMap();
-				String tableName = comboTabName.getItem(comboTabName.getSelectionIndex());
+				
+				String tempTableName = comboTabName.getItem(comboTabName.getSelectionIndex());
+				String tableName = tempTableName.substring(0, tempTableName.indexOf(" ["));
 				
 				String camelCaseTableName = camelCaseStr.tableNameConvert(tableName);
 				
@@ -317,7 +319,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		if (StringUtils.isNotEmpty(sourceDir)) {
 			txtSrcFolder.setText(sourceDir);
-			
 			srcPath = sourceDir;
 		}
 		
@@ -342,6 +343,13 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			public void keyPressed(KeyEvent e) {
 			}
 		});
+		
+		String defaultPackageName = this.getPackageName();
+		
+		if (StringUtils.isNotEmpty(defaultPackageName)) {
+			txtPackageName.setText(defaultPackageName);
+			packageName = defaultPackageName;
+		}
 
 		//UserCase Name
 		Label labelUserCase = new Label(groupInfo, SWT.NONE);
@@ -440,6 +448,10 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	
 	private String getSourceDiretory() {
 		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(Constants.SOURCE_DIRECTORY);
+	}
+	
+	private String getPackageName() {
+		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(Constants.CODE_PACKAGE_NAME);
 	}
 	
 	private void generateSourceCode() {

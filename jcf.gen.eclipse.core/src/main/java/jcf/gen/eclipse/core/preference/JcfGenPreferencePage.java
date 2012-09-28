@@ -7,12 +7,13 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -53,6 +54,9 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 //		
 //		updateMargin(dbGroup);
 		
+		/**
+		 * Template Path
+		 */
 		Group templateGroup = new Group(main, SWT.COLOR_DARK_GRAY);
 		
 		templateGroup.setText(MessageUtil.getMessage("preference.group.template"));
@@ -89,6 +93,9 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		
 		addField(templateEditor);
 		
+		/**
+		 * Source Path
+		 */
 		Group srcGroup = new Group(main, SWT.COLOR_DARK_GRAY);
 		
 		srcGroup.setText(MessageUtil.getMessage("preference.group.source"));
@@ -111,6 +118,9 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		
 		addField(srcEditor);
 		
+		/**
+		 * VM File Selection
+		 */
 		Group vmFileGroup = new Group(main, SWT.COLOR_DARK_GRAY);
 		
 		vmFileGroup.setText(MessageUtil.getMessage("preference.group.velocity"));
@@ -128,8 +138,26 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		addField(new BooleanFieldEditor(Constants.SQLMAP_FILE, 
 				MessageUtil.getMessage("preference.velocity.sqlmap"), vmFileGroup));
 
-		
 		updateMargin(vmFileGroup);
+		
+		/**
+		 * Code Group
+		 */
+		Group codeGroup  = new Group(main, SWT.COLOR_DARK_GRAY);
+		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(codeGroup);
+		
+		Label codeLabel = new Label(codeGroup, SWT.NONE);
+		
+		codeLabel.setLayoutData(new GridData(SWT.FILL, SWT.LEFT, true, false, 2, 1));
+		codeLabel.setText(MessageUtil.getMessage("preference.source.code.label"));
+		
+		StringFieldEditor packageNameEditor = new StringFieldEditor(Constants.CODE_PACKAGE_NAME, 
+				MessageUtil.getMessage("preference.source.code.package"), codeGroup);
+		packageNameEditor.getLabelControl(codeGroup).setToolTipText(MessageUtil.getMessage("preference.source.code.package.tooltip"));
+		addField(packageNameEditor);
+		
+		updateMargin(codeGroup);
+		
 	}
 	
 	private void updateMargin(Group group) {

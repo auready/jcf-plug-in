@@ -91,11 +91,14 @@ public class DatabaseService {
 		
 		if ("ORACLE".equals(dbms.toUpperCase())) {
 			if ("TABLE_NAME".equals(type)) {
-				sb.append("SELECT T.OBJECT_NAME AS TABLE_NAME \n");
-				sb.append("  FROM USER_OBJECTS T \n");
-				sb.append(" WHERE T.OBJECT_TYPE = 'TABLE' \n");
-				sb.append("   AND T.STATUS = 'VALID' \n");
-				sb.append(" ORDER BY 1 \n");
+				sb.append("SELECT (SELECT UTC.TABLE_NAME || ' [' || UTC.COMMENTS || ']' \n");
+				sb.append("		     FROM USER_TAB_COMMENTS UTC \n");
+				sb.append("		    WHERE UTC.TABLE_TYPE = UO.OBJECT_TYPE \n");
+				sb.append("           AND UTC.TABLE_NAME = UO.OBJECT_NAME) AS TABLE_NAME \n");
+				sb.append("  FROM USER_OBJECTS UO \n");
+				sb.append(" WHERE UO.OBJECT_TYPE IN ('TABLE', 'VIEW') \n");
+				sb.append("   AND UO.STATUS = 'VALID' \n");
+				sb.append("	ORDER BY 1 \n");
 				
 			} else if ("COLUMN_NAME".equals(type)) {
 				String tableName = (String) model.get("TABLE_NAME");
