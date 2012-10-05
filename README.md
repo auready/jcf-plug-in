@@ -1,5 +1,3 @@
-# The JCF Plug-In
-
 ## JCF Source Generate Plug-In
 The JCF Source Generate Plug-In provides a comprehensive JCF programming. 
 
