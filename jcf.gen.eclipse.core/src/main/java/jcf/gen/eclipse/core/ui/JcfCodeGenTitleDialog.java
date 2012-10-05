@@ -8,10 +8,15 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
+import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.fieldassist.ComboContentAdapter;
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -53,6 +58,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	private Map<String, Boolean> template = new HashMap<String, Boolean>();
 	
 	private TableViewer tableViewer;
+	private String[] objItems;
 	
 	private String srcPath = "";
 	private String packageName = "";
@@ -144,52 +150,66 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		labelDbTable.setText(MessageUtil.getMessage("label.db.table"));
 		
 		//ComboViewer
-		final Combo comboTabName = new Combo(groupDbInfo, SWT.DROP_DOWN);
+		final Combo comboTableName = new Combo(groupDbInfo, SWT.DROP_DOWN);
 		
-		comboTabName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboTabName.setEnabled(false);
+		comboTableName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboTableName.setEnabled(false);
 		
 		if (this.isDbEnvEnable()) {
-			comboTabName.setEnabled(true);
-						
-			String[] dbTableNames = databaseService.getTableNames();
+			comboTableName.setEnabled(true);
 			
-			comboTabName.setItems(dbTableNames);
+			objItems = databaseService.getTableNames("");
+			comboTableName.setItems(objItems);
 		}
 			
-		comboTabName.addSelectionListener(new SelectionListener() {
+		comboTableName.addSelectionListener(new SelectionListener() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ColumnNameCamelCaseMap camelCaseStr = new ColumnNameCamelCaseMap();
-				
-				String tempTableName = comboTabName.getItem(comboTabName.getSelectionIndex());
-				String tableName = tempTableName.substring(0, tempTableName.indexOf(" ["));
-				
-				String camelCaseTableName = camelCaseStr.tableNameConvert(tableName);
-				
-				txtUserCase.setText(camelCaseTableName);
-				userCaseName = camelCaseTableName;
-				
-				//Table Contents Change
-				List<TableColumns> list = databaseService.getColumnList(tableName);
-				
-				tableViewer.getTable().setEnabled(true);
-				tableViewer.setInput(list);
-				
-				((CheckboxTableViewer) tableViewer).setAllChecked(true);
-				
-				//Argument
-				if (list.size() > 0) {
-					argument.clear();
-					
-					argument.put(Constants.TABLENAME, tableName);
-					argument.put(Constants.COLUMNS, list);
-				}
+				setTableCombo(comboTableName.getSelectionIndex());
 			}
 			
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+		
+		comboTableName.addKeyListener(new KeyAdapter() {
+			
+			@Override
+			public void keyReleased(KeyEvent ke) {
+				String tempObjName = comboTableName.getText().toUpperCase();
+				String[] objNames = databaseService.getTableNames(tempObjName);
+					
+				try {
+					SimpleContentProposalProvider scp = new SimpleContentProposalProvider(objNames);
+					scp.setProposals(objNames);
+					scp.setFiltering(true);
+					
+					KeyStroke ks = KeyStroke.getInstance("Ctrl+Space");
+					
+					ContentProposalAdapter adapter = 
+							new ContentProposalAdapter(comboTableName, new ComboContentAdapter(), scp, ks, null);
+					
+					adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+					
+				} catch (Exception e) {
+					throw new RuntimeException(e.getMessage());
+				}
+			}
+		});
+		
+		comboTableName.addListener(SWT.CHANGED, new Listener() {
+			
+			@Override
+			public void handleEvent(Event event) {
+				String selectedObjName = comboTableName.getText().toUpperCase();
+				
+				int index = 0;
+				
+				if ((index = findTableName(selectedObjName)) >= 0) {
+					setTableCombo(index);
+				}
 			}
 		});
 		
@@ -218,6 +238,44 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 				}
 			}
 		});
+	}
+	
+	private void setTableCombo(int index) {
+		ColumnNameCamelCaseMap camelCaseStr = new ColumnNameCamelCaseMap();
+		
+		String tempTableName = objItems[index];
+		String tableName = tempTableName.substring(0, tempTableName.indexOf(" ["));
+		
+		String camelCaseTableName = camelCaseStr.tableNameConvert(tableName);
+		
+		txtUserCase.setText(camelCaseTableName);
+		userCaseName = camelCaseTableName;
+		
+		//Table Contents Change
+		List<TableColumns> list = databaseService.getColumnList(tableName);
+		
+		tableViewer.getTable().setEnabled(true);
+		tableViewer.setInput(list);
+		
+		((CheckboxTableViewer) tableViewer).setAllChecked(true);
+		
+		//Argument
+		if (list.size() > 0) {
+			argument.clear();
+			
+			argument.put(Constants.TABLENAME, tableName);
+			argument.put(Constants.COLUMNS, list);
+		}
+	}
+	
+	private int findTableName(String tableName) {
+		for (int i = 0; i < objItems.length; i++) {
+			if (objItems[i].equals(tableName)) {
+				return i;
+			}
+		}
+		
+		return -1;
 	}
 	
 	private String[] category = {Constants.ACTION_FILE, Constants.SERVICE_FILE, Constants.MODEL_FILE, Constants.SQLMAP_FILE, Constants.GROOVY_FILE};
