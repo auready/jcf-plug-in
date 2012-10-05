@@ -52,6 +52,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	private Map<String, Boolean> template = new HashMap<String, Boolean>();
 	
 	private TableViewer tableViewer;
+	private String[] objItems;
 	
 	private String srcPath = "";
 	private String packageName = "";
@@ -141,46 +142,23 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		labelDbTable.setText(MessageUtil.getMessage("label.db.table"));
 		
 		//ComboViewer
-		final Combo comboTabName = new Combo(groupDbInfo, SWT.READ_ONLY);
+		final Combo comboTabName = new Combo(groupDbInfo, SWT.DROP_DOWN);
 		
 		comboTabName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboTabName.setEnabled(false);
 		
 		if (this.isDbEnvEnable()) {
 			comboTabName.setEnabled(true);
-						
-			String[] dbTableNames = databaseService.getTableNames();
 			
-			comboTabName.setItems(dbTableNames);
+			objItems = databaseService.getTableNames();
+			comboTabName.setItems(objItems);
 		}
 			
 		comboTabName.addSelectionListener(new SelectionListener() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ColumnNameCamelCaseMap camelCaseStr = new ColumnNameCamelCaseMap();
-				String tableName = comboTabName.getItem(comboTabName.getSelectionIndex());
-				
-				String camelCaseTableName = camelCaseStr.tableNameConvert(tableName);
-				
-				txtUserCase.setText(camelCaseTableName);
-				userCaseName = camelCaseTableName;
-				
-				//Table Contents Change
-				List<TableColumns> list = databaseService.getColumnList(tableName);
-				
-				tableViewer.getTable().setEnabled(true);
-				tableViewer.setInput(list);
-				
-				((CheckboxTableViewer) tableViewer).setAllChecked(true);
-				
-				//Argument
-				if (list.size() > 0) {
-					argument.clear();
-					
-					argument.put(Constants.TABLENAME, tableName);
-					argument.put(Constants.COLUMNS, list);
-				}
+				setTableCombo(comboTabName.getSelectionIndex());
 			}
 			
 			@Override
@@ -213,6 +191,32 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 				}
 			}
 		});
+	}
+	
+	private void setTableCombo(int index) {
+		ColumnNameCamelCaseMap camelCaseStr = new ColumnNameCamelCaseMap();
+		String tableName = objItems[index];
+		
+		String camelCaseTableName = camelCaseStr.tableNameConvert(tableName);
+		
+		txtUserCase.setText(camelCaseTableName);
+		userCaseName = camelCaseTableName;
+		
+		//Table Contents Change
+		List<TableColumns> list = databaseService.getColumnList(tableName);
+		
+		tableViewer.getTable().setEnabled(true);
+		tableViewer.setInput(list);
+		
+		((CheckboxTableViewer) tableViewer).setAllChecked(true);
+		
+		//Argument
+		if (list.size() > 0) {
+			argument.clear();
+			
+			argument.put(Constants.TABLENAME, tableName);
+			argument.put(Constants.COLUMNS, list);
+		}
 	}
 	
 	private String[] category = {Constants.CONTROLLER_FILE, Constants.SERVICE_FILE, Constants.MODEL_FILE, Constants.SQLMAP_FILE, Constants.GROOVY_FILE};
