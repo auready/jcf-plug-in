@@ -50,23 +50,6 @@ public class JcfConnectionPreferencePage extends FieldEditorPreferencePage imple
 		
 		GridLayoutFactory.swtDefaults().margins(0, 0).applyTo(main);
 		
-		Group dbCategoryGroup = new Group(main, SWT.NONE);
-		
-		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(dbCategoryGroup);
-		
-		String[][] dbCategory = {{Constants.DB_ORACLE, Constants.DB_ORACLE}, {Constants.DB_MYSQL, Constants.DB_MYSQL}};
-		
-		RadioGroupFieldEditor dbCategoryEditor = new RadioGroupFieldEditor(Constants.DB_CATEGORY_RADIO, 
-				MessageUtil.getMessage("preference.db.category.desc"),
-				dbCategory.length, 
-				dbCategory, 
-				dbCategoryGroup);
-		
-		addField(dbCategoryEditor);
-		
-		((GridLayout) dbCategoryGroup.getLayout()).marginWidth = 5;
-		((GridLayout) dbCategoryGroup.getLayout()).marginBottom = 5;
-		
 		Group dbGroup = new Group(main, SWT.NONE);
 		dbGroup.setText(MessageUtil.getMessage("preference.group.db"));
 		
@@ -112,6 +95,25 @@ public class JcfConnectionPreferencePage extends FieldEditorPreferencePage imple
 				connMsgBox(msg, connTest);
 			}
 		});
+		
+		Group dbCategoryGroup = new Group(main, SWT.NONE);
+		
+		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(dbCategoryGroup);
+		
+		String[][] dbCategory = {{Constants.DB_ORACLE, Constants.DB_ORACLE}, {Constants.DB_MYSQL, Constants.DB_MYSQL}};
+		
+		RadioGroupFieldEditor dbCategoryEditor = new RadioGroupFieldEditor(Constants.DB_CATEGORY_RADIO, 
+				MessageUtil.getMessage("preference.db.category.desc"),
+				dbCategory.length, 
+				dbCategory, 
+				dbCategoryGroup);
+		
+		addField(dbCategoryEditor);
+		
+		((GridLayout) dbCategoryGroup.getLayout()).marginWidth = 5;
+		((GridLayout) dbCategoryGroup.getLayout()).marginBottom = 5;
+		
+		dbCategoryGroup.setVisible(false);
 	}
 	
 	private void updateMargin(Group group) {

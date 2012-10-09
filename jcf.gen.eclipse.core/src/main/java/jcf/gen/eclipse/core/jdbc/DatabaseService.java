@@ -11,6 +11,7 @@ import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.JcfGeneratorPlugIn;
 import jcf.gen.eclipse.core.jdbc.model.TableColumns;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -48,8 +49,11 @@ public class DatabaseService {
 		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(keyProperty);
 	}
 	
-	public String[] getTableNames() {
-		List<String> list = this.jdbcTemplate.queryForList(this.createQuery("TABLE_NAME", null), String.class);
+	public String[] getTableNames(String objName) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("OBJECT_NAME", objName);
+		
+		List<String> list = this.jdbcTemplate.queryForList(this.createQuery("TABLE_NAME", map), String.class);
 		
 		return list.toArray(new String[list.size()]);
 	}
@@ -91,11 +95,21 @@ public class DatabaseService {
 		
 		if ("ORACLE".equals(dbms.toUpperCase())) {
 			if ("TABLE_NAME".equals(type)) {
-				sb.append("SELECT T.OBJECT_NAME AS TABLE_NAME \n");
-				sb.append("  FROM USER_OBJECTS T \n");
-				sb.append(" WHERE T.OBJECT_TYPE = 'TABLE' \n");
-				sb.append("   AND T.STATUS = 'VALID' \n");
-				sb.append(" ORDER BY 1 \n");
+				String objName = (String) model.get("OBJECT_NAME");
+				
+				sb.append("SELECT (SELECT UTC.TABLE_NAME || ' [' || UTC.COMMENTS || ']' \n");
+				sb.append("		     FROM USER_TAB_COMMENTS UTC \n");
+				sb.append("		    WHERE UTC.TABLE_TYPE = UO.OBJECT_TYPE \n");
+				sb.append("           AND UTC.TABLE_NAME = UO.OBJECT_NAME) AS TABLE_NAME \n");
+				sb.append("  FROM USER_OBJECTS UO \n");
+				sb.append(" WHERE UO.OBJECT_TYPE IN ('TABLE', 'VIEW') \n");
+				sb.append("   AND UO.STATUS = 'VALID' \n");
+				
+				if (StringUtils.isNotEmpty(objName)) {
+					sb.append("   AND UO.OBJECT_NAME LIKE '" + objName + "%' \n");
+				}
+
+				sb.append("	ORDER BY 1 \n");
 				
 			} else if ("COLUMN_NAME".equals(type)) {
 				String tableName = (String) model.get("TABLE_NAME");
@@ -130,38 +144,7 @@ public class DatabaseService {
 				sb.append(" WHERE T.TABLE_NAME = '" + tableName + "' \n");
 				sb.append(" ORDER BY T.COLUMN_ID \n");
 			}
-			
-			
-		} else if ("MYSQL".equals(dbms.toUpperCase())) {
-			if ("TABLE_NAME".equals(type)) {
-				sb.append("SELECT TABLE_NAME \n");
-				sb.append("	 FROM INFORMATION_SCHEMA.TABLES \n");
-				sb.append(" WHERE TABLE_SCHEMA != 'information_schema' \n");
-				
-			} else if ("COLUMN_NAME".equals(type)) {
-				String tableName = (String) model.get("TABLE_NAME");
-				
-				sb.append("SELECT T.TABLE_NAME, \n");
-				sb.append("		  (SELECT TABLE_COMMENT \n");
-				sb.append("			 FROM INFORMATION_SCHEMA.tables \n");
-				sb.append("	        WHERE TABLE_NAME = T.TABLE_NAME) AS TABLE_COMMENT, \n");
-				sb.append("		  T.COLUMN_NAME, \n");
-				sb.append("		  T.COLUMN_COMMENT, \n");
-				sb.append("		  ' ' AS PK, \n");
-				sb.append("		  T.DATA_TYPE, \n");
-				sb.append("		  ' ' AS DATA_LENGTH, \n");
-				sb.append("		  ' ' AS CHAR_LENGTH, \n");
-				sb.append("       ' ' AS DATA_PRECISION, \n");
-				sb.append("		  ' ' AS DATA_SCALE, \n");
-				sb.append("		  T.IS_NULLABLE AS NULLABLE, \n");
-				sb.append("		  ' ' AS COLUMN_ID, \n");
-				sb.append("		  ' ' AS DEFAULT_LENGTH, \n");
-				sb.append("       T.COLUMN_DEFAULT AS DATA_DEFAULT \n");
-				sb.append("	 FROM INFORMATION_SCHEMA.columns T \n");
-				sb.append("	WHERE TABLE_NAME = '" + tableName + "' \n");
-			}
-			
-		}
+		} 
 		
 		return sb.toString();
 	}
