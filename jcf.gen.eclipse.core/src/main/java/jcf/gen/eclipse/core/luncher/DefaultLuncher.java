@@ -49,6 +49,8 @@ public class DefaultLuncher {
 		
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		
+		boolean hasNumberType = false;
+		
 		for (TableColumns col : columnList) {
 			String colName = col.getColumnName();
 			
@@ -60,7 +62,7 @@ public class DefaultLuncher {
 				map.put(Constants.COL_COLUMN_NAME, col.getColumnName());
 				map.put(Constants.COL_COLUMN_COMMENT, col.getColumnCommnet());
 				map.put(Constants.COL_PK, col.getPk());
-				map.put(Constants.COL_DATA_TYPE, DbUtils.convertToDataType(col.getDataType()));
+				map.put(Constants.COLUMN_DATA_TYPE, DbUtils.convertToDataType(col.getDataType()));
 				map.put(Constants.COL_DATA_LENGTH, col.getDataLength());
 				map.put(Constants.COL_CHAR_LENGTH, col.getCharLength());
 				map.put(Constants.COL_DATA_PRECISION, col.getDataPrecision());
@@ -71,6 +73,10 @@ public class DefaultLuncher {
 				map.put(Constants.COL_DATA_DEFAULT, col.getDataDefault());
 				map.put(Constants.COLUMN_NAME_CAMEL, columnNameCamelCase.camelCaseConverter(col.getColumnName()));
 				map.put(Constants.COLUMN_NAME_PASCAL, columnNameCamelCase.pascalCaseConverter(col.getColumnName()));
+				
+				if (!hasNumberType) {
+					if (DbUtils.hasNumberType(col.getDataType())) hasNumberType = true;
+				}
 				
 				list.add(map);
 			}
@@ -85,6 +91,7 @@ public class DefaultLuncher {
 		model.put(Constants.SHARP, "#");
 		model.put(Constants.DOLLOR, "$");
 		model.put(Constants.TABLE_COMMENT, (list.get(0)).get(Constants.COL_TABLE_COMMENT));
+		model.put(Constants.IMPORT_MATH_CLASS, (hasNumberType ? Constants.IMPORT_BIG_DECIMAL : Constants.IMPORT_NULL));
 		
 		String isPkExist = hasPrimaryKeyInList(list) ? Constants.IS_PK_EXIST_Y : Constants.IS_PK_EXIST_N;
 		model.put(Constants.IS_PK_EXIST, isPkExist);
