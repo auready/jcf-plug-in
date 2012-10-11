@@ -8,10 +8,15 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
+import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.fieldassist.ComboContentAdapter;
+import org.eclipse.jface.fieldassist.ContentProposalAdapter;
+import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -84,7 +89,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	
 	@Override
 	protected Control createDialogArea(Composite parent) {
-//		setTitleImage(JcfGeneratorPlugIn.getImageDescriptor("icons/sample.gif").createImage());
+		setTitleImage(JcfGeneratorPlugIn.getImageDescriptor("icons/jcf.png").createImage());
 		Composite area = (Composite) super.createDialogArea(parent);
 		
 		Composite container = new Composite(area, SWT.NONE);
@@ -150,7 +155,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		if (this.isDbEnvEnable()) {
 			comboTabName.setEnabled(true);
 			
-			objItems = databaseService.getTableNames();
+			objItems = databaseService.getTableNames("");
 			comboTabName.setItems(objItems);
 		}
 			
@@ -163,6 +168,46 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+		
+		comboTabName.addKeyListener(new KeyAdapter() {
+			
+			@Override
+			public void keyReleased(KeyEvent ke) {
+				String tempObjName = comboTabName.getText().toUpperCase();
+				String[] objNames = databaseService.getTableNames(tempObjName);
+				
+				try {
+					SimpleContentProposalProvider scp = new SimpleContentProposalProvider(objNames);
+					
+					scp.setProposals(objNames);
+				 	scp.setFiltering(true);
+				 	
+				 	KeyStroke ks = KeyStroke.getInstance("Ctrl+Space");
+				 	
+				 	ContentProposalAdapter adapter = 
+				 			new ContentProposalAdapter(comboTabName, new ComboContentAdapter(), scp, ks, null);
+				 	
+				 	adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+
+				} catch (Exception e) {
+					throw new RuntimeException(e.getMessage());
+				}
+			}
+		});
+		
+		comboTabName.addListener(SWT.CHANGED, new Listener() {
+			
+			@Override
+			public void handleEvent(Event event) {
+				String selectedObjName = comboTabName.getText().toUpperCase();
+				
+				int index = 0;
+				
+				if ((index = findTableName(selectedObjName)) >= 0) {
+					setTableCombo(index);
+				}
 			}
 		});
 		
@@ -195,8 +240,9 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	
 	private void setTableCombo(int index) {
 		ColumnNameCamelCaseMap camelCaseStr = new ColumnNameCamelCaseMap();
-		String tableName = objItems[index];
 		
+		String tempTableName = objItems[index];
+		String tableName = tempTableName.substring(0, tempTableName.indexOf(" ["));
 		String camelCaseTableName = camelCaseStr.tableNameConvert(tableName);
 		
 		txtUserCase.setText(camelCaseTableName);
@@ -217,6 +263,14 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			argument.put(Constants.TABLENAME, tableName);
 			argument.put(Constants.COLUMNS, list);
 		}
+	}
+	
+	private int findTableName(String tableName) {
+		for (int i = 0; i < objItems.length; i++) {
+			if (objItems[i].equals(tableName)) return i;
+		}
+		
+		return -1;
 	}
 	
 	private String[] category = {Constants.CONTROLLER_FILE, Constants.SERVICE_FILE, Constants.MODEL_FILE, Constants.SQLMAP_FILE, Constants.GROOVY_FILE};
@@ -366,14 +420,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			public void keyReleased(KeyEvent e) {
 				if (txtUserCase.getText().length() > 0) {
 					userCaseName = txtUserCase.getText();
-					
-//					String first = txtUserCase.getText().substring(0, 1);
-//					
-//					if (first.toUpperCase() != first) {
-//						setMessage("Usercase Name start with an uppercase letter");
-//					} else {
-//						setMessage("Source Code Sample Generator");
-//					}
 				}
 			}
 			

@@ -9,8 +9,6 @@ import java.util.Set;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import jcf.gen.eclipse.core.generator.controller.ControlGenerator;
 import jcf.gen.eclipse.core.generator.dao.GroovyGenerator;
@@ -19,14 +17,11 @@ import jcf.gen.eclipse.core.generator.service.ServiceGenerator;
 import jcf.gen.eclipse.core.generator.model.ModelGenerator;
 import jcf.gen.eclipse.core.jdbc.model.TableColumns;
 import jcf.gen.eclipse.core.Constants;
-import jcf.gen.eclipse.core.JcfGeneratorPlugIn;
 import jcf.gen.eclipse.core.utils.ColumnNameCamelCaseMap;
 import jcf.gen.eclipse.core.utils.DbUtils;
 
 public class DefaultLuncher {
 	
-	private static final Logger logger = LoggerFactory.getLogger(DefaultLuncher.class);
-
 	public DefaultLuncher() {
 	}
 	
@@ -48,6 +43,8 @@ public class DefaultLuncher {
 		List<TableColumns> columnList = (List<TableColumns>) arg.get(Constants.COLUMNS);
 		
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		
+		boolean hasNumberType = false;
 		
 		for (TableColumns col : columnList) {
 			String colName = col.getColumnName();
@@ -72,6 +69,10 @@ public class DefaultLuncher {
 				map.put(Constants.COLUMN_NAME_CAMEL, columnNameCamelCase.camelCaseConverter(col.getColumnName()));
 				map.put(Constants.COLUMN_NAME_PASCAL, columnNameCamelCase.pascalCaseConverter(col.getColumnName()));
 				
+				if (!hasNumberType) {
+					if (DbUtils.hasNumberType(col.getDataType())) hasNumberType = true;
+				}
+				
 				list.add(map);
 			}
 		}
@@ -85,6 +86,7 @@ public class DefaultLuncher {
 		model.put(Constants.SHARP, "#");
 		model.put(Constants.DOLLOR, "$");
 		model.put(Constants.TABLE_COMMENT, (list.get(0)).get(Constants.COL_TABLE_COMMENT));
+		model.put(Constants.IMPORT_MATH_CLASS, (hasNumberType ? Constants.IMPORT_BIG_DECIMAL : Constants.IMPORT_NULL));
 		
 		String isPkExist = hasPrimaryKeyInList(list) ? Constants.IS_PK_EXIST_Y : Constants.IS_PK_EXIST_N;
 		model.put(Constants.IS_PK_EXIST, isPkExist);
