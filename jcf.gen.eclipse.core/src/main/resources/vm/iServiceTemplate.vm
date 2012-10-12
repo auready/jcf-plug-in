@@ -1,0 +1,14 @@
+package ${PACKAGE}.service;
+
+import ${PACKAGE}.model.${UC_NAME}Model;
+
+public interface I${UC_NAME}Service{
+
+	public ${UC_NAME}Model get${UC_NAME}(Map param);
+	public List get${UC_NAME}List(Map param);
+	public void insert${UC_NAME}(${UC_NAME}Model ${UC_NAME_CAMEL});
+	public void update${UC_NAME}(${UC_NAME}Model ${UC_NAME_CAMEL});
+	public void delete${UC_NAME}(${UC_NAME}Model ${UC_NAME_CAMEL});
+	public void save${UC_NAME}(GridData<${UC_NAME}Model> gridData);
+
+}

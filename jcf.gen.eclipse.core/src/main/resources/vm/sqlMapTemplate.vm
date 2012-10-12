@@ -23,9 +23,9 @@ WHERE ${column.COLUMN_NAME} = ${SHARP}${column.COLUMN_NAME_CAMEL}${SHARP}
 #end
 #else
 #if( $velocityCount == 1 )
-WHERE <isNotNull property="${column.COLUMN_NAME_CAMEL}" >  ${column.COLUMN_NAME} = #${column.COLUMN_NAME_CAMEL}# </isNotNull>
+WHERE <isNotEmpty property="${column.COLUMN_NAME_CAMEL}" >  ${column.COLUMN_NAME} = #${column.COLUMN_NAME_CAMEL}# </isNotEmpty>
 #else
-        <isNotNull property="${column.COLUMN_NAME_CAMEL}" prepend="AND" >  ${column.COLUMN_NAME} = #${column.COLUMN_NAME_CAMEL}# </isNotNull>
+        <isNotEmpty property="${column.COLUMN_NAME_CAMEL}" prepend="AND" >  ${column.COLUMN_NAME} = #${column.COLUMN_NAME_CAMEL}# </isNotEmpty>
 #end        
 #end
 #end
@@ -43,77 +43,57 @@ ${column.COLUMN_NAME} = ${SHARP}${column.COLUMN_NAME_CAMEL}${SHARP}
 #end
 #end
 
-<sqlMap namespace="${TABLE_NAME_CAMEL}">
+<sqlMap namespace="${UC_NAME_CAMEL}">
 
-	<typeAlias alias="${TABLE_NAME_CAMEL}TDO" type="${PACKAGE}.model.${TABLE_NAME_PASCAL}TDO" />
-    
-	<resultMap id="${TABLE_NAME_CAMEL}TDO-resultMap" class="${TABLE_NAME_CAMEL}TDO">
-#foreach( ${column} in ${COLUMNS} )
-		<result column="${column.COLUMN_NAME}" property="${column.COLUMN_NAME_CAMEL}" />
-#end
-	</resultMap>
+	<typeAlias alias="${UC_NAME_CAMEL}Model" type="${PACKAGE}.model.${UC_NAME}Model" />
 	    	
-	<statement id="select001" parameterClass="map" resultMap="${TABLE_NAME_CAMEL}TDO-resultMap">
-	SELECT #comma()
-	FROM ${SCHEMA}.${TABLENAME}
-	<dynamic>
-	#where()
-	</dynamic>
+	<statement id="get${UC_NAME}List" parameterClass="java.util.Map" resultMap="${UC_NAME_CAMEL}Model">
+		SELECT 
+			#comma()
+		FROM 
+			${TABLENAME}
+		<dynamic>
+			#where()
+		</dynamic>
 	</statement>
-	
-	<statement id="select002" parameterClass="map" resultClass="columnNameCamelCaseMap">
-	SELECT #comma()
-	FROM ${SCHEMA}.${TABLENAME}
-	<dynamic>
-	#where()
-	</dynamic>
+
+	<!-- ※저장(수정)일시는 테이블마다 컬럼이름이 다르니 테이블에 맞춰 추가해줘야 함 -->
+	<statement id="insert${UC_NAME}" parameterClass="${UC_NAME_CAMEL}Model">
+		INSERT INTO 
+			${TABLENAME} (
+			#comma()
+			) VALUES (
+	#foreach( ${column} in ${COLUMNS} )
+		       ${SHARP}${column.COLUMN_NAME_CAMEL}${SHARP}#if( $velocityHasNext ),#end
+
+	#end
+		)	
 	</statement>
 	
 
-	<statement id="insert001" parameterClass="${TABLE_NAME_CAMEL}TDO">
-	<![CDATA[
-	INSERT INTO ${SCHEMA}.${TABLENAME}
-	(
-         #comma()
-	)
-	VALUES
-	(
+	<statement id="update${UC_NAME}" parameterClass="${UC_NAME_CAMEL}Model">
+		UPDATE 
+			${TABLENAME} 
+		SET 
+			<dynamic prepend="where">
 #foreach( ${column} in ${COLUMNS} )
-#if ( ${column.COLUMN_NAME} == 'FRST_REGS_DTM' || ${column.COLUMN_NAME} == 'LAST_REGS_DTM' )
-	       SYSDATE#if( $velocityHasNext ),#end
-
-#else
-	       ${SHARP}${column.COLUMN_NAME_CAMEL}${SHARP}#if( $velocityHasNext ),#end
-
+#if (!(${column.PK}))
+			<isNotEmpty property="${column.COLUMN_NAME_CAMEL}" prepend="," >  ${column.COLUMN_NAME} = ${SHARP}${column.COLUMN_NAME_CAMEL}${SHARP} </isNotEmpty>
 #end
 #end
-	)	
-	]]>
+			</dynamic>
+		
+		WHERE 
+			#wherePK()
 	</statement>
 	
-
-	<statement id="update001" parameterClass="${TABLE_NAME_CAMEL}TDO">
-	UPDATE ${SCHEMA}.${TABLENAME} 
-	SET 
-	<dynamic>
-	LAST_REGS_DTM =	SYSDATE
-#foreach( ${column} in ${COLUMNS} )
-#if (!(${column.PK} || ${column.COLUMN_NAME} == 'FRST_REGS_DTM' || ${column.COLUMN_NAME} == 'FRST_REGS_USR_NO' || ${column.COLUMN_NAME} == 'LAST_REGS_DTM'))
-        <isNotNull property="${column.COLUMN_NAME_CAMEL}" prepend="," >  ${column.COLUMN_NAME} = ${SHARP}${column.COLUMN_NAME_CAMEL}${SHARP} </isNotNull>
-#end
-#end
-	</dynamic>
-	
-	WHERE #wherePK()
-	
-	</statement>
-	
-	<statement id="delete001" parameterClass="${TABLE_NAME_CAMEL}TDO">
-	DELETE FROM ${SCHEMA}.${TABLENAME}
+	<statement id="delete${UC_NAME}" parameterClass="${UC_NAME_CAMEL}Model">
+	DELETE FROM 
+		${TABLENAME}
 	#if ( ${IS_PK_EXIST} == 'N' )
-	#where()
+		#where()
 	#else
-	WHERE #wherePK()
+		WHERE #wherePK()
 	#end
 	</statement>
  	
