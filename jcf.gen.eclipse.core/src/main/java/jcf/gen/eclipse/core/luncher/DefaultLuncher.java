@@ -9,24 +9,19 @@ import java.util.Set;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import jcf.gen.eclipse.core.generator.controller.ControlGenerator;
-import jcf.gen.eclipse.core.generator.dao.GroovyGenerator;
 import jcf.gen.eclipse.core.generator.dao.SqlMapGenerator;
+import jcf.gen.eclipse.core.generator.service.IServiceGenerator;
 import jcf.gen.eclipse.core.generator.service.ServiceGenerator;
 import jcf.gen.eclipse.core.generator.model.ModelGenerator;
 import jcf.gen.eclipse.core.jdbc.model.TableColumns;
 import jcf.gen.eclipse.core.Constants;
-import jcf.gen.eclipse.core.JcfGeneratorPlugIn;
 import jcf.gen.eclipse.core.utils.ColumnNameCamelCaseMap;
 import jcf.gen.eclipse.core.utils.DbUtils;
 
 public class DefaultLuncher {
 	
-	private static final Logger logger = LoggerFactory.getLogger(DefaultLuncher.class);
-
 	public DefaultLuncher() {
 	}
 	
@@ -122,8 +117,10 @@ public class DefaultLuncher {
 		if (createTemplateFile(Constants.SERVICE_FILE)) {
 			ServiceGenerator serviceGenerator = new ServiceGenerator();
 			serviceGenerator.generatorFile(srcPath, packageName, userCaseName, model);
+			
+			IServiceGenerator iServiceGenerator = new IServiceGenerator();
+			iServiceGenerator.generatorFile(srcPath, packageName, userCaseName, model);
 		}
-		
 		
 		if (createTemplateFile(Constants.MODEL_FILE)) {
 			ModelGenerator modelGenerator = new ModelGenerator();
@@ -135,9 +132,9 @@ public class DefaultLuncher {
 			sqlMapGenerator.generatorFile(srcPath, packageName, userCaseName, model);
 		}
 		
-		if (createTemplateFile(Constants.GROOVY_FILE)) {
-			GroovyGenerator groovyGenerator = new GroovyGenerator();
-			groovyGenerator.generatorFile(srcPath, packageName, userCaseName, model);
-		}
+//		if (createTemplateFile(Constants.GROOVY_FILE)) {
+//			GroovyGenerator groovyGenerator = new GroovyGenerator();
+//			groovyGenerator.generatorFile(srcPath, packageName, userCaseName, model);
+//		}
 	}
 }
