@@ -93,6 +93,16 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	}
 	
 	@Override
+	protected Point getInitialLocation(Point initPoint) {
+		Display display = Display.getCurrent();
+		
+		int x = (display.getClientArea().width - getInitialSize().x) / 2;
+		int y = (display.getClientArea().height - getInitialSize().y) / 2;
+		
+		return new Point(x, y);
+	}
+	
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite area = (Composite) super.createDialogArea(parent);
 		
