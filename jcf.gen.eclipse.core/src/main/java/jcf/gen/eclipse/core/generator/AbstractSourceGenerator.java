@@ -1,9 +1,11 @@
 package jcf.gen.eclipse.core.generator;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
 import java.util.Properties;
@@ -107,5 +109,37 @@ public abstract class AbstractSourceGenerator implements SourceGenerator {
 			throw new VelocityException(ioe.toString());
 		}
 		
+	}
+	
+	public String generatorText(String packageName, String userCaseName, Map<String, Object> model) {
+		if (StringUtils.isNotEmpty(userCaseName)) {
+			model.put(Constants.UC_NAME, userCaseName);
+			model.put(Constants.UC_NAME_CAMEL, StringUtils.uncapitalize(userCaseName));
+		} else {
+			throw new RuntimeException(MessageUtil.getMessage("exception.runtime.usercase"));
+		}
+		
+		if (StringUtils.isNotEmpty(packageName)) {
+			model.put(Constants.PACKAGE, packageName);
+		} else {
+			throw new RuntimeException(MessageUtil.getMessage("exception.runtime.package"));
+		}
+		
+		String result = "";
+		
+		try {
+			StringWriter writer = new StringWriter();
+			
+			VelocityEngineUtils.mergeTemplate(velocityEngine, getVmFileName(), model, writer);
+			
+			result = writer.toString();
+			
+			writer.close();
+			
+			return result;
+			
+		} catch (IOException ioe) {
+			throw new VelocityException(ioe.toString());
+		}
 	}
 }

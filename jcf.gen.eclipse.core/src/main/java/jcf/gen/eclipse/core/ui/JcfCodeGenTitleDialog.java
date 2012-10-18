@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.TableViewer;
@@ -25,6 +26,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -113,7 +115,16 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	}
 	
 	@Override
-	protected void createButtonsForButtonBar(Composite parent) {
+	protected void createButtonsForButtonBar(final Composite parent) {
+		Button previewButton = createButton(parent, IDialogConstants.PROCEED_ID, 
+				MessageUtil.getMessage("button.default.preview"), false);
+		
+		previewButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				makeCodePreviewDialog(parent);
+			}
+		});
+		
 		Button generateButton = createButton(parent, OK, MessageUtil.getMessage("button.default.generator"), false);
 		
 		generateButton.addSelectionListener(new SelectionAdapter() {
@@ -130,6 +141,14 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 				close();
 			}
 		});
+	}
+	
+	protected void makeCodePreviewDialog(final Composite parent) {
+		this.addArgInfo();
+		
+		CodePreviewDialog preview = new CodePreviewDialog(parent.getShell());
+		
+		preview.open(packageName, userCaseName, argument, delArgument);
 	}
 	
 	protected void createTabContents(Composite parent) {
@@ -509,13 +528,9 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(Constants.SOURCE_DIRECTORY);
 	}
 	
-	private void generateSourceCode() {
-		DefaultLuncher luncher = new DefaultLuncher();
-		
+	private void addArgInfo() {
 		if (tabName.equals(MessageUtil.getMessage("tab.table.title"))) {
 			argument.put(Constants.TEMPLATE_CHECK, templateArg);
-			
-			luncher.execute(srcPath, packageName, userCaseName, argument, delArgument);
 			
 		} else {
 			templateArg.put(Constants.CONTROLLER_FILE, false);
@@ -529,8 +544,15 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			List<TableColumns> list = databaseService.getQueryMetaData(query.toUpperCase());
 			
 			argument.put(Constants.COLUMNS, list);
-			
-			luncher.execute(srcPath, packageName, userCaseName, argument);
+			delArgument = null;
 		}
+	}
+	
+	private void generateSourceCode() {
+		this.addArgInfo();
+		
+		DefaultLuncher luncher = new DefaultLuncher();
+
+		luncher.execute(srcPath, packageName, userCaseName, argument, delArgument);
 	}
 }

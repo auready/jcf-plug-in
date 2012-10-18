@@ -21,6 +21,12 @@ public class Constants {
 	public static final String SQLMAP_FILE = "SQLMAP_FILE";
 	public static final String GROOVY_FILE = "GROOVY_FILE";
 	
+	public static final String CONTROLLER = "CONTROLLER";
+	public static final String SERVICE = "SERVICE";
+	public static final String MODEL = "MODEL";
+	public static final String SQLMAP = "SQLMAP";
+	public static final String GROOVY = "GROOVY";
+	
 	public static final String TEMPLATE_CHECK = "TEMPLATE_CHECK";
 	
 	public static final String PK_COL = "PK";
