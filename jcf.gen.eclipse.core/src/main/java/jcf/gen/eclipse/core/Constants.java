@@ -22,6 +22,12 @@ public class Constants {
 	public static final String SQLMAP_FILE = "SQLMAP_FILE";
 	public static final String GROOVY_FILE = "GROOVY_FILE";
 	
+	public static final String CONTROLLER = "CONTROLLER";
+	public static final String SERVICE = "SERVICE";
+	public static final String MODEL = "MODEL";
+	public static final String SQLMAP = "SQLMAP";
+	public static final String GROOVY = "GROOVY";
+	
 	public static final String IMPORT_MATH_CLASS = "IMPORT_MATH_CLASS";
 	public static final String IMPORT_NULL = "";
 	public static final String IMPORT_BIG_DECIMAL = "import java.math.BigDecimal;";

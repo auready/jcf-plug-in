@@ -36,13 +36,13 @@ public class DefaultLuncher {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void execute(String srcPath, String packageName, String userCaseName, Map<String, Object> arg, Set<String> delArg) {
+	private Map<String, Object> makeMapData(Map<String, Object> arg, Set<String> delArg) {
 		ColumnNameCamelCaseMap columnNameCamelCase = new ColumnNameCamelCaseMap();
 		
-		String tableName = (String) arg.get(Constants.TABLENAME);
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		List<TableColumns> columnList = (List<TableColumns>) arg.get(Constants.COLUMNS);
 		
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		Map<String, Object> model = new HashMap<String, Object>();
 		
 		boolean hasNumberType = false;
 		
@@ -76,8 +76,8 @@ public class DefaultLuncher {
 				list.add(map);
 			}
 		}
-		 
-		Map<String, Object> model = new HashMap<String, Object>();
+		
+		String tableName = (String) arg.get(Constants.TABLENAME);
 		
 		model.put(Constants.TABLENAME, tableName);
 		model.put(Constants.TABLE_NAME_CAMEL, columnNameCamelCase.camelCaseConverter(tableName));
@@ -93,6 +93,12 @@ public class DefaultLuncher {
 		
 		template = (HashMap<String, Boolean>) arg.get(Constants.TEMPLATE);
 		
+		return model;
+	}
+	
+	public void execute(String srcPath, String packageName, String userCaseName, Map<String, Object> arg, Set<String> delArg) {
+		Map<String, Object> model = this.makeMapData(arg, delArg);
+		
 		this.run(srcPath, packageName, userCaseName, model);
 		
 		MessageBox msg = new MessageBox(Display.getCurrent().getActiveShell(), SWT.ICON_INFORMATION | SWT.OK);
@@ -100,6 +106,12 @@ public class DefaultLuncher {
 		msg.setText("JCF");
 		msg.setMessage("JCF Source Generate");
 		msg.open();
+	}
+	
+	public Map<String, String> execute(String packageName, String userCaseName, Map<String, Object> arg, Set<String> delArg) {
+		Map<String, Object> model = this.makeMapData(arg, delArg);
+		
+		return this.preview(packageName, userCaseName, model);
 	}
 	
 	private Map<String, Boolean> template;
@@ -119,7 +131,6 @@ public class DefaultLuncher {
 			serviceGenerator.generatorFile(srcPath, packageName, userCaseName, model);
 		}
 		
-		
 		if (createTemplateFile(Constants.MODEL_FILE)) {
 			ModelGenerator modelGenerator = new ModelGenerator();
 			modelGenerator.generatorFile(srcPath, packageName, userCaseName, model);
@@ -134,5 +145,36 @@ public class DefaultLuncher {
 			GroovyGenerator groovyGenerator = new GroovyGenerator();
 			groovyGenerator.generatorFile(srcPath, packageName, userCaseName, model);
 		}
+	}
+	
+	private Map<String, String> preview(String packageName, String userCaseName, Map<String, Object> model) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		if (createTemplateFile(Constants.CONTROLLER_FILE)) {
+			ControlGenerator controlGenerator = new ControlGenerator();
+			map.put(Constants.CONTROLLER, controlGenerator.generatorText(packageName, userCaseName, model));
+		}
+		
+		if (createTemplateFile(Constants.SERVICE_FILE)) {
+			ServiceGenerator serviceGenerator = new ServiceGenerator();
+			map.put(Constants.SERVICE, serviceGenerator.generatorText(packageName, userCaseName, model));
+		}
+		
+		if (createTemplateFile(Constants.MODEL_FILE)) {
+			ModelGenerator modelGenerator = new ModelGenerator();
+			map.put(Constants.MODEL, modelGenerator.generatorText(packageName, userCaseName, model));
+		}
+		
+		if (createTemplateFile(Constants.SQLMAP_FILE)) {
+			SqlMapGenerator sqlMapGenerator = new SqlMapGenerator();
+			map.put(Constants.SQLMAP, sqlMapGenerator.generatorText(packageName, userCaseName, model));
+		}
+		
+		if (createTemplateFile(Constants.GROOVY_FILE)) {
+			GroovyGenerator groovyGenerator = new GroovyGenerator();
+			map.put(Constants.GROOVY, groovyGenerator.generatorText(packageName, userCaseName, model));
+		}
+		
+		return map;
 	}
 }

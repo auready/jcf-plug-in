@@ -9,6 +9,7 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 
 import org.eclipse.jface.bindings.keys.KeyStroke;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.fieldassist.ComboContentAdapter;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
@@ -30,6 +31,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -65,6 +67,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	
 	public JcfCodeGenTitleDialog(Shell parent) {
 		super(parent);
+		setShellStyle(SWT.TITLE | SWT.RESIZE | SWT.CLOSE);
 	}
 	
 	@Override
@@ -84,7 +87,17 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	
 	@Override
 	protected Point getInitialSize() {
-		return new Point(500, 500);
+		return new Point(550, 600);
+	}
+	
+	@Override
+	protected Point getInitialLocation(Point initPoint) {
+		Display display = Display.getCurrent();
+		
+		int x = (display.getClientArea().width - getInitialSize().x) / 2;
+		int y = (display.getClientArea().height - getInitialSize().y) / 2;
+		
+		return new Point(x, y);
 	}
 	
 	@Override
@@ -113,7 +126,15 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	}
 	
 	@Override
-	protected void createButtonsForButtonBar(Composite parent) {
+	protected void createButtonsForButtonBar(final Composite parent) {
+		Button previewButton = createButton(parent, IDialogConstants.PROCEED_ID, MessageUtil.getMessage("button.default.preview"), false);
+		
+		previewButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				makeCodePreviewDialog(parent);
+			}
+		});
+		
 		Button generateButton = createButton(parent, OK, MessageUtil.getMessage("button.default.generator"), false);
 		
 		generateButton.addSelectionListener(new SelectionAdapter() {
@@ -130,6 +151,14 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 				close();
 			}
 		});
+	}
+	
+	protected void makeCodePreviewDialog(final Composite parent) {
+		argument.put(Constants.TEMPLATE, template);
+		
+		CodePreviewDialog preview = new CodePreviewDialog(parent.getShell());
+		
+		preview.open(packageName, userCaseName, argument, delArgument);
 	}
 	
 	protected void createDbGroup(Composite parent) {

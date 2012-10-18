@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
 import java.util.Properties;
@@ -11,8 +12,6 @@ import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.VelocityException;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ui.velocity.VelocityEngineFactory;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
@@ -66,13 +65,13 @@ public abstract class AbstractSourceGenerator implements SourceGenerator {
 		return new StringBuilder(srcPath).append(seperator).append(packagePath).toString();
 	}
 	
-	private VelocityEngine velocityEngine;
-
-	public void setVelocityEngine(VelocityEngine velocityEngine) {
-		this.velocityEngine = velocityEngine;
-	}
-	
-	public void generatorFile(String srcPath, String packageName, String userCaseName, Map<String, Object> model) {
+	private Map<String, Object> initMapData(String packageName, String userCaseName, Map<String, Object> model) {
+		if (StringUtils.isNotEmpty(packageName)) {
+			model.put(Constants.PACKAGE, packageName);
+		} else {
+			throw new RuntimeException(MessageUtil.getMessage("exception.runtime.package"));
+		}
+		
 		if (StringUtils.isNotEmpty(userCaseName)) {
 			model.put(Constants.UC_NAME, userCaseName);
 			model.put(Constants.UC_NAME_CAMEL, StringUtils.uncapitalize(userCaseName));
@@ -80,11 +79,17 @@ public abstract class AbstractSourceGenerator implements SourceGenerator {
 			throw new RuntimeException(MessageUtil.getMessage("exception.runtime.usercase"));
 		}
 		
-		if (StringUtils.isNotEmpty(packageName)) {
-			model.put(Constants.PACKAGE, packageName);
-		} else {
-			throw new RuntimeException(MessageUtil.getMessage("exception.runtime.package"));
-		}
+		return model;
+	}
+	
+	private VelocityEngine velocityEngine;
+
+	public void setVelocityEngine(VelocityEngine velocityEngine) {
+		this.velocityEngine = velocityEngine;
+	}
+	
+	public void generatorFile(String srcPath, String packageName, String userCaseName, Map<String, Object> model) {
+		model = this.initMapData(packageName, userCaseName, model);
 		
 		String fullPackagePath = getPackagePath(getBasePath(srcPath, packageName));
 		
@@ -105,7 +110,27 @@ public abstract class AbstractSourceGenerator implements SourceGenerator {
 			throw new VelocityException(fnfe.toString());
 		} catch (IOException ioe) {
 			throw new VelocityException(ioe.toString());
-		}
+		}	
+	}
+	
+	public String generatorText(String packageName, String userCaseName, Map<String, Object> model) {
+		model = this.initMapData(packageName, userCaseName, model);
 		
+		String result = "";
+		
+		try {
+			StringWriter writer = new StringWriter();
+			
+			VelocityEngineUtils.mergeTemplate(velocityEngine, getVmFileName(), model, writer);
+			
+			result = writer.toString();
+			
+			writer.close();
+			
+			return result;
+			
+		} catch (IOException ioe) {
+			throw new VelocityException(ioe.toString());
+		}
 	}
 }
