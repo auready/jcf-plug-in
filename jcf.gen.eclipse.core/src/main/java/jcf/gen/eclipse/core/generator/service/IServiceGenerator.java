@@ -10,7 +10,7 @@ public class IServiceGenerator extends AbstractSourceGenerator {
 
 	@Override
 	public String getFileName(Map<String, Object> infoMap) {
-		return StrUtils.nts(new StringBuilder(("I") + (String)infoMap.get(Constants.UC_NAME)).append("Service.java").toString());
+		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.UC_NAME)).append("Service.java").toString());
 	}
 
 	@Override

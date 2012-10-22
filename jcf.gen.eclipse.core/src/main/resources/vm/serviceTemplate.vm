@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
-@Title : ${UC_NAME}Service
+@Title : ${UC_NAME}ServiceImpl
 @Description :
 @Copyright : Copyright (c) 2012
 @Company : Daewoo Information Systems Co., Ltd.
@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @version 1.0
 */
 @Service
-public class ${UC_NAME}Service {
+public class ${UC_NAME}ServiceImpl {
 
 	@Autowired
 	private CommonDao commonDao;
