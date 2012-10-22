@@ -1,82 +1,125 @@
-package ${PACKAGE}.service;
+package com.symc.${PACKAGE}.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jcf.ux.xframe.mvc.GridData;
-import jcf.ux.xframe.mvc.XFrameRequest;
-import jcf.ux.xframe.mvc.XFrameResponse;
+import jcf.data.GridData;
+import jcf.data.RowStatusCallback;
+import com.symc.common.dao.CommonDao;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.hnc.spic.sys.context.RequestContext;
-import ${PACKAGE}.model.${TABLE_NAME_PASCAL}TDO;
-import com.hnc.spic.sys.dao.CommonDao;
-
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * <p> Service </p>
- * @author 
- * @version 1.0
- */
+@Title : ${UC_NAME}ServiceImpl
+@Description :
+@Copyright : Copyright (c) 2012
+@Company : Daewoo Information Systems Co., Ltd.
+@Author :
+@version 1.0
+*/
 @Service
-public class ${UC_NAME}Service {
-	
-	private static final Logger logger = LoggerFactory
-			.getLogger(${UC_NAME}Service.class);
-			
+public class ${UC_NAME}ServiceImpl implements ${UC_NAME}Service {
+
 	@Autowired
-	private CommonDao dao;
+	private CommonDao commonDao;
 
 	/**
-	 * <p> ${TABLENAME} SEARCH LIST </p>
-	 * @return 
-	 */
-	public List<${TABLE_NAME_PASCAL}TDO> selectList(Map<String, ?> requestMap) {
-		return dao.queryForList("${TABLE_NAME_CAMEL}.select001", requestMap);
+	@Title :
+	@Description :
+	@Author :
+	@Param : Map
+	@Return : ${UC_NAME}
+	*/
+	public Map<String, Object> get${UC_NAME}(Map param) {
+		Map<String, Object> ${UC_NAME_CAMEL} = commonDao.queryForMap("${UC_NAME_CAMEL}.get${UC_NAME}List", param);
+		return ${UC_NAME_CAMEL};
 	}
 	
 	/**
-	 * <p> ${TABLENAME} SEARCH LIST MAP </p>
-	 * @return 
-	 */
-	public List selectListMap(Map<String, ?> requestMap) {
-		return dao.queryForList("${TABLE_NAME_CAMEL}.select002", requestMap);
+	@Title :
+	@Description :
+	@Author :
+	@Param : Map
+	@Return : List<Map<String, Object>>
+	*/
+	public List<Map<String, Object>> get${UC_NAME}List(Map param) {
+		List<Map<String, Object>> list = commonDao.queryForMapList("${UC_NAME_CAMEL}.get${UC_NAME}List", param);
+		return list;
 	}
-	
+
 	/**
-	 * <p> ${TABLENAME} SAVE LIST </p>
-	 * @return 
-	 */
-	public void saveList(GridData<${TABLE_NAME_PASCAL}TDO> gridData) {
-		dao.saveGridData("${TABLE_NAME_CAMEL}.*001",gridData);
+	@Title :
+	@Description :
+	@Author :
+	@Param : Map
+	@Return : int
+	*/
+	public int get${UC_NAME}Count(Map param) {
+		int count = commonDao.queryForInt("${UC_NAME_CAMEL}.get${UC_NAME}Count", param);
+		return count;
 	}
-	
+
 	/**
-	 * <p> ${TABLENAME} INSERT </p>
-	 * @return 
-	 */
-	public void insert(${TABLE_NAME_PASCAL}TDO ${TABLE_NAME_CAMEL}TDO) {
-		dao.insert("${TABLE_NAME_CAMEL}.insert001",${TABLE_NAME_CAMEL}TDO);
+	@Title :
+	@Description :
+	@Author :
+	@Param : ${UC_NAME}
+	@Return : void
+	*/
+	public void insert${UC_NAME}(Map ${UC_NAME_CAMEL}) {
+		commonDao.update("${UC_NAME}.insert${UC_NAME}", ${UC_NAME_CAMEL});
 	}
-	
+
 	/**
-	 * <p> ${TABLENAME} UPDATE </p>
-	 * @return 
-	 */
-	public void update(${TABLE_NAME_PASCAL}TDO ${TABLE_NAME_CAMEL}TDO) {
-		dao.update("${TABLE_NAME_CAMEL}.update001",${TABLE_NAME_CAMEL}TDO);
+	@Title :
+	@Description :
+	@Author :
+	@Param : ${UC_NAME}
+	@Return : void
+	*/
+	public void update${UC_NAME}(Map ${UC_NAME_CAMEL}) {
+		commonDao.update("${UC_NAME}.update${UC_NAME}", ${UC_NAME_CAMEL});
 	}
-	
+
 	/**
-	 * <p> ${TABLENAME} DELETE </p>
-	 * @return 
-	 */
-	public void delete(${TABLE_NAME_PASCAL}TDO ${TABLE_NAME_CAMEL}TDO) {
-		dao.delete("${TABLE_NAME_CAMEL}.delete001",${TABLE_NAME_CAMEL}TDO);
+	@Title :
+	@Description :
+	@Author :
+	@Param : ${UC_NAME}
+	@Return : void
+	*/
+	public void delete${UC_NAME}(Map ${UC_NAME_CAMEL}) {
+		commonDao.update("${UC_NAME}.delete${UC_NAME}", ${UC_NAME_CAMEL});
+	}
+
+	/**
+	@Title :
+	@Description :
+	@Author :
+	@Param : GridData
+	@Return : void
+	*/
+	public void save${UC_NAME}(GridData<HashMap> gridData) {
+		gridData.forEachRow(new RowStatusCallback<HashMap>() {
+
+			public void update(HashMap record, HashMap oldRecord, int rowNum) {
+				update${UC_NAME}(record);
+			}
+
+			public void normal(HashMap record, int rowNum) {
+				
+			}
+
+			public void insert(HashMap record, int rowNum) {
+				insert${UC_NAME}(record);
+			}
+
+			public void delete(HashMap record, int rowNum) {
+				delete${UC_NAME}(record);
+			}
+		});
 	}
 }

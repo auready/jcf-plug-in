@@ -2,6 +2,7 @@ package jcf.gen.eclipse.core.preference;
 
 import java.io.File;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -9,7 +10,7 @@ import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
@@ -19,7 +20,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -61,13 +67,13 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		
 		dbGroup.setText(MessageUtil.getMessage("preference.group.db"));
 		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(dbGroup);
+		/*
+		FileFieldEditor dbFileEditor = 
+				new FileFieldEditor(Constants.DB_PROPERTY_FILE, 
+						MessageUtil.getMessage("preference.db.file"), dbGroup);
 		
-//		FileFieldEditor dbFileEditor = 
-//				new FileFieldEditor(Constants.DB_PROPERTY_FILE, 
-//						MessageUtil.getMessage("preference.db.file"), dbGroup);
-//		
-//		addField(dbFileEditor);
-
+		addField(dbFileEditor);
+		 */
 		this.createDbFileList(dbGroup);
 		
 		updateMargin(dbGroup);
@@ -130,38 +136,36 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		
 		addField(srcEditor);
 		
-		Group vmFileGroup = new Group(main, SWT.COLOR_DARK_GRAY);
+		this.createVmTemplateGroup(main);
 		
-		vmFileGroup.setText(MessageUtil.getMessage("preference.group.velocity"));
-		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(vmFileGroup);
-		
-		addField(new BooleanFieldEditor(Constants.CONTROLLER_FILE, 
-				MessageUtil.getMessage("preference.velocity.controller"), vmFileGroup));
-		
-		addField(new BooleanFieldEditor(Constants.SERVICE_FILE, 
-				MessageUtil.getMessage("preference.velocity.service"), vmFileGroup));
-		
-		addField(new BooleanFieldEditor(Constants.MODEL_FILE, 
-				MessageUtil.getMessage("preference.velocity.model"), vmFileGroup));
-		
-		addField(new BooleanFieldEditor(Constants.SQLMAP_FILE, 
-				MessageUtil.getMessage("preference.velocity.sqlmap"), vmFileGroup));
-		
-		addField(new BooleanFieldEditor(Constants.GROOVY_FILE, 
-				MessageUtil.getMessage("preference.velocity.groovy"), vmFileGroup));
-		
-		updateMargin(vmFileGroup);
+		performDefaults();
 	}
 	
 	@Override
 	protected void performDefaults() {
+		table.removeAll();
 		
+		super.performDefaults();
 	}
 	
 	@Override
 	public boolean performOk() {
+		IPreferenceStore store = JcfGeneratorPlugIn.getDefault().getPreferenceStore();
+
+		StringBuffer id = new StringBuffer();
+		StringBuffer path = new StringBuffer();
 		
-		return true;
+		TableItem[] items = table.getItems();
+		
+		for (int i = 0; i < items.length; i++) {
+			id.append(items[i].getText(0)).append("\n");
+			path.append(items[i].getText(1)).append("\n");
+		}
+		
+		store.setValue(Constants.DB_ID, id.toString());
+		store.setValue(Constants.DB_PATH, path.toString());
+		
+		return super.performOk();
 	}
 	
 	private void createDbFileList(Composite parent) {
@@ -174,23 +178,25 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 	    parent.setLayout(layout);
 	    parent.setLayoutData(new GridData(GridData.FILL_BOTH));
 	    
-		viewer = new TableViewer(parent, SWT.BORDER | SWT.V_SCROLL);
+		viewer = new TableViewer(parent, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
+
+		this.table = viewer.getTable();
 		
-		table = viewer.getTable();
+		this.table.setLayoutData(new GridData(GridData.FILL_BOTH));
+		this.table.setHeaderVisible(true);
+		this.table.setLinesVisible(true);
+		this.table.setEnabled(true);
 		
-		table.setLayoutData(new GridData(GridData.FILL_BOTH));
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-		table.addSelectionListener(new SelectionAdapter() {
+		this.table.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				boolean enable = false;
-				TableItem[] items = table.getItems();
+				TableItem[] items = JcfGenPreferencePage.this.table.getItems();
 				
 				if (items.length > 0) {
 					enable = true;
 				}
 
-				removeButton.setEnabled(enable);
+				JcfGenPreferencePage.this.removeButton.setEnabled(enable);
 			}
 		});
 				
@@ -224,7 +230,12 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		addButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		addButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
+				DbPathDialog dialog = new DbPathDialog(JcfGenPreferencePage.this.getShell());
 				
+				if (dialog.open() == 0) {
+					TableItem item = new TableItem(table, SWT.NONE);
+					item.setText(new String[] {dialog.getId(), dialog.getPath()});
+				}
 			}
 		});
 		
@@ -235,11 +246,34 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		removeButton.setEnabled(false);
 		removeButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-				
-				
+				int[] indices = table.getSelectionIndices();
+				table.remove(indices);
 			}
 		});
+	}
+	
+	private void createVmTemplateGroup(Composite parent) {
+		Group vmFileGroup = new Group(parent, SWT.COLOR_DARK_GRAY);
+		
+		vmFileGroup.setText(MessageUtil.getMessage("preference.group.velocity"));
+		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(vmFileGroup);
+		
+		addField(new BooleanFieldEditor(Constants.CONTROLLER_FILE, 
+				MessageUtil.getMessage("preference.velocity.controller"), vmFileGroup));
+		
+		addField(new BooleanFieldEditor(Constants.SERVICE_FILE, 
+				MessageUtil.getMessage("preference.velocity.service"), vmFileGroup));
+		
+		addField(new BooleanFieldEditor(Constants.MODEL_FILE, 
+				MessageUtil.getMessage("preference.velocity.model"), vmFileGroup));
+		
+		addField(new BooleanFieldEditor(Constants.SQLMAP_FILE, 
+				MessageUtil.getMessage("preference.velocity.sqlmap"), vmFileGroup));
+		
+		addField(new BooleanFieldEditor(Constants.GROOVY_FILE, 
+				MessageUtil.getMessage("preference.velocity.groovy"), vmFileGroup));
+		
+		updateMargin(vmFileGroup);
 	}
 	
 	private void updateMargin(Group group) {
@@ -257,8 +291,8 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		private Text idText;
 		private Text pathText;
 		
-		private String id;
-		private String path;
+		private String id = "";
+		private String path = "";
 		
 		public DbPathDialog(Shell parent) {
 			super(parent);
@@ -273,9 +307,68 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 			this.path = path;
 		}
 		
+		protected void constrainShellSize() {
+			Shell shell = DbPathDialog.this.getShell();
+			shell.pack();
+			shell.setSize(400, shell.getSize().y);
+		}
 		
+		protected Control createDialogArea(Composite parent) {
+			DbPathDialog.this.getShell().setText("Db Property File");
+			
+			Composite container = new Composite(parent, SWT.NONE);
+		    
+			container.setLayoutData(new GridData(GridData.FILL_BOTH));
+			container.setLayout(new GridLayout(3, false));
+			
+			Label label = new Label(container, SWT.NONE);
+			label.setText("DB ID:");
+			
+			this.idText = new Text(container, SWT.BORDER);
+			this.idText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			this.idText.setText(this.id);
+			
+			label = new Label(container, SWT.NONE);
+			
+			label = new Label(container, SWT.NONE);
+			label.setText("PATH:");
+			
+			this.pathText = new Text(container, SWT.BORDER);
+			this.pathText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			this.pathText.setText(this.path);
+			
+			Button filePathButton = new Button(container, SWT.PUSH);
+			filePathButton.setText("...");
+			filePathButton.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent event) {
+					FileDialog openDialog = new FileDialog(DbPathDialog.this.getShell(), SWT.OPEN);
+					
+					String openFile = openDialog.open();
+					if (openFile != null) {
+						pathText.setText(openFile);
+					}
+				}
+			});
+			
+			return container;
+		}
 		
-		
+		protected void okPressed() {
+			if (StringUtils.isEmpty(this.idText.getText())) {
+				openAlertDialog("DB ID");
+				return;
+			}
+			
+			if (StringUtils.isEmpty(this.pathText.getText())) {
+				openAlertDialog("DB FILE PATH");
+				return;
+			}
+			
+			this.id = this.idText.getText();
+			this.path = this.pathText.getText();
+			
+			super.okPressed();
+		}
 		
 		public String getId() {
 			return this.id;
@@ -283,6 +376,14 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		
 		public String getPath() {
 			return this.path;
+		}
+		
+		private void openAlertDialog(String message) {
+			MessageBox box = new MessageBox(Display.getCurrent().getActiveShell(), SWT.ICON_WARNING | SWT.OK);
+			
+			box.setMessage(message);
+			box.setText("Warning");
+			box.open();
 		}
 	}
 }

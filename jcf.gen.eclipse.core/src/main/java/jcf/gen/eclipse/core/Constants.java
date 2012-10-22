@@ -29,6 +29,9 @@ public class Constants {
 	
 	public static final String TEMPLATE_CHECK = "TEMPLATE_CHECK";
 	
+	public static final String DB_ID = "ID";
+	public static final String DB_PATH = "PATH";
+	
 	public static final String PK_COL = "PK";
 	public static final String TABLENAME = "TABLENAME";
 	public static final String COLUMNS = "COLUMNS";

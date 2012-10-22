@@ -1,132 +1,118 @@
-package ${PACKAGE}.controller;
+package com.symc.${PACKAGE}.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
-import jcf.ux.xframe.mvc.GridData;
-import jcf.ux.xframe.mvc.XFrameRequest;
-import jcf.ux.xframe.mvc.XFrameResponse;
+import jcf.data.GridData;
+import jcf.sua.mvc.MciRequest;
+import jcf.sua.mvc.MciResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.symc.${PACKAGE}.service.${UC_NAME}Service;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import ${PACKAGE}.model.${TABLE_NAME_PASCAL}TDO;
-import ${PACKAGE}.service.${UC_NAME}Service;
-
-
-
 /**
- * <p> Controller </p>
- * @author 
- * @version 1.0
- */
+@Title : ${UC_NAME}Controller
+@Description :
+@Copyright : Copyright (c) 2012
+@Company : Daewoo Information Systems Co., Ltd.
+@Author :
+@version 1.0
+*/
 @Controller
+@RequestMapping("/${UC_NAME_CAMEL}")
 public class ${UC_NAME}Controller {
-	
-	private static final Logger logger = LoggerFactory
-			.getLogger(${UC_NAME}Controller.class);
 	@Autowired
-	${UC_NAME}Service ${UC_NAME_CAMEL}Service;
+	private ${UC_NAME}Service ${UC_NAME_CAMEL}Service;
 
 	/**
-	 * <p> ${TABLENAME} SEARCH LIST </p>
-	 * @param request XframeRequest
-	 * @param response XframeResponse
-	 * URL : /${REQUEST_URL}/${UC_NAME_CAMEL}/selectList.do
-	 */
-	@RequestMapping
-	public void selectList(XFrameRequest request, XFrameResponse response){
-	    Map<String, ?> requestMap = null;
-	    if(!request.isEmpty("ds_input"))
-	       requestMap = request.getMap("ds_input", 0);
-		
-		List<${TABLE_NAME_PASCAL}TDO> selectList = ${UC_NAME_CAMEL}Service.selectList(requestMap);
-		response.setList("ds_output", selectList);
+	@Title :
+	@Description :
+	@Author :
+	@exception Exception
+	*/
+	@RequestMapping("/get${UC_NAME}")
+	public void get${UC_NAME}(MciRequest request, MciResponse response){
+		Map param = request.getMap("req");
+		Map<String, Object> ${UC_NAME_CAMEL} = ${UC_NAME_CAMEL}Service.get${UC_NAME}(param);
+		response.set("", ${UC_NAME_CAMEL});
+	}
+	
+	/**
+	@Title :
+	@Description :
+	@Author :
+	@exception Exception
+	*/
+	@RequestMapping("/get${UC_NAME}List")
+	public void get${UC_NAME}List(MciRequest request, MciResponse response){
+		Map param = request.getMap("req");
+		List<Map<String, Object>> ${UC_NAME_CAMEL}List = ${UC_NAME_CAMEL}Service.get${UC_NAME}List(param);
+		response.setList("${UC_NAME_CAMEL}List", ${UC_NAME_CAMEL}List);
 	}
 
 	/**
-	 * <p> ${TABLENAME} SEARCH LIST MAP </p>
-	 * @param request XframeRequest
-	 * @param response XframeResponse
-	 * URL : /${REQUEST_URL}/${UC_NAME_CAMEL}/selectListMap.do
-	 */
-	@RequestMapping
-	public void selectListMap(XFrameRequest request, XFrameResponse response){
-	    Map<String, ?> requestMap = null;
-	    if(!request.isEmpty("ds_input"))
-	       requestMap = request.getMap("ds_input", 0);
-		
-		List selectList = ${UC_NAME_CAMEL}Service.selectListMap(requestMap);
-		response.setMapList("ds_output", selectList);
+	@Title :
+	@Description :
+	@Author :
+	@exception Exception
+	*/
+	@RequestMapping("/get${UC_NAME}Count")
+	public void get${UC_NAME}Count(MciRequest request, MciResponse response){
+		Map param = request.getMap("req");
+		int count = ${UC_NAME_CAMEL}Service.get${UC_NAME}Count(param);
+		response.set("${UC_NAME_CAMEL}Count", count);
 	}
-	
+
 	/**
-	 * <p> ${TABLENAME} SAVE LIST </p>
-	 * @param request XframeRequest
-	 * @param response XframeResponse
-	 * URL : /${REQUEST_URL}/${UC_NAME_CAMEL}/saveList.do
-	 */
-	@RequestMapping
-	public void saveList(XFrameRequest request, XFrameResponse response){
-		GridData<${TABLE_NAME_PASCAL}TDO> gridData  = null;
-	    if(request.isEmpty("ds_output"))
-	       throw new BusinessException("");
-	    
-		gridData = request.getGridData("ds_output", ${TABLE_NAME_PASCAL}TDO.class);
-		${UC_NAME_CAMEL}Service.saveList(gridData);
+	@Title :
+	@Description :
+	@Author :
+	@exception Exception
+	*/
+	@RequestMapping("/insert${UC_NAME}")
+	public void insert${UC_NAME}(MciRequest request, MciResponse response){
+		Map ${UC_NAME_CAMEL} = request.getMap("req");
+		${UC_NAME_CAMEL}Service.insert${UC_NAME}(${UC_NAME_CAMEL});
 	}
-	
-		/**
-	 * <p> ${TABLENAME} INSERT </p>
-	 * @param request XframeRequest
-	 * @param response XframeResponse
-	 * URL : /${REQUEST_URL}/${UC_NAME_CAMEL}/insert.do
-	 */
-	@RequestMapping
-	public void insert(XFrameRequest request, XFrameResponse response){
-		${TABLE_NAME_PASCAL}TDO ${TABLE_NAME_CAMEL}TDO = null;
-	    if(request.isEmpty("ds_${TABLE_NAME_CAMEL}"))
-	       throw new BusinessException("");
-	       
-	    ${TABLE_NAME_CAMEL}TDO = (${TABLE_NAME_PASCAL}TDO)request.getMap("ds_${TABLE_NAME_CAMEL}", 0);
-	    
-		${UC_NAME_CAMEL}Service.insert(${TABLE_NAME_CAMEL}TDO);
+
+	/**
+	@Title :
+	@Description :
+	@Author :
+	@exception Exception
+	*/
+	@RequestMapping("/update${UC_NAME}")
+	public void update${UC_NAME}(MciRequest request, MciResponse response){
+		Map ${UC_NAME_CAMEL} = request.getMap("req");
+		${UC_NAME_CAMEL}Service.update${UC_NAME}(${UC_NAME_CAMEL});
 	}
-	
-		/**
-	 * <p> ${TABLENAME} UPDATE </p>
-	 * @param request XframeRequest
-	 * @param response XframeResponse
-	 * URL : /${REQUEST_URL}/${UC_NAME_CAMEL}/update.do
-	 */
-	@RequestMapping
-	public void update(XFrameRequest request, XFrameResponse response){
-		${TABLE_NAME_PASCAL}TDO ${TABLE_NAME_CAMEL}TDO = null;
-	    if(request.isEmpty("ds_${TABLE_NAME_CAMEL}"))
-	       throw new BusinessException("");
-	       
-	    ${TABLE_NAME_CAMEL}TDO = (${TABLE_NAME_PASCAL}TDO)request.getMap("ds_${TABLE_NAME_CAMEL}", 0);
-	    
-		${UC_NAME_CAMEL}Service.update(${TABLE_NAME_CAMEL}TDO);
+
+	/**
+	@Title :
+	@Description :
+	@Author :
+	@exception Exception
+	*/
+	@RequestMapping("/delete${UC_NAME}")
+	public void delete${UC_NAME}(MciRequest request, MciResponse response){
+		Map ${UC_NAME_CAMEL} = request.getMap("req");
+		${UC_NAME_CAMEL}Service.delete${UC_NAME}(${UC_NAME_CAMEL});
 	}
-	
-		/**
-	 * <p> ${TABLENAME} DELETE </p>
-	 * @param request XframeRequest
-	 * @param response XframeResponse
-	 * URL : /${REQUEST_URL}/${UC_NAME_CAMEL}/saveList.do
-	 */
-	@RequestMapping
-	public void delete(XFrameRequest request, XFrameResponse response){
-		${TABLE_NAME_PASCAL}TDO ${TABLE_NAME_CAMEL}TDO = null;
-	    if(request.isEmpty("ds_${TABLE_NAME_CAMEL}"))
-	       throw new BusinessException("");
-	       
-	    ${TABLE_NAME_CAMEL}TDO = (${TABLE_NAME_PASCAL}TDO)request.getMap("ds_${TABLE_NAME_CAMEL}", 0);
-	    
-		${UC_NAME_CAMEL}Service.delete(${TABLE_NAME_CAMEL}TDO);
+
+	/**
+	@Title :
+	@Description :
+	@Author :
+	@exception Exception
+	*/
+	@RequestMapping("/save${UC_NAME}List")
+	public void save${UC_NAME}List(MciRequest request, MciResponse response){
+		GridData<HashMap> gridData = request.getGridData("", HashMap.class);
+		${UC_NAME_CAMEL}Service.save${UC_NAME}(gridData);
+		response.addSuccessMessage("success");
 	}
 }

@@ -219,7 +219,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		comboTabName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboTabName.setEnabled(false);
 		
-		String dbFilePath = this.getDbPropertyFilePath();
+		String dbFilePath = this.getPreferenceStore(Constants.DB_PROPERTY_FILE);
 		
 		if (StringUtils.isNotEmpty(dbFilePath)) {
 			comboTabName.setEnabled(true);
@@ -433,7 +433,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			}
 		});
 		
-		String sourceDir = this.getSourceDiretory();
+		String sourceDir = this.getPreferenceStore(Constants.SOURCE_DIRECTORY);
 		
 		if (StringUtils.isNotEmpty(sourceDir)) {
 			txtSrcFolder.setText(sourceDir);
@@ -531,12 +531,8 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		return gridData;
 	}
 	
-	private String getDbPropertyFilePath() {
-		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(Constants.DB_PROPERTY_FILE);
-	}
-	
-	private String getSourceDiretory() {
-		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(Constants.SOURCE_DIRECTORY);
+	private String getPreferenceStore(String id) {
+		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(id);
 	}
 	
 	private void addArgInfo() {
