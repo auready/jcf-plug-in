@@ -115,6 +115,8 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		this.createTabContents(container);
 		
+		this.createTemplateGroup(container);
+		
 		this.createCodeGroup(container);
 		
 		//Separator
@@ -177,7 +179,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		tableTabItem.setControl(pageOne);
 		
 		this.createDbGroup(pageOne);
-		this.createTemplateGroup(pageOne);
 		
 		// Query Base Tab
 		TabItem sqlTabItem = new TabItem(tabFolder, SWT.NONE);

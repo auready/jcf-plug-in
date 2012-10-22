@@ -167,6 +167,12 @@ public class DefaultLuncher {
 	private Map<String, String> preview(String packageName, String userCaseName, Map<String, Object> model, Map<String, Boolean> templateArg) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		
+		map.put(Constants.CONTROLLER, "");
+		map.put(Constants.SERVICE, "");
+		map.put(Constants.MODEL, "");
+		map.put(Constants.SQLMAP, "");
+		map.put(Constants.GROOVY, "");
+		
 		if (templateArg.get(Constants.CONTROLLER_FILE)) {
 			ControlGenerator controlGenerator = new ControlGenerator();
 			map.put(Constants.CONTROLLER, controlGenerator.generatorText(packageName, userCaseName, model));
