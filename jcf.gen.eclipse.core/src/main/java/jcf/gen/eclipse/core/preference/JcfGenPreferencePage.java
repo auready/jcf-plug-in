@@ -11,6 +11,7 @@ import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.ListEditor;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
@@ -45,7 +46,7 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 	private Table table;
 	private Button addButton;
 	private Button removeButton;
-
+	
 	public JcfGenPreferencePage() {
 		super(GRID);
 		
@@ -67,14 +68,18 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		
 		dbGroup.setText(MessageUtil.getMessage("preference.group.db"));
 		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(dbGroup);
-		/*
+		
+		FileFieldEditor schemaFileEditor = 
+				new FileFieldEditor(Constants.SCHEMA_PROPERTY_FILE, 
+						MessageUtil.getMessage("preference.db.schema"), dbGroup);
+		
+		addField(schemaFileEditor);
+		
 		FileFieldEditor dbFileEditor = 
 				new FileFieldEditor(Constants.DB_PROPERTY_FILE, 
 						MessageUtil.getMessage("preference.db.file"), dbGroup);
 		
 		addField(dbFileEditor);
-		 */
-		this.createDbFileList(dbGroup);
 		
 		updateMargin(dbGroup);
 		
@@ -140,7 +145,7 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		
 		performDefaults();
 	}
-	
+	/*
 	@Override
 	protected void performDefaults() {
 		table.removeAll();
@@ -150,7 +155,7 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 	
 	@Override
 	public boolean performOk() {
-		IPreferenceStore store = JcfGeneratorPlugIn.getDefault().getPreferenceStore();
+		IPreferenceStore store = getPreferenceStore();
 
 		StringBuffer id = new StringBuffer();
 		StringBuffer path = new StringBuffer();
@@ -167,7 +172,7 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		
 		return super.performOk();
 	}
-	
+	*/
 	private void createDbFileList(Composite parent) {
 		GridLayout layout = new GridLayout();
 	    

@@ -6,7 +6,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -72,15 +75,32 @@ public class FileUtils {
 			br.close();
 			
 		} catch (IOException ioe) {
-			ioe.printStackTrace();
+			throw new RuntimeException(ioe.getMessage());
 		}
 		
 		return resMap;
 	}
 	
+	public static String[] readPropertyFiles(String path) {
+		String data = "";
+		
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(path));
+			data = br.readLine();
+			
+			br.close();
+		} catch (IOException ioe) {
+			throw new RuntimeException(ioe.getMessage());
+		}
+		
+		return data.split(",");
+	}
+	
 	public static byte[] getFileToByteArray(String fullFilePath) {
 		FileInputStream fis;
+		
 		byte[] out = null;
+		
 		try {
 			fis = new FileInputStream(fullFilePath);
 			out = new byte[fis.available()];
@@ -91,6 +111,7 @@ public class FileUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 		return out;
 	}
 }

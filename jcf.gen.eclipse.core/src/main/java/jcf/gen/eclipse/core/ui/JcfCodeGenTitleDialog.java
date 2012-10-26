@@ -41,6 +41,7 @@ import jcf.gen.eclipse.core.jdbc.model.TableColumns;
 import jcf.gen.eclipse.core.jdbc.DatabaseService;
 import jcf.gen.eclipse.core.luncher.DefaultLuncher;
 import jcf.gen.eclipse.core.utils.ColumnNameCamelCaseMap;
+import jcf.gen.eclipse.core.utils.FileUtils;
 import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.utils.MessageUtil;
 
@@ -58,7 +59,9 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	
 	private TabFolder tabFolder;
 	private TableViewer tableViewer;
+	private Combo comboTabName;
 	
+	private String schema = "";
 	private String srcPath = "";
 	private String packageName = "";
 	private String userCaseName = "";
@@ -89,7 +92,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	
 	@Override
 	protected Point getInitialSize() {
-		return new Point(550, 600);
+		return new Point(550, 750);
 	}
 	
 	@Override
@@ -111,7 +114,9 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		container.setLayout(new GridLayout(1, true));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		this.databaseService = new DatabaseService();
+//		this.databaseService = new DatabaseService();
+		
+		this.createSchemaGroup(container);
 		
 		this.createTabContents(container);
 		
@@ -161,6 +166,41 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		CodePreviewDialog preview = new CodePreviewDialog(parent.getShell());
 		
 		preview.open(packageName, userCaseName, argument, delArgument);
+	}
+	
+	protected void createSchemaGroup(Composite parent) {
+		Group groupSchema = new Group(parent, SWT.NONE);
+		
+		groupSchema.setLayout(new GridLayout(2, false));
+		groupSchema.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		Label labelDbTable = new Label(groupSchema, SWT.NONE);
+		
+		labelDbTable.setLayoutData(this.getLabelLayout());
+		labelDbTable.setText(MessageUtil.getMessage("label.db.schema"));
+		
+		final Combo comboSchmea = new Combo(groupSchema, SWT.READ_ONLY);
+		
+		comboSchmea.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboSchmea.setEnabled(true);
+		comboSchmea.setItems(FileUtils.readPropertyFiles(this.getPreferenceStore(Constants.SCHEMA_PROPERTY_FILE)));
+		
+		comboSchmea.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				schema = comboSchmea.getItem(comboSchmea.getSelectionIndex());
+			
+				databaseService = new DatabaseService(schema.substring(schema.indexOf("[") + 1, schema.length() - 1));
+				
+				comboTabName.setEnabled(true);
+				comboTabName.setItems(databaseService.getTableNames());
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 	}
 	
 	protected void createTabContents(Composite parent) {
@@ -214,19 +254,16 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		labelDbTable.setText(MessageUtil.getMessage("label.db.table"));
 		
 		//ComboViewer
-		final Combo comboTabName = new Combo(groupDbInfo, SWT.READ_ONLY);
+		comboTabName = new Combo(groupDbInfo, SWT.READ_ONLY);
 		
 		comboTabName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboTabName.setEnabled(false);
 		
-		String dbFilePath = this.getPreferenceStore(Constants.DB_PROPERTY_FILE);
-		
-		if (StringUtils.isNotEmpty(dbFilePath)) {
-			comboTabName.setEnabled(true);
-						
-			String[] dbTableNames = databaseService.getTableNames();
+		if (StringUtils.isNotEmpty(this.schema)) {
+			databaseService = new DatabaseService(schema);
 			
-			comboTabName.setItems(dbTableNames);
+			comboTabName.setEnabled(true);
+			comboTabName.setItems(databaseService.getTableNames());
 		}
 			
 		comboTabName.addSelectionListener(new SelectionListener() {

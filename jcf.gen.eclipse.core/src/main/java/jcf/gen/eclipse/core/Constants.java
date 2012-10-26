@@ -5,6 +5,7 @@ public class Constants {
 	public static final String DB_ORACLE = "oracle";
 	public static final String DB_MSSQL = "mssql";
 	
+	public static final String SCHEMA_PROPERTY_FILE = "SCHEMA_PROPERTY_FILE";
 	public static final String DB_PROPERTY_FILE = "DB_PROPERTY_FILE";
 	
 	public static final String DB_DRIVER_CLASS = "DB_DRIVER_CLASS";

@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.JcfGeneratorPlugIn;
 import jcf.gen.eclipse.core.jdbc.model.TableColumns;
+import jcf.gen.eclipse.core.utils.FileUtils;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -17,15 +18,15 @@ import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 
 public class DatabaseService {
 	
-	public DatabaseService() {
-		init();
+	public DatabaseService(String schema) {
+		init(schema);
 	}
 	
-	private void init() {
+	private void init(String schema) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate();
 		
 		this.jdbcTemplate = jdbcTemplate;
-		this.jdbcTemplate.setDataSource(getDataSource());
+		this.jdbcTemplate.setDataSource(getDataSourceFromFile(schema));
 		
 		this.dbms = this.getPreference(Constants.DB_CATEGORY_RADIO);
 	}
@@ -34,13 +35,15 @@ public class DatabaseService {
 
 	private String dbms;
 	
-	public DataSource getDataSource() {
+	private DataSource getDataSourceFromFile(String schema) {
+		HashMap<String, String> dbFile = FileUtils.readPropertyFile(this.getPreference(Constants.DB_PROPERTY_FILE));
+		
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		
-		dataSource.setDriverClassName(this.getPreference(Constants.DB_DRIVER_CLASS));
-		dataSource.setUrl(this.getPreference(Constants.DB_URL));
-		dataSource.setUsername(this.getPreference(Constants.DB_USERNAME));
-		dataSource.setPassword(this.getPreference(Constants.DB_PASSWORD));
+		dataSource.setDriverClassName(dbFile.get("jdbc.driverClassName"));
+		dataSource.setUrl(dbFile.get("jdbc.url")+schema);
+		dataSource.setUsername(dbFile.get("jdbc.username"));
+		dataSource.setPassword(dbFile.get("jdbc.password"));
 		
 		return dataSource;
 	}
