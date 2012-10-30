@@ -13,14 +13,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
@@ -30,8 +28,6 @@ public class CodePreviewDialog extends Dialog {
 
 	private TabFolder tabFolder;
 	
-	private String packageName;
-	private String usercaseName;
 	private Map<String, Object> argument;
 	private Set<String> delArgument;
 	
@@ -94,9 +90,7 @@ public class CodePreviewDialog extends Dialog {
 		return area;
 	}
 	
-	public void open(String packageName, String userCaseName, Map<String, Object> arg, Set<String> delArg) {
-		this.packageName = packageName;
-		this.usercaseName = userCaseName;
+	public void open(Map<String, Object> arg, Set<String> delArg) {
 		this.argument = arg;
 		this.delArgument = delArg;
 
@@ -108,9 +102,8 @@ public class CodePreviewDialog extends Dialog {
 		tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		this.addTabItem(Constants.MODEL);
-		this.addTabItem(Constants.SERVICE);
 		this.addTabItem(Constants.CONTROLLER);
-		this.addTabItem(Constants.SQLMAP);
+		this.addTabItem(Constants.SERVICE);
 		this.addTabItem(Constants.GROOVY);
 	}
 	
@@ -134,6 +127,6 @@ public class CodePreviewDialog extends Dialog {
 	private void generateSourceCode() {
 		DefaultLuncher luncher = new DefaultLuncher();
 		
-		retMap = luncher.execute(packageName, usercaseName, argument, delArgument);
+		retMap = luncher.execute(argument, delArgument);
 	}
 }

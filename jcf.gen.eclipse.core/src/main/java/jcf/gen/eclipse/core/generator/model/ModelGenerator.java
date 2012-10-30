@@ -10,12 +10,11 @@ import jcf.gen.eclipse.core.utils.StrUtils;
 public class ModelGenerator extends AbstractSourceGenerator {
 
 	public String getFileName(Map<String,Object> infoMap) {
-		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.TABLE_NAME_PASCAL)).append("Model.java").toString());
+		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.MODEL_FILE_NAME)).toString());
 	}
 
-	public String getPackagePath(String basePackPath) {
-		return new StringBuilder(basePackPath).append(getSeperator())
-				.append("model").toString();
+	public String getPackagePath(Map<String,Object> infoMap) {
+		return new StringBuilder((String) infoMap.get(Constants.MODEL_PKG_NAME)).toString();
 	}
 
 	public String getVmFileName() {

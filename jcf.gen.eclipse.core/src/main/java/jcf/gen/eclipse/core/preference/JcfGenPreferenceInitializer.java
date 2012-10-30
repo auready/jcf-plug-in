@@ -17,10 +17,6 @@ public class JcfGenPreferenceInitializer extends AbstractPreferenceInitializer {
 		
 		store.setDefault(Constants.DB_ID, "");
 		store.setDefault(Constants.DB_PATH, "");
-//		store.setDefault(Constants.DB_DRIVER_CLASS, "");
-//		store.setDefault(Constants.DB_URL, "");
-//		store.setDefault(Constants.DB_USERNAME, "");
-//		store.setDefault(Constants.DB_PASSWORD, "");
 		
 		store.setDefault(Constants.TEMPLATE_DIRECTORY, System.getProperty("user.home"));
 		store.setDefault(Constants.SOURCE_DIRECTORY, "");
@@ -28,7 +24,6 @@ public class JcfGenPreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(Constants.CONTROLLER_FILE, true);
 		store.setDefault(Constants.SERVICE_FILE, true);
 		store.setDefault(Constants.MODEL_FILE, true);
-		store.setDefault(Constants.SQLMAP_FILE, true);
 		store.setDefault(Constants.GROOVY_FILE, true);
 	}
 

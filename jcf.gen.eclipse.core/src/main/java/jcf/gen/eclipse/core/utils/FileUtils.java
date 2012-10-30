@@ -86,9 +86,12 @@ public class FileUtils {
 		
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(path));
-			data = br.readLine();
+			
+			String temp = br.readLine();
+			data = temp.substring(temp.indexOf("=") + 1);
 			
 			br.close();
+			
 		} catch (IOException ioe) {
 			throw new RuntimeException(ioe.getMessage());
 		}

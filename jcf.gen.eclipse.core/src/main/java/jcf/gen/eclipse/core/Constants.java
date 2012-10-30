@@ -15,18 +15,28 @@ public class Constants {
 	
 	public static final String TEMPLATE_DIRECTORY = "TEMPLATE_DIRECTORY";
 	public static final String SOURCE_DIRECTORY = "SOURCE_DIRECTORY";
+	public static final String BIZ_NAME = "BIZ_NAME";
+	public static final String AUTHOR = "AUTHOR";
 	
-	public static final String CONTROLLER_FILE = "CONTROLLER_FILE";
+	public static final String CONTROLLER_FILE = "ACTION_FILE";
 	public static final String SERVICE_FILE = "SERVICE_FILE";
 	public static final String MODEL_FILE = "MODEL_FILE";
-	public static final String SQLMAP_FILE = "SQLMAP_FILE";
 	public static final String GROOVY_FILE = "GROOVY_FILE";
 	
-	public static final String CONTROLLER = "CONTROLLER";
+	public static final String CONTROLLER = "ACTION";
 	public static final String SERVICE = "SERVICE";
 	public static final String MODEL = "MODEL";
-	public static final String SQLMAP = "SQLMAP";
 	public static final String GROOVY = "GROOVY";
+	
+	public static final String ACTION_PKG_NAME = "ACTION_PKG_NAME";
+	public static final String SERVICE_PKG_NAME = "SERVICE_PKG_NAME";
+	public static final String MODEL_PKG_NAME = "MODEL_PKG_NAME";
+	public static final String GROOVY_PKG_NAME = "GROOVY_PKG_NAME";
+	
+	public static final String ACTION_FILE_NAME = "ACTION_FILE_NAME";
+	public static final String SERVICE_FILE_NAME = "SERVICE_FILE_NAME";
+	public static final String MODEL_FILE_NAME = "MODEL_FILE_NAME";
+	public static final String GROOVY_FILE_NAME = "GROOVY_FILE_NAME";
 	
 	public static final String TEMPLATE_CHECK = "TEMPLATE_CHECK";
 	

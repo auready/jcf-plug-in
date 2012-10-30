@@ -150,39 +150,8 @@ public class DatabaseService {
 				sb.append("  FROM USER_TAB_COLUMNS T \n");
 				sb.append(" WHERE T.TABLE_NAME = '" + tableName + "' \n");
 				sb.append(" ORDER BY T.COLUMN_ID \n");
-			}
-			
-			
-		} else if ("MYSQL".equals(dbms.toUpperCase())) {
-			if ("TABLE_NAME".equals(type)) {
-				sb.append("SELECT TABLE_NAME \n");
-				sb.append("	 FROM INFORMATION_SCHEMA.TABLES \n");
-				sb.append(" WHERE TABLE_SCHEMA != 'information_schema' \n");
-				
-			} else if ("COLUMN_NAME".equals(type)) {
-				String tableName = (String) model.get("TABLE_NAME");
-				
-				sb.append("SELECT T.TABLE_NAME, \n");
-				sb.append("		  (SELECT TABLE_COMMENT \n");
-				sb.append("			 FROM INFORMATION_SCHEMA.tables \n");
-				sb.append("	        WHERE TABLE_NAME = T.TABLE_NAME) AS TABLE_COMMENT, \n");
-				sb.append("		  T.COLUMN_NAME, \n");
-				sb.append("		  T.COLUMN_COMMENT, \n");
-				sb.append("		  ' ' AS PK, \n");
-				sb.append("		  T.DATA_TYPE, \n");
-				sb.append("		  ' ' AS DATA_LENGTH, \n");
-				sb.append("		  ' ' AS CHAR_LENGTH, \n");
-				sb.append("       ' ' AS DATA_PRECISION, \n");
-				sb.append("		  ' ' AS DATA_SCALE, \n");
-				sb.append("		  T.IS_NULLABLE AS NULLABLE, \n");
-				sb.append("		  ' ' AS COLUMN_ID, \n");
-				sb.append("		  ' ' AS DEFAULT_LENGTH, \n");
-				sb.append("       T.COLUMN_DEFAULT AS DATA_DEFAULT \n");
-				sb.append("	 FROM INFORMATION_SCHEMA.columns T \n");
-				sb.append("	WHERE TABLE_NAME = '" + tableName + "' \n");
-			}
-			
-		}
+			}	
+		} 
 		
 		return sb.toString();
 	}

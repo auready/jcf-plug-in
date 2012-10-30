@@ -12,9 +12,8 @@ public class SqlMapGenerator extends AbstractSourceGenerator {
 		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.TABLE_NAME_PASCAL)).append("-sqlMap.xml").toString());
 	}
 
-	public String getPackagePath(String basePackPath) {
-		return new StringBuilder(basePackPath).append(getSeperator())
-				.append("sqlmap").toString();
+	public String getPackagePath(Map<String,Object> infoMap) {
+		return null;
 	}
 
 	public String getVmFileName() {

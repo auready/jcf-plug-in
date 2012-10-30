@@ -1,6 +1,5 @@
 package jcf.gen.eclipse.core.generator;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,18 +9,14 @@ import java.io.Writer;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.VelocityException;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ui.velocity.VelocityEngineFactory;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.JcfGeneratorPlugIn;
 import jcf.gen.eclipse.core.utils.FileUtils;
-import jcf.gen.eclipse.core.utils.MessageUtil;
 import jcf.gen.eclipse.core.utils.StrUtils;
 
 public abstract class AbstractSourceGenerator implements SourceGenerator {
@@ -39,7 +34,7 @@ public abstract class AbstractSourceGenerator implements SourceGenerator {
 	
 	public abstract String getFileName(Map<String,Object> infoModel);
 
-	public abstract String getPackagePath(String basePackPath);
+	public abstract String getPackagePath(Map<String,Object> infoModel);
 	
 	protected void init() {
 		try {
@@ -74,23 +69,9 @@ public abstract class AbstractSourceGenerator implements SourceGenerator {
 		this.velocityEngine = velocityEngine;
 	}
 	
-	public void generatorFile(String srcPath, String packageName, String userCaseName, Map<String, Object> model) {
-		if (StringUtils.isNotEmpty(userCaseName)) {
-			model.put(Constants.UC_NAME, userCaseName);
-			model.put(Constants.UC_NAME_CAMEL, StringUtils.uncapitalize(userCaseName));
-		} else {
-			throw new RuntimeException(MessageUtil.getMessage("exception.runtime.usercase"));
-		}
+	public void generatorFile(String srcPath, Map<String, Object> model) {
+		String fullPackagePath = this.getBasePath(srcPath, getPackagePath(model));
 		
-		if (StringUtils.isNotEmpty(packageName)) {
-			model.put(Constants.PACKAGE, packageName);
-		} else {
-			throw new RuntimeException(MessageUtil.getMessage("exception.runtime.package"));
-		}
-		
-		String fullPackagePath = getPackagePath(getBasePath(srcPath, packageName));
-		
-//		FileUtils.removeDirectories(fullPackagePath, true);
 		FileUtils.makeDirectories(fullPackagePath);
 		
 		String fileWithFullPath = new StringBuilder(fullPackagePath).append(getSeperator()).append(getFileName(model)).toString();
@@ -111,20 +92,7 @@ public abstract class AbstractSourceGenerator implements SourceGenerator {
 		
 	}
 	
-	public String generatorText(String packageName, String userCaseName, Map<String, Object> model) {
-		if (StringUtils.isNotEmpty(userCaseName)) {
-			model.put(Constants.UC_NAME, userCaseName);
-			model.put(Constants.UC_NAME_CAMEL, StringUtils.uncapitalize(userCaseName));
-		} else {
-			throw new RuntimeException(MessageUtil.getMessage("exception.runtime.usercase"));
-		}
-		
-		if (StringUtils.isNotEmpty(packageName)) {
-			model.put(Constants.PACKAGE, packageName);
-		} else {
-			throw new RuntimeException(MessageUtil.getMessage("exception.runtime.package"));
-		}
-		
+	public String generatorText(Map<String, Object> model) {
 		String result = "";
 		
 		try {

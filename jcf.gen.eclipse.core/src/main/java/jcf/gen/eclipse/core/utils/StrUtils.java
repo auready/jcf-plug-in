@@ -749,5 +749,17 @@ public class StrUtils {
 
         return newColumnName;
     }
+    
+    public static int seperateFileFromPkg(String str) {
+    	int lastIdx = str.lastIndexOf('.');
+    	
+    	for (int i = lastIdx - 1; i > 0; i--) {
+    		if (str.charAt(i) == '.') {
+    			return i;
+    		}
+    	}
+    	
+    	return lastIdx;
+    }
 }
 

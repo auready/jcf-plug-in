@@ -8,18 +8,14 @@ import jcf.gen.eclipse.core.utils.StrUtils;
 
 public class GroovyGenerator extends AbstractSourceGenerator {
 
-	@Override
 	public String getFileName(Map<String,Object> infoMap) {
-		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.TABLE_NAME_PASCAL)).append("Query.groovy").toString());
+		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.GROOVY_FILE_NAME)).toString());
 	}
 
-	@Override
-	public String getPackagePath(String basePackPath) {
-		return new StringBuilder(basePackPath).append(getSeperator())
-				.append("dao").toString();
+	public String getPackagePath(Map<String,Object> infoMap) {
+		return new StringBuilder((String) infoMap.get(Constants.GROOVY_PKG_NAME)).toString();
 	}
 
-	@Override
 	public String getVmFileName() {
 		return "groovyTemplate.vm";
 	}

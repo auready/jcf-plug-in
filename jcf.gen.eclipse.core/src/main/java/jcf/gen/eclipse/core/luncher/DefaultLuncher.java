@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.slf4j.Logger;
@@ -21,6 +20,7 @@ import jcf.gen.eclipse.core.generator.model.ModelGenerator;
 import jcf.gen.eclipse.core.jdbc.model.TableColumns;
 import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.utils.ColumnNameCamelCaseMap;
+import jcf.gen.eclipse.core.utils.StrUtils;
 
 public class DefaultLuncher {
 	
@@ -40,15 +40,11 @@ public class DefaultLuncher {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void execute(String srcPath, String packageName, String userCaseName, Map<String, Object> arg, Set<String> delArg) {
+	public void execute(String srcPath, Map<String, Object> arg, Set<String> delArg) {
 		Map<String, Object> model = this.makeMapData(arg, delArg);
 		Map<String, Boolean> templateArg = (HashMap<String, Boolean>) arg.get(Constants.TEMPLATE_CHECK);
 		
-		if (delArg == null) {
-			model.put(Constants.TABLE_NAME_PASCAL, userCaseName);
-		}
-		
-		this.run(srcPath, packageName, userCaseName, model, templateArg);
+		this.run(srcPath, model, templateArg);
 		
 		MessageBox msg = new MessageBox(Display.getCurrent().getActiveShell(), SWT.ICON_INFORMATION | SWT.OK);
 		
@@ -58,15 +54,11 @@ public class DefaultLuncher {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Map<String, String> execute(String packageName, String userCaseName, Map<String, Object> arg, Set<String> delArg) {
+	public Map<String, String> execute(Map<String, Object> arg, Set<String> delArg) {
 		Map<String, Object> model = this.makeMapData(arg, delArg);
 		Map<String, Boolean> templateArg = (HashMap<String, Boolean>) arg.get(Constants.TEMPLATE_CHECK);
 		
-		if (delArg == null) {
-			model.put(Constants.TABLE_NAME_PASCAL, userCaseName);
-		}
-		
-		return this.preview(packageName, userCaseName, model, templateArg);
+		return this.preview(model, templateArg);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -134,68 +126,81 @@ public class DefaultLuncher {
 			model.put(Constants.COLUMNS, list);
 		}
 		
+		model.put(Constants.BIZ_NAME, (String) arg.get(Constants.BIZ_NAME));
+		model.put(Constants.AUTHOR, (String) arg.get(Constants.AUTHOR));
+		
+		String actionFileName = (String) arg.get(Constants.ACTION_PKG_NAME);
+		String serviceFileName = (String) arg.get(Constants.SERVICE_PKG_NAME);
+		String modelFileName = (String) arg.get(Constants.MODEL_PKG_NAME);
+		String groovyFileName = (String) arg.get(Constants.GROOVY_PKG_NAME);
+		
+		int idx = StrUtils.seperateFileFromPkg(actionFileName);
+		model.put(Constants.ACTION_PKG_NAME, actionFileName.substring(0, idx));
+		model.put(Constants.ACTION_FILE_NAME, actionFileName.substring(idx + 1));
+		
+		idx = StrUtils.seperateFileFromPkg(serviceFileName);
+		model.put(Constants.SERVICE_PKG_NAME, serviceFileName.substring(0, idx));
+		model.put(Constants.SERVICE_FILE_NAME, serviceFileName.substring(idx + 1));
+		
+		idx = StrUtils.seperateFileFromPkg(modelFileName);
+		model.put(Constants.MODEL_PKG_NAME, modelFileName.substring(0, idx));
+		model.put(Constants.MODEL_FILE_NAME, modelFileName.substring(idx + 1));
+		
+		idx = StrUtils.seperateFileFromPkg(groovyFileName);
+		model.put(Constants.GROOVY_PKG_NAME, groovyFileName.substring(0, idx));
+		model.put(Constants.GROOVY_FILE_NAME, groovyFileName.substring(idx + 1));
+		
 		return model;
 	}
 	
-	private void run(String srcPath, String packageName, String userCaseName, Map<String, Object> model, Map<String, Boolean> templateArg) {
+	private void run(String srcPath, Map<String, Object> model, Map<String, Boolean> templateArg) {
 		if (templateArg.get(Constants.CONTROLLER_FILE)) {
 			ControlGenerator controlGenerator = new ControlGenerator();		
-			controlGenerator.generatorFile(srcPath, packageName, userCaseName, model);
+			controlGenerator.generatorFile(srcPath, model);
 		}
 		
 		if (templateArg.get(Constants.SERVICE_FILE)) {
 			ServiceGenerator serviceGenerator = new ServiceGenerator();
-			serviceGenerator.generatorFile(srcPath, packageName, userCaseName, model);
+			serviceGenerator.generatorFile(srcPath, model);
 		}
 		
 		if (templateArg.get(Constants.MODEL_FILE)) {
 			ModelGenerator modelGenerator = new ModelGenerator();
-			modelGenerator.generatorFile(srcPath, packageName, userCaseName, model);
-		}
-		
-		if (templateArg.get(Constants.SQLMAP_FILE)) {
-			SqlMapGenerator sqlMapGenerator = new SqlMapGenerator();
-			sqlMapGenerator.generatorFile(srcPath, packageName, userCaseName, model);
+			modelGenerator.generatorFile(srcPath, model);
 		}
 		
 		if (templateArg.get(Constants.GROOVY_FILE)) {
 			GroovyGenerator groovyGenerator = new GroovyGenerator();
-			groovyGenerator.generatorFile(srcPath, packageName, userCaseName, model);
+			groovyGenerator.generatorFile(srcPath, model);
 		}
 	}
 	
-	private Map<String, String> preview(String packageName, String userCaseName, Map<String, Object> model, Map<String, Boolean> templateArg) {
+	private Map<String, String> preview(Map<String, Object> model, Map<String, Boolean> templateArg) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		
 		map.put(Constants.CONTROLLER, "");
 		map.put(Constants.SERVICE, "");
 		map.put(Constants.MODEL, "");
-		map.put(Constants.SQLMAP, "");
 		map.put(Constants.GROOVY, "");
 		
 		if (templateArg.get(Constants.CONTROLLER_FILE)) {
 			ControlGenerator controlGenerator = new ControlGenerator();
-			map.put(Constants.CONTROLLER, controlGenerator.generatorText(packageName, userCaseName, model));
+			map.put(Constants.CONTROLLER, controlGenerator.generatorText(model));
 		}
 		
 		if (templateArg.get(Constants.SERVICE_FILE)) {
 			ServiceGenerator serviceGenerator = new ServiceGenerator();
-			map.put(Constants.SERVICE, serviceGenerator.generatorText(packageName, userCaseName, model));
+			map.put(Constants.SERVICE, serviceGenerator.generatorText(model));
 		}
 		
 		if (templateArg.get(Constants.MODEL_FILE)) {
 			ModelGenerator modelGenerator = new ModelGenerator();
-			map.put(Constants.MODEL, modelGenerator.generatorText(packageName, userCaseName, model));
-		}
-		
-		if (templateArg.get(Constants.SQLMAP_FILE)) {
-			SqlMapGenerator sqlMapGenerator = new SqlMapGenerator();
-			map.put(Constants.SQLMAP, sqlMapGenerator.generatorText(packageName, userCaseName, model));
+			map.put(Constants.MODEL, modelGenerator.generatorText(model));
 		}
 		
 		if (templateArg.get(Constants.GROOVY_FILE)) {
 			GroovyGenerator groovyGenerator = new GroovyGenerator();
-			map.put(Constants.GROOVY, groovyGenerator.generatorText(packageName, userCaseName, model));
+			map.put(Constants.GROOVY, groovyGenerator.generatorText(model));
 		}
 		
 		return map;

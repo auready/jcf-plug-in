@@ -9,15 +9,15 @@ import jcf.gen.eclipse.core.utils.StrUtils;
 public class ControlGenerator extends AbstractSourceGenerator {
 
 	public String getFileName(Map<String,Object> infoMap) {
-		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.UC_NAME)).append("Controller.java").toString());
+		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.ACTION_FILE_NAME)).toString());
 	}
 
-	public String getPackagePath(String basePackPath) {
-		return new StringBuilder(basePackPath).append(getSeperator()).append("controller").toString();
+	public String getPackagePath(Map<String,Object> infoMap) {
+		return new StringBuilder((String) infoMap.get(Constants.ACTION_PKG_NAME)).toString();
 	}
 
 	@Override
 	public String getVmFileName() {
-		return "controlTemplate.vm";
+		return "actionTemplate.vm";
 	}
 }
