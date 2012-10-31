@@ -14,6 +14,7 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.fieldassist.ComboContentAdapter;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -110,7 +111,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		container.setLayout(new GridLayout(1, true));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		if (this.isDbEnvEnable()) this.databaseService = new DatabaseService();
+		if (StringUtils.isNotEmpty(getPreferenceStore().getString(Constants.DB_PASSWORD))) this.databaseService = new DatabaseService();
 		
 		this.createDbGroup(container);
 		
@@ -181,7 +182,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		comboTabName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboTabName.setEnabled(false);
 		
-		if (this.isDbEnvEnable()) {
+		if (StringUtils.isNotEmpty(getPreferenceStore().getString(Constants.DB_PASSWORD))) {
 			comboTabName.setEnabled(true);
 			
 			objItems = databaseService.getTableNames("");
@@ -313,14 +314,14 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		// Initialize
 		for (int i = 0, len = category.length; i < len; i++) {
-			template.put(category[i], isCheckedTemplate(category[i]));
+			template.put(category[i], getPreferenceStore().getBoolean(category[i]));
 		}
 		
 		final Button[] btnTemplate = new Button[5];
 		
 		btnTemplate[0] = new Button(groupInfo, SWT.CHECK);
 		btnTemplate[0].setText(category[0].substring(0, category[0].indexOf("_")).toLowerCase());
-		btnTemplate[0].setSelection(isCheckedTemplate(category[0]));
+		btnTemplate[0].setSelection(getPreferenceStore().getBoolean(category[0]));
 		btnTemplate[0].addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				template.put(category[0], btnTemplate[0].getSelection());
@@ -329,7 +330,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		btnTemplate[1] = new Button(groupInfo, SWT.CHECK);
 		btnTemplate[1].setText(category[1].substring(0, category[1].indexOf("_")).toLowerCase());
-		btnTemplate[1].setSelection(isCheckedTemplate(category[1]));
+		btnTemplate[1].setSelection(getPreferenceStore().getBoolean(category[1]));
 		btnTemplate[1].addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				template.put(category[1], btnTemplate[1].getSelection());
@@ -338,7 +339,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		btnTemplate[2] = new Button(groupInfo, SWT.CHECK);
 		btnTemplate[2].setText(category[2].substring(0, category[2].indexOf("_")).toLowerCase());
-		btnTemplate[2].setSelection(isCheckedTemplate(category[2]));
+		btnTemplate[2].setSelection(getPreferenceStore().getBoolean(category[2]));
 		btnTemplate[2].addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				template.put(category[2], btnTemplate[2].getSelection());
@@ -347,7 +348,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		btnTemplate[3] = new Button(groupInfo, SWT.CHECK);
 		btnTemplate[3].setText(category[3].substring(0, category[3].indexOf("_")).toLowerCase());
-		btnTemplate[3].setSelection(isCheckedTemplate(category[3]));
+		btnTemplate[3].setSelection(getPreferenceStore().getBoolean(category[3]));
 		btnTemplate[3].addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				template.put(category[3], btnTemplate[3].getSelection());
@@ -356,7 +357,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		btnTemplate[4] = new Button(groupInfo, SWT.CHECK);
 		btnTemplate[4].setText(category[4].substring(0, category[4].indexOf("_")).toLowerCase());
-		btnTemplate[4].setSelection(isCheckedTemplate(category[4]));
+		btnTemplate[4].setSelection(getPreferenceStore().getBoolean(category[4]));
 		btnTemplate[4].addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				template.put(category[4], btnTemplate[4].getSelection());
@@ -405,7 +406,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			}
 		});
 		
-		String sourceDir = this.getSourceDiretory();
+		String sourceDir = getPreferenceStore().getString(Constants.SOURCE_DIRECTORY);
 		
 		if (StringUtils.isNotEmpty(sourceDir)) {
 			txtSrcFolder.setText(sourceDir);
@@ -496,19 +497,9 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		return gridData;
 	}
-
-	private boolean isCheckedTemplate(String category) {
-		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getBoolean(category);
-	}
 	
-	private boolean isDbEnvEnable() {
-		String dbPass = JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(Constants.DB_PASSWORD);
-		
-		return StringUtils.isNotEmpty(dbPass);
-	}
-	
-	private String getSourceDiretory() {
-		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(Constants.SOURCE_DIRECTORY);
+	private IPreferenceStore getPreferenceStore() {
+		return JcfGeneratorPlugIn.getDefault().getPreferenceStore();
 	}
 	
 	private void generateSourceCode() {
