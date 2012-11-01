@@ -20,6 +20,7 @@ import jcf.gen.eclipse.core.generator.model.ModelGenerator;
 import jcf.gen.eclipse.core.jdbc.model.TableColumns;
 import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.utils.ColumnNameCamelCaseMap;
+import jcf.gen.eclipse.core.utils.DbUtils;
 import jcf.gen.eclipse.core.utils.StrUtils;
 
 public class DefaultLuncher {
@@ -69,6 +70,7 @@ public class DefaultLuncher {
 		List<TableColumns> columnList = (List<TableColumns>) arg.get(Constants.COLUMNS);
 		
 		Map<String, Object> model = new HashMap<String, Object>();
+		boolean hasNumberType = false;
 		
 		if (delArg != null) {
 			for (TableColumns col : columnList) {
@@ -82,7 +84,7 @@ public class DefaultLuncher {
 					map.put(Constants.COL_COLUMN_NAME, col.getColumnName());
 					map.put(Constants.COL_COLUMN_COMMENT, col.getColumnCommnet());
 					map.put(Constants.COL_PK, col.getPk());
-					map.put(Constants.COL_DATA_TYPE, col.getDataType());
+					map.put(Constants.COLUMN_DATA_TYPE, DbUtils.convertToDataType(col.getDataType()));
 					map.put(Constants.COL_DATA_LENGTH, col.getDataLength());
 					map.put(Constants.COL_CHAR_LENGTH, col.getCharLength());
 					map.put(Constants.COL_DATA_PRECISION, col.getDataPrecision());
@@ -93,6 +95,10 @@ public class DefaultLuncher {
 					map.put(Constants.COL_DATA_DEFAULT, col.getDataDefault());
 					map.put(Constants.COLUMN_NAME_CAMEL, columnNameCamelCase.camelCaseConverter(col.getColumnName()));
 					map.put(Constants.COLUMN_NAME_PASCAL, columnNameCamelCase.pascalCaseConverter(col.getColumnName()));
+					
+					if (!hasNumberType) {
+						if (DbUtils.hasNumberType(col.getDataType())) hasNumberType = true;
+					}
 					
 					list.add(map);
 				}
@@ -116,9 +122,13 @@ public class DefaultLuncher {
 				Map<String, Object> map = new HashMap<String, Object>();
 				
 				map.put(Constants.COL_COLUMN_NAME, col.getColumnName());
-				map.put(Constants.COL_DATA_TYPE, col.getDataType());
+				map.put(Constants.COLUMN_DATA_TYPE, DbUtils.convertToDataType(col.getDataType()));
 				map.put(Constants.COLUMN_NAME_CAMEL, columnNameCamelCase.camelCaseConverter(col.getColumnName()));
 				map.put(Constants.COLUMN_NAME_PASCAL, columnNameCamelCase.modelCaseConverter(col.getColumnName()));
+				
+				if (!hasNumberType) {
+					if (DbUtils.hasNumberType(col.getDataType())) hasNumberType = true;
+				}
 				
 				list.add(map);
 			}
@@ -126,6 +136,7 @@ public class DefaultLuncher {
 			model.put(Constants.COLUMNS, list);
 		}
 		
+		model.put(Constants.IMPORT_MATH_CLASS, (hasNumberType ? Constants.IMPORT_BIG_DECIMAL : Constants.IMPORT_NULL));
 		model.put(Constants.BIZ_NAME, (String) arg.get(Constants.BIZ_NAME));
 		model.put(Constants.AUTHOR, (String) arg.get(Constants.AUTHOR));
 		

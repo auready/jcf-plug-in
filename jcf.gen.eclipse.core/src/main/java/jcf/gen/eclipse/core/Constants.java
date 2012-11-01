@@ -3,7 +3,6 @@ package jcf.gen.eclipse.core;
 public class Constants {
 	public static final String DB_CATEGORY_RADIO = "DB_CATEGORY_RADIO";
 	public static final String DB_ORACLE = "oracle";
-	public static final String DB_MSSQL = "mssql";
 	
 	public static final String SCHEMA_PROPERTY_FILE = "SCHEMA_PROPERTY_FILE";
 	public static final String DB_PROPERTY_FILE = "DB_PROPERTY_FILE";
@@ -43,6 +42,10 @@ public class Constants {
 	public static final String DB_ID = "ID";
 	public static final String DB_PATH = "PATH";
 	
+	public static final String IMPORT_MATH_CLASS = "IMPORT_MATH_CLASS";
+	public static final String IMPORT_NULL = "";
+	public static final String IMPORT_BIG_DECIMAL = "import java.math.BigDecimal;";
+	
 	public static final String PK_COL = "PK";
 	public static final String TABLENAME = "TABLENAME";
 	public static final String COLUMNS = "COLUMNS";
@@ -51,6 +54,7 @@ public class Constants {
 	public static final String COLUMN_NAME = "COLUMN_NAME";
 	public static final String COLUMN_NAME_CAMEL = "COLUMN_NAME_CAMEL";
 	public static final String COLUMN_NAME_PASCAL = "COLUMN_NAME_PASCAL";
+	public static final String COLUMN_DATA_TYPE = "COLUMN_DATA_TYPE";
 	public static final String TABLE_COMMENT = "TABLE_COMMENT";
 	public static final String TABLE_NAME_CAMEL = "TABLE_NAME_CAMEL";
 	public static final String TABLE_NAME_PASCAL = "TABLE_NAME_PASCAL";

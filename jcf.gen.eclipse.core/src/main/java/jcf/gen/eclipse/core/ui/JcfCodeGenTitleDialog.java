@@ -42,6 +42,7 @@ import jcf.gen.eclipse.core.jdbc.DatabaseService;
 import jcf.gen.eclipse.core.luncher.DefaultLuncher;
 import jcf.gen.eclipse.core.utils.ColumnNameCamelCaseMap;
 import jcf.gen.eclipse.core.utils.FileUtils;
+import jcf.gen.eclipse.core.utils.StrUtils;
 import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.utils.MessageUtil;
 
@@ -198,8 +199,13 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		final Combo comboSchmea = new Combo(groupSchema, SWT.READ_ONLY);
 		
 		comboSchmea.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboSchmea.setEnabled(true);
-		comboSchmea.setItems(FileUtils.readPropertyFiles(this.getPreferenceStore(Constants.SCHEMA_PROPERTY_FILE)));
+		
+		if (StringUtils.isNotEmpty(getPreferenceStore(Constants.SCHEMA_PROPERTY_FILE))) {
+			comboSchmea.setEnabled(true);
+			comboSchmea.setItems(FileUtils.readPropertyFiles(getPreferenceStore(Constants.SCHEMA_PROPERTY_FILE)));
+		} else {
+			comboSchmea.setEnabled(false);
+		}
 		
 		comboSchmea.addSelectionListener(new SelectionListener() {
 			
@@ -629,7 +635,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 				if (tabName.equals(MessageUtil.getMessage("tab.table.title"))) {
 					modelPkgName = topCategory + midCategory + smallCategory + ".model." + camelCaseTableName + "M01";
 				} else {
-					modelPkgName = topCategory + midCategory + smallCategory + ".model." + "0000M01";
+					modelPkgName = topCategory + midCategory + smallCategory + ".model." + shortCategory + "0000M01";
 				}
 				
 				txtActionClass.setText(actionPkgName);
