@@ -1,4 +1,4 @@
-package com.symc.${PACKAGE}.controller;
+package ${ACTION_PKG_NAME};
 
 import java.util.List;
 import java.util.Map;
@@ -8,25 +8,23 @@ import jcf.data.GridData;
 import jcf.sua.mvc.MciRequest;
 import jcf.sua.mvc.MciResponse;
 
-import com.symc.${PACKAGE}.service.${UC_NAME}Service;
+import ${SERVICE_PKG_NAME}.${SERVICE_FILE_NAME};
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
-@Title : ${UC_NAME}Controller
-@Description :
-@Copyright : Copyright (c) 2012
-@Company : Daewoo Information Systems Co., Ltd.
-@Author :
+@Title : ${ACTION_FILE_NAME}
+@Description : ${BIZ_NAME}
+@Author : ${AUTHOR}
 @version 1.0
 */
 @Controller
 @RequestMapping("/${UC_NAME_CAMEL}")
-public class ${UC_NAME}Controller {
+public class ${ACTION_FILE_NAME} {
 	@Autowired
-	private ${UC_NAME}Service ${UC_NAME_CAMEL}Service;
+	private ${SERVICE_FILE_NAME} service;
 
 	/**
 	@Title :

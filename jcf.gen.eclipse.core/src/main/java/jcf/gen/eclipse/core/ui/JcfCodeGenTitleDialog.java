@@ -498,6 +498,8 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 				
 				if (category.contains("COM")) {
 					txtMidCategory.setText("comm");
+				} else {
+					txtMidCategory.setText("");
 				}
 			}
 			
@@ -620,14 +622,14 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 				smallCategory = StringUtils.isNotEmpty(smallCategory) ? "." + smallCategory.toLowerCase() : "";
 				shortCategory = StringUtils.isNotEmpty(shortCategory) ? "." + StringUtils.capitalize(shortCategory.toLowerCase()) : "";
 				
-				actionPkgName = topCategory + midCategory + ".action" + shortCategory + "Act.java";
-				servicePkgName = topCategory + midCategory + smallCategory + shortCategory + "Svc.java";
-				groovyPkgName = topCategory + midCategory + smallCategory + ".qry" + shortCategory + "Qry.groovy";
+				actionPkgName = topCategory + midCategory + ".action" + shortCategory + "Act";
+				servicePkgName = topCategory + midCategory + smallCategory + shortCategory + "Svc";
+				groovyPkgName = topCategory + midCategory + smallCategory + ".qry" + shortCategory + "Qry";
 				
 				if (tabName.equals(MessageUtil.getMessage("tab.table.title"))) {
-					modelPkgName = topCategory + midCategory + smallCategory + ".model." + camelCaseTableName + "M01.java";
+					modelPkgName = topCategory + midCategory + smallCategory + ".model." + camelCaseTableName + "M01";
 				} else {
-					modelPkgName = topCategory + midCategory + smallCategory + ".model." + "0000M01.java";
+					modelPkgName = topCategory + midCategory + smallCategory + ".model." + "0000M01";
 				}
 				
 				txtActionClass.setText(actionPkgName);

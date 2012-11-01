@@ -1,13 +1,14 @@
-package com.symc.${PACKAGE}.model;
+package ${MODEL_PKG_NAME};
 
 ${IMPORT_MATH_CLASS}
 
 /**
  * <p> ${TABLE_COMMENT} TDO </p>
- * @author
+ * @Description : ${BIZ_NAME}
+ * @author : ${AUTHOR}
  * @version 1.0
  */
-public class ${UC_NAME}Model {
+public class ${MODEL_FILE_NAME} {
  #foreach( ${column} in ${COLUMNS} )
     private ${column.COLUMN_DATA_TYPE} ${column.COLUMN_NAME_CAMEL}; /* ${column.COLUMN_COMMENT} */
  #end

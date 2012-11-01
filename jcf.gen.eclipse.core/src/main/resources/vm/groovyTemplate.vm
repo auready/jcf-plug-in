@@ -1,4 +1,4 @@
-package ${PACKAGE}.dao;
+package ${GROOVY_PKG_NAME};
 
 #macro( comma )
 #foreach( ${column} in ${COLUMNS} )
@@ -40,7 +40,7 @@ ${column.COLUMN_NAME} = :${column.COLUMN_NAME_CAMEL}
 #end
 #end
 
-public class ${TABLE_NAME_PASCAL}Query{
+public class ${GROOVY_FILE_NAME} {
 
 	public static String select = '''
 		SELECT

@@ -9,7 +9,7 @@ import jcf.gen.eclipse.core.utils.StrUtils;
 public class GroovyGenerator extends AbstractSourceGenerator {
 
 	public String getFileName(Map<String,Object> infoMap) {
-		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.GROOVY_FILE_NAME)).toString());
+		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.GROOVY_FILE_NAME)).append(".groovy").toString());
 	}
 
 	public String getPackagePath(Map<String,Object> infoMap) {

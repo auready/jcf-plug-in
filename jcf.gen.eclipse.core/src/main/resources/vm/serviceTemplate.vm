@@ -1,4 +1,4 @@
-package com.symc.${PACKAGE}.service;
+package ${SERVICE_PKG_NAME};
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,15 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
-@Title : ${UC_NAME}ServiceImpl
-@Description :
-@Copyright : Copyright (c) 2012
-@Company : Daewoo Information Systems Co., Ltd.
-@Author :
+@Title : ${SERVICE_FILE_NAME}
+@Description : ${BIZ_NAME}
+@Author : ${AUTHOR}
 @version 1.0
 */
 @Service
-public class ${UC_NAME}ServiceImpl implements ${UC_NAME}Service {
+public class ${SERVICE_FILE_NAME} {
 
 	@Autowired
 	private CommonDao commonDao;

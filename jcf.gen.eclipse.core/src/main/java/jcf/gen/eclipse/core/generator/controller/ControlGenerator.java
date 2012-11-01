@@ -9,7 +9,7 @@ import jcf.gen.eclipse.core.utils.StrUtils;
 public class ControlGenerator extends AbstractSourceGenerator {
 
 	public String getFileName(Map<String,Object> infoMap) {
-		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.ACTION_FILE_NAME)).toString());
+		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.ACTION_FILE_NAME)).append(".java").toString());
 	}
 
 	public String getPackagePath(Map<String,Object> infoMap) {
