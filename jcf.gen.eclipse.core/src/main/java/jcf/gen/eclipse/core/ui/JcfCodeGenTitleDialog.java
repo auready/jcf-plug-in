@@ -42,7 +42,6 @@ import jcf.gen.eclipse.core.jdbc.DatabaseService;
 import jcf.gen.eclipse.core.luncher.DefaultLuncher;
 import jcf.gen.eclipse.core.utils.ColumnNameCamelCaseMap;
 import jcf.gen.eclipse.core.utils.FileUtils;
-import jcf.gen.eclipse.core.utils.StrUtils;
 import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.utils.MessageUtil;
 
@@ -489,7 +488,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		Label labelTopCategory = new Label(groupInfo, SWT.NONE);
 		
 		labelTopCategory.setLayoutData(this.getLabelLayout());
-		labelTopCategory.setText("대분류");
+		labelTopCategory.setText("Top Category");
 		
 		comboTopCategory = new Combo(groupInfo, SWT.READ_ONLY);
 		
@@ -518,7 +517,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		Label labelMidCategory = new Label(groupInfo, SWT.NONE);
 		
 		labelMidCategory.setLayoutData(this.getLabelLayout());
-		labelMidCategory.setText("중분류");
+		labelMidCategory.setText("Middle");
 		
 		txtMidCategory = new Text(groupInfo, SWT.BORDER);
 		txtMidCategory.setLayoutData(this.getOneSpanTextLayout());
@@ -527,7 +526,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		Label labelSmallCategory = new Label(groupInfo, SWT.NONE);
 		
 		labelSmallCategory.setLayoutData(this.getLabelLayout());
-		labelSmallCategory.setText("소분류");
+		labelSmallCategory.setText("Small");
 		
 		txtSmallCategory = new Text(groupInfo, SWT.BORDER);
 		txtSmallCategory.setLayoutData(this.getOneSpanTextLayout());
@@ -536,7 +535,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		Label labelShortCategory = new Label(groupInfo, SWT.NONE);
 		
 		labelShortCategory.setLayoutData(this.getLabelLayout());
-		labelShortCategory.setText("업무그룹약어");
+		labelShortCategory.setText("BizGroup Abbr");
 		
 		txtShortCategory = new Text(groupInfo, SWT.BORDER);
 		txtShortCategory.setLayoutData(this.getOneSpanTextLayout());
@@ -545,7 +544,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		Label labelBizNameCategory = new Label(groupInfo, SWT.NONE);
 		
 		labelBizNameCategory.setLayoutData(this.getLabelLayout());
-		labelBizNameCategory.setText("업무명");
+		labelBizNameCategory.setText("BizName");
 		
 		txtBizNameCategory = new Text(groupInfo, SWT.BORDER);
 		txtBizNameCategory.setLayoutData(this.getOneSpanTextLayout());
@@ -564,7 +563,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		Label labelAuthorCategory = new Label(groupInfo, SWT.NONE);
 		
 		labelAuthorCategory.setLayoutData(this.getLabelLayout());
-		labelAuthorCategory.setText("작성자");
+		labelAuthorCategory.setText("Author");
 		
 		txtAuthorCategory = new Text(groupInfo, SWT.BORDER);
 		txtAuthorCategory.setLayoutData(this.getOneSpanTextLayout());
@@ -589,8 +588,8 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		// Button
 		Button btnInitClassName = new Button(groupInfo, SWT.PUSH);
 		
-		btnInitClassName.setText("초기화");
-		btnInitClassName.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+		btnInitClassName.setText("Init");
+		btnInitClassName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		btnInitClassName.setEnabled(true);
 		
 		btnInitClassName.addSelectionListener(new SelectionAdapter() {
@@ -612,7 +611,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		Button btnCreateClassName = new Button(groupInfo, SWT.PUSH);
 		
-		btnCreateClassName.setText("클래스명 생성");
+		btnCreateClassName.setText("Create Class Name");
 		btnCreateClassName.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		btnCreateClassName.setEnabled(true);
 		

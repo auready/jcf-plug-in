@@ -9,12 +9,9 @@ import java.util.Set;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import jcf.gen.eclipse.core.generator.controller.ControlGenerator;
 import jcf.gen.eclipse.core.generator.dao.GroovyGenerator;
-import jcf.gen.eclipse.core.generator.dao.SqlMapGenerator;
 import jcf.gen.eclipse.core.generator.service.ServiceGenerator;
 import jcf.gen.eclipse.core.generator.model.ModelGenerator;
 import jcf.gen.eclipse.core.jdbc.model.TableColumns;
@@ -24,8 +21,6 @@ import jcf.gen.eclipse.core.utils.DbUtils;
 import jcf.gen.eclipse.core.utils.StrUtils;
 
 public class DefaultLuncher {
-	
-	private static final Logger logger = LoggerFactory.getLogger(DefaultLuncher.class);
 
 	public DefaultLuncher() {
 	}

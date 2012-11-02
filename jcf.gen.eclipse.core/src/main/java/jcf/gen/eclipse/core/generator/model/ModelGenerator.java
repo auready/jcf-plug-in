@@ -3,7 +3,6 @@ package jcf.gen.eclipse.core.generator.model;
 import java.util.Map;
 
 import jcf.gen.eclipse.core.Constants;
-import jcf.gen.eclipse.core.JcfGeneratorPlugIn;
 import jcf.gen.eclipse.core.generator.AbstractSourceGenerator;
 import jcf.gen.eclipse.core.utils.StrUtils;
 
