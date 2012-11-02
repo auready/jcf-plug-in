@@ -40,18 +40,18 @@ ${column.COLUMN_NAME} = :${column.COLUMN_NAME_CAMEL}
 #end
 #end
 
-public class ${GROOVY_FILE_NAME} {
+public class ${GROOVY_FILE_NAME}{
 
-	public static String select = '''
+	public static String find${METHOD_NAME} = '''
 		SELECT
 		   #comma()
 
-		FROM ${SCHEMA}.${TABLENAME}
+		FROM ${TABLENAME}
 #where()
     '''
 
-	public static String insert = '''
-		INSERT INTO ${SCHEMA}.${TABLENAME}
+	public static String insert${METHOD_NAME} = '''
+		INSERT INTO ${TABLENAME}
 			(
 		         #comma()
 
@@ -66,8 +66,8 @@ public class ${GROOVY_FILE_NAME} {
             )
 	'''
 
-	public static String update = '''
-		UPDATE ${SCHEMA}.${TABLENAME}
+	public static String update${METHOD_NAME} = '''
+		UPDATE ${TABLENAME}
 		SET
 #foreach( ${column} in ${COLUMNS} )
 #if (!${column.PK})
@@ -77,8 +77,8 @@ public class ${GROOVY_FILE_NAME} {
 		WHERE #wherePK()
     '''
 
-	public static String delete = '''
-		DELETE FROM ${SCHEMA}.${TABLENAME}
+	public static String delete${METHOD_NAME} = '''
+		DELETE FROM ${TABLENAME}
 #if ( ${IS_PK_EXIST} == 'N' )
         #where()
 #else

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -132,8 +133,11 @@ public class DefaultLuncher {
 		}
 		
 		model.put(Constants.IMPORT_MATH_CLASS, (hasNumberType ? Constants.IMPORT_BIG_DECIMAL : Constants.IMPORT_NULL));
+		model.put(Constants.BIZ_ABBR, (String) arg.get(Constants.BIZ_ABBR));
 		model.put(Constants.BIZ_NAME, (String) arg.get(Constants.BIZ_NAME));
 		model.put(Constants.AUTHOR, (String) arg.get(Constants.AUTHOR));
+		model.put(Constants.METHOD_NAME, (String) arg.get(Constants.METHOD_NAME));
+		model.put(Constants.METHOD_NAME_CAMEL, StringUtils.uncapitalize((String) arg.get(Constants.METHOD_NAME)));
 		
 		String actionFileName = (String) arg.get(Constants.ACTION_PKG_NAME);
 		String serviceFileName = (String) arg.get(Constants.SERVICE_PKG_NAME);
@@ -147,10 +151,12 @@ public class DefaultLuncher {
 		idx = StrUtils.seperateFileFromPkg(serviceFileName);
 		model.put(Constants.SERVICE_PKG_NAME, serviceFileName.substring(0, idx));
 		model.put(Constants.SERVICE_FILE_NAME, serviceFileName.substring(idx + 1));
+		model.put(Constants.SERVICE_FILE_NAME_CAMEL, StringUtils.uncapitalize(serviceFileName.substring(idx + 1)));
 		
 		idx = StrUtils.seperateFileFromPkg(modelFileName);
 		model.put(Constants.MODEL_PKG_NAME, modelFileName.substring(0, idx));
 		model.put(Constants.MODEL_FILE_NAME, modelFileName.substring(idx + 1));
+		model.put(Constants.MODEL_FILE_NAME_CAMEL, StringUtils.uncapitalize(modelFileName.substring(idx + 1)));
 		
 		idx = StrUtils.seperateFileFromPkg(groovyFileName);
 		model.put(Constants.GROOVY_PKG_NAME, groovyFileName.substring(0, idx));

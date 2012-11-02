@@ -1,10 +1,12 @@
 package ${ACTION_PKG_NAME};
 
-import java.util.List;
+import jcf.hanyang.base.BaseAct;
+
 import java.util.Map;
-import java.util.HashMap;
+import ${MODEL_PKG_NAME}.${MODEL_FILE_NAME};
 
 import jcf.data.GridData;
+import jcf.hanyang.metadata.ResultData;
 import jcf.sua.mvc.MciRequest;
 import jcf.sua.mvc.MciResponse;
 
@@ -16,28 +18,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
 @Title : ${ACTION_FILE_NAME}
-@Description : ${BIZ_NAME}
-@Author : ${AUTHOR}
+@Description : ${METHOD_NAME}
+@Copyright : Copyright (c) 2012
+@Company : Daewoo Information Systems Co., Ltd.
+@Author :
 @version 1.0
 */
 @Controller
-@RequestMapping("/${UC_NAME_CAMEL}")
-public class ${ACTION_FILE_NAME} {
+@RequestMapping("/${ACTION_FILE_NAME}")
+public class ${ACTION_FILE_NAME} extends BaseAct{
+	
 	@Autowired
-	private ${SERVICE_FILE_NAME} service;
-
-	/**
-	@Title :
-	@Description :
-	@Author :
-	@exception Exception
-	*/
-	@RequestMapping("/get${UC_NAME}")
-	public void get${UC_NAME}(MciRequest request, MciResponse response){
-		Map param = request.getMap("req");
-		Map<String, Object> ${UC_NAME_CAMEL} = ${UC_NAME_CAMEL}Service.get${UC_NAME}(param);
-		response.set("", ${UC_NAME_CAMEL});
-	}
+	private ${SERVICE_FILE_NAME} ${SERVICE_FILE_NAME_CAMEL};
 	
 	/**
 	@Title :
@@ -45,11 +37,11 @@ public class ${ACTION_FILE_NAME} {
 	@Author :
 	@exception Exception
 	*/
-	@RequestMapping("/get${UC_NAME}List")
-	public void get${UC_NAME}List(MciRequest request, MciResponse response){
-		Map param = request.getMap("req");
-		List<Map<String, Object>> ${UC_NAME_CAMEL}List = ${UC_NAME_CAMEL}Service.get${UC_NAME}List(param);
-		response.setList("${UC_NAME_CAMEL}List", ${UC_NAME_CAMEL}List);
+	@RequestMapping("/find${METHOD_NAME}s")
+	public void find${METHOD_NAME}s(MciRequest request, MciResponse response){
+		Map<String, Object> paramMap = request.getParam();
+		ResultData ${METHOD_NAME_CAMEL}List = ${SERVICE_FILE_NAME_CAMEL}.find${METHOD_NAME}s(paramMap);
+		response.set("DS_${MODEL_FILE_NAME}", ${MODEL_FILE_NAME_CAMEL}List);
 	}
 
 	/**
@@ -58,59 +50,9 @@ public class ${ACTION_FILE_NAME} {
 	@Author :
 	@exception Exception
 	*/
-	@RequestMapping("/get${UC_NAME}Count")
-	public void get${UC_NAME}Count(MciRequest request, MciResponse response){
-		Map param = request.getMap("req");
-		int count = ${UC_NAME_CAMEL}Service.get${UC_NAME}Count(param);
-		response.set("${UC_NAME_CAMEL}Count", count);
-	}
-
-	/**
-	@Title :
-	@Description :
-	@Author :
-	@exception Exception
-	*/
-	@RequestMapping("/insert${UC_NAME}")
-	public void insert${UC_NAME}(MciRequest request, MciResponse response){
-		Map ${UC_NAME_CAMEL} = request.getMap("req");
-		${UC_NAME_CAMEL}Service.insert${UC_NAME}(${UC_NAME_CAMEL});
-	}
-
-	/**
-	@Title :
-	@Description :
-	@Author :
-	@exception Exception
-	*/
-	@RequestMapping("/update${UC_NAME}")
-	public void update${UC_NAME}(MciRequest request, MciResponse response){
-		Map ${UC_NAME_CAMEL} = request.getMap("req");
-		${UC_NAME_CAMEL}Service.update${UC_NAME}(${UC_NAME_CAMEL});
-	}
-
-	/**
-	@Title :
-	@Description :
-	@Author :
-	@exception Exception
-	*/
-	@RequestMapping("/delete${UC_NAME}")
-	public void delete${UC_NAME}(MciRequest request, MciResponse response){
-		Map ${UC_NAME_CAMEL} = request.getMap("req");
-		${UC_NAME_CAMEL}Service.delete${UC_NAME}(${UC_NAME_CAMEL});
-	}
-
-	/**
-	@Title :
-	@Description :
-	@Author :
-	@exception Exception
-	*/
-	@RequestMapping("/save${UC_NAME}List")
-	public void save${UC_NAME}List(MciRequest request, MciResponse response){
-		GridData<HashMap> gridData = request.getGridData("", HashMap.class);
-		${UC_NAME_CAMEL}Service.save${UC_NAME}(gridData);
-		response.addSuccessMessage("success");
+	@RequestMapping("/save${METHOD_NAME}s")
+	public void save${METHOD_NAME}s(MciRequest request, MciResponse response){
+		GridData<${MODEL_FILE_NAME}> gridData = request.getGridData("DS_${MODEL_FILE_NAME}", ${MODEL_FILE_NAME}.class);
+		${SERVICE_FILE_NAME_CAMEL}.save${METHOD_NAME}s(gridData);
 	}
 }

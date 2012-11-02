@@ -4,8 +4,7 @@ ${IMPORT_MATH_CLASS}
 
 /**
  * <p> ${TABLE_COMMENT} TDO </p>
- * @Description : ${BIZ_NAME}
- * @author : ${AUTHOR}
+ * @author
  * @version 1.0
  */
 public class ${MODEL_FILE_NAME} {

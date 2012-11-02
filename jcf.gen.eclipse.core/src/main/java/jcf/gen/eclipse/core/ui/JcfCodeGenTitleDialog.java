@@ -63,6 +63,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	private Text txtShortCategory;
 	private Text txtBizNameCategory;
 	private Text txtAuthorCategory;
+	private Text txtMethodCategory;
 	
 	private Text txtActionClass = null;
 	private Text txtServiceClass = null;
@@ -74,6 +75,8 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	private String query = "";
 	private String author = "";
 	private String bizName = "";
+	private String bizAbbr = "";
+	private String methodName = "";
 	private String camelCaseTableName = "";
 	
 	private String actionPkgName = "";
@@ -81,7 +84,11 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	private String modelPkgName = "";
 	private String groovyPkgName = "";
 	
-	private String[] TOP_CATEGORY = {"공통[COM]", "학사[HAKSA]", "행정[HUAS]", "연구[RESEARCH]", "부속[AFF]"};
+	private String[] TOP_CATEGORY = {MessageUtil.getMessage("ko.code.top.category.com"), 
+									 MessageUtil.getMessage("ko.code.top.category.haksa"),
+									 MessageUtil.getMessage("ko.code.top.category.huas"),
+									 MessageUtil.getMessage("ko.code.top.category.research"),
+									 MessageUtil.getMessage("ko.code.top.category.aff")};
 	
 	private String tabName = MessageUtil.getMessage("tab.table.title");
 	
@@ -93,9 +100,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	@Override
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-		
 		shell.setText(MessageUtil.getMessage("dialog.shell.title"));
-//		shell.setImage(JcfGeneratorPlugIn.getImageDescriptor("icons/sample.gif").createImage());
 	}
 	
 	@Override
@@ -123,8 +128,9 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		Composite area = (Composite) super.createDialogArea(parent);
+		setTitleImage(JcfGeneratorPlugIn.getImageDescriptor("icons/logo.png").createImage());
 		
+		Composite area = (Composite) super.createDialogArea(parent);		
 		Composite container = new Composite(area, SWT.NONE);
 		
 		container.setLayout(new GridLayout(1, true));
@@ -137,6 +143,8 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		this.createTemplateGroup(container);
 		
 		this.createCodeGroup(container);
+		
+		this.createBizGroup(container);
 		
 		this.createClassGroup(container);
 		
@@ -459,7 +467,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		Button btnSelectDir = new Button(groupInfo, SWT.PUSH);
 		
 		btnSelectDir.setText(MessageUtil.getMessage("button.directory.dialog"));
-		btnSelectDir.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
+		btnSelectDir.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		btnSelectDir.setEnabled(true);
 		
 		btnSelectDir.addSelectionListener(new SelectionAdapter() {
@@ -483,12 +491,19 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			txtSrcFolder.setText(sourceDir);
 			srcPath = sourceDir;
 		}
+	}
+	
+	protected void createBizGroup(Composite parent) {
+		final Group groupInfo = new Group(parent, SWT.NONE);
+		
+		groupInfo.setLayout(new GridLayout(6, false));
+		groupInfo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		//Large Category
 		Label labelTopCategory = new Label(groupInfo, SWT.NONE);
 		
 		labelTopCategory.setLayoutData(this.getLabelLayout());
-		labelTopCategory.setText("Top Category");
+		labelTopCategory.setText(MessageUtil.getMessage("ko.title.top.category"));
 		
 		comboTopCategory = new Combo(groupInfo, SWT.READ_ONLY);
 		
@@ -517,7 +532,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		Label labelMidCategory = new Label(groupInfo, SWT.NONE);
 		
 		labelMidCategory.setLayoutData(this.getLabelLayout());
-		labelMidCategory.setText("Middle");
+		labelMidCategory.setText(MessageUtil.getMessage("ko.title.middle.category"));
 		
 		txtMidCategory = new Text(groupInfo, SWT.BORDER);
 		txtMidCategory.setLayoutData(this.getOneSpanTextLayout());
@@ -526,7 +541,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		Label labelSmallCategory = new Label(groupInfo, SWT.NONE);
 		
 		labelSmallCategory.setLayoutData(this.getLabelLayout());
-		labelSmallCategory.setText("Small");
+		labelSmallCategory.setText(MessageUtil.getMessage("ko.title.small.category"));
 		
 		txtSmallCategory = new Text(groupInfo, SWT.BORDER);
 		txtSmallCategory.setLayoutData(this.getOneSpanTextLayout());
@@ -535,16 +550,27 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		Label labelShortCategory = new Label(groupInfo, SWT.NONE);
 		
 		labelShortCategory.setLayoutData(this.getLabelLayout());
-		labelShortCategory.setText("BizGroup Abbr");
+		labelShortCategory.setText(MessageUtil.getMessage("ko.title.bizabbr.category"));
 		
 		txtShortCategory = new Text(groupInfo, SWT.BORDER);
 		txtShortCategory.setLayoutData(this.getOneSpanTextLayout());
+		txtShortCategory.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				bizAbbr = txtShortCategory.getText();
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+			}
+		});
 		
 		// Biz Name Category
 		Label labelBizNameCategory = new Label(groupInfo, SWT.NONE);
 		
 		labelBizNameCategory.setLayoutData(this.getLabelLayout());
-		labelBizNameCategory.setText("BizName");
+		labelBizNameCategory.setText(MessageUtil.getMessage("ko.title.bizname.category"));
 		
 		txtBizNameCategory = new Text(groupInfo, SWT.BORDER);
 		txtBizNameCategory.setLayoutData(this.getOneSpanTextLayout());
@@ -563,7 +589,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		Label labelAuthorCategory = new Label(groupInfo, SWT.NONE);
 		
 		labelAuthorCategory.setLayoutData(this.getLabelLayout());
-		labelAuthorCategory.setText("Author");
+		labelAuthorCategory.setText(MessageUtil.getMessage("ko.title.author.category"));
 		
 		txtAuthorCategory = new Text(groupInfo, SWT.BORDER);
 		txtAuthorCategory.setLayoutData(this.getOneSpanTextLayout());
@@ -577,19 +603,34 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			public void keyPressed(KeyEvent e) {
 			}
 		});
-	}
-	
-	protected void createClassGroup(Composite parent) {
-		final Group groupInfo = new Group(parent, SWT.NONE);
 		
-		groupInfo.setLayout(new GridLayout(4, false));
-		groupInfo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		// Method
+		Label labelMethodCategory = new Label(groupInfo, SWT.NONE);
+		
+		labelMethodCategory.setLayoutData(this.getLabelLayout());
+		labelMethodCategory.setText(MessageUtil.getMessage("ko.title.method.category"));
+		
+		txtMethodCategory = new Text(groupInfo, SWT.BORDER);
+		txtMethodCategory.setLayoutData(this.getOneSpanTextLayout());
+		txtMethodCategory.addKeyListener(new KeyListener() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				methodName = txtMethodCategory.getText();
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+			}
+		});
+		
+		Label tmp = new Label(groupInfo, SWT.NONE);
+		tmp.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		// Button
 		Button btnInitClassName = new Button(groupInfo, SWT.PUSH);
 		
-		btnInitClassName.setText("Init");
-		btnInitClassName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		btnInitClassName.setText(MessageUtil.getMessage("ko.btn.class.init"));
+		btnInitClassName.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		btnInitClassName.setEnabled(true);
 		
 		btnInitClassName.addSelectionListener(new SelectionAdapter() {
@@ -601,6 +642,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 				txtShortCategory.setText("");
 				txtBizNameCategory.setText("");
 				txtAuthorCategory.setText("");
+				txtMethodCategory.setText("");
 				
 				txtActionClass.setText("");
 				txtServiceClass.setText("");
@@ -611,8 +653,8 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		Button btnCreateClassName = new Button(groupInfo, SWT.PUSH);
 		
-		btnCreateClassName.setText("Create Class Name");
-		btnCreateClassName.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+		btnCreateClassName.setText(MessageUtil.getMessage("ko.btn.class.create"));
+		btnCreateClassName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		btnCreateClassName.setEnabled(true);
 		
 		btnCreateClassName.addSelectionListener(new SelectionAdapter() {
@@ -643,9 +685,13 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 				txtModelClass.setText(modelPkgName);
 			}
 		});
+	}
+	
+	protected void createClassGroup(Composite parent) {
+		final Group groupInfo = new Group(parent, SWT.NONE);
 		
-		Label tmp = new Label(groupInfo, SWT.NONE);
-		tmp.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		groupInfo.setLayout(new GridLayout(4, false));
+		groupInfo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		// Action Class
 		Label labelActionClass = new Label(groupInfo, SWT.NONE);
@@ -775,8 +821,10 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			delArgument = null;
 		}
 		
+		argument.put(Constants.BIZ_ABBR, bizAbbr.toUpperCase());
 		argument.put(Constants.BIZ_NAME, bizName);
 		argument.put(Constants.AUTHOR, author);
+		argument.put(Constants.METHOD_NAME, methodName);
 
 		argument.put(Constants.ACTION_PKG_NAME, actionPkgName);
 		argument.put(Constants.SERVICE_PKG_NAME, servicePkgName);

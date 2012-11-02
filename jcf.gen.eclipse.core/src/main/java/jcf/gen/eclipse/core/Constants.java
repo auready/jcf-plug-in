@@ -14,8 +14,11 @@ public class Constants {
 	
 	public static final String TEMPLATE_DIRECTORY = "TEMPLATE_DIRECTORY";
 	public static final String SOURCE_DIRECTORY = "SOURCE_DIRECTORY";
+	public static final String BIZ_ABBR = "BIZ_ABBR";
 	public static final String BIZ_NAME = "BIZ_NAME";
 	public static final String AUTHOR = "AUTHOR";
+	public static final String METHOD_NAME = "METHOD_NAME";
+	public static final String METHOD_NAME_CAMEL = "METHOD_NAME_CAMEL";
 	
 	public static final String CONTROLLER_FILE = "ACTION_FILE";
 	public static final String SERVICE_FILE = "SERVICE_FILE";
@@ -36,6 +39,8 @@ public class Constants {
 	public static final String SERVICE_FILE_NAME = "SERVICE_FILE_NAME";
 	public static final String MODEL_FILE_NAME = "MODEL_FILE_NAME";
 	public static final String GROOVY_FILE_NAME = "GROOVY_FILE_NAME";
+	public static final String MODEL_FILE_NAME_CAMEL = "MODEL_FILE_NAME_CAMEL";
+	public static final String SERVICE_FILE_NAME_CAMEL = "SERVICE_FILE_NAME_CAMEL";
 	
 	public static final String TEMPLATE_CHECK = "TEMPLATE_CHECK";
 	

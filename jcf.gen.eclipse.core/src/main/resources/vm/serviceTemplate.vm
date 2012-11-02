@@ -1,122 +1,60 @@
 package ${SERVICE_PKG_NAME};
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import jcf.hanyang.base.BaseSvc;
+
 import java.util.Map;
+
+import ${MODEL_PKG_NAME}.${MODEL_FILE_NAME};
+import ${GROOVY_PKG_NAME}.${GROOVY_FILE_NAME};
 
 import jcf.data.GridData;
 import jcf.data.RowStatusCallback;
-import com.symc.common.dao.CommonDao;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
 @Title : ${SERVICE_FILE_NAME}
-@Description : ${BIZ_NAME}
-@Author : ${AUTHOR}
+@Description : ${METHOD_NAME}
+@Copyright : Copyright (c) 2012
+@Company : Daewoo Information Systems Co., Ltd.
+@Author :
 @version 1.0
 */
 @Service
-public class ${SERVICE_FILE_NAME} {
-
-	@Autowired
-	private CommonDao commonDao;
+public class ${SERVICE_FILE_NAME} implements BaseSvc {
 
 	/**
 	@Title :
 	@Description :
 	@Author :
-	@Param : Map
-	@Return : ${UC_NAME}
 	*/
-	public Map<String, Object> get${UC_NAME}(Map param) {
-		Map<String, Object> ${UC_NAME_CAMEL} = commonDao.queryForMap("${UC_NAME_CAMEL}.get${UC_NAME}List", param);
-		return ${UC_NAME_CAMEL};
-	}
-	
-	/**
-	@Title :
-	@Description :
-	@Author :
-	@Param : Map
-	@Return : List<Map<String, Object>>
-	*/
-	public List<Map<String, Object>> get${UC_NAME}List(Map param) {
-		List<Map<String, Object>> list = commonDao.queryForMapList("${UC_NAME_CAMEL}.get${UC_NAME}List", param);
-		return list;
+	public ResultData find${METHOD_NAME}s(Map paramMap) {
+		return dao.queryForResultData(${GROOVY_FILE_NAME}.find${METHOD_NAME}List(), paramMap);
 	}
 
 	/**
 	@Title :
 	@Description :
 	@Author :
-	@Param : Map
-	@Return : int
 	*/
-	public int get${UC_NAME}Count(Map param) {
-		int count = commonDao.queryForInt("${UC_NAME_CAMEL}.get${UC_NAME}Count", param);
-		return count;
-	}
+	public void save${METHOD_NAME}s(GridData<${MODEL_FILE_NAME}> gridData) {
+		gridData.forEachRow(new RowStatusCallback<${MODEL_FILE_NAME}>() {
 
-	/**
-	@Title :
-	@Description :
-	@Author :
-	@Param : ${UC_NAME}
-	@Return : void
-	*/
-	public void insert${UC_NAME}(Map ${UC_NAME_CAMEL}) {
-		commonDao.update("${UC_NAME}.insert${UC_NAME}", ${UC_NAME_CAMEL});
-	}
-
-	/**
-	@Title :
-	@Description :
-	@Author :
-	@Param : ${UC_NAME}
-	@Return : void
-	*/
-	public void update${UC_NAME}(Map ${UC_NAME_CAMEL}) {
-		commonDao.update("${UC_NAME}.update${UC_NAME}", ${UC_NAME_CAMEL});
-	}
-
-	/**
-	@Title :
-	@Description :
-	@Author :
-	@Param : ${UC_NAME}
-	@Return : void
-	*/
-	public void delete${UC_NAME}(Map ${UC_NAME_CAMEL}) {
-		commonDao.update("${UC_NAME}.delete${UC_NAME}", ${UC_NAME_CAMEL});
-	}
-
-	/**
-	@Title :
-	@Description :
-	@Author :
-	@Param : GridData
-	@Return : void
-	*/
-	public void save${UC_NAME}(GridData<HashMap> gridData) {
-		gridData.forEachRow(new RowStatusCallback<HashMap>() {
-
-			public void update(HashMap record, HashMap oldRecord, int rowNum) {
-				update${UC_NAME}(record);
+			public void update(${MODEL_FILE_NAME} record, ${MODEL_FILE_NAME} oldRecord, int rowNum) {
+				dao.update(${GROOVY_FILE_NAME}.update${MODEL_FILE_NAME}(), record);
 			}
 
-			public void normal(HashMap record, int rowNum) {
+			public void normal(${MODEL_FILE_NAME} record, int rowNum) {
 				
 			}
 
-			public void insert(HashMap record, int rowNum) {
-				insert${UC_NAME}(record);
+			public void insert(${MODEL_FILE_NAME} record, int rowNum) {
+				dao.update(${GROOVY_FILE_NAME}.insert${MODEL_FILE_NAME}(), record);
 			}
 
-			public void delete(HashMap record, int rowNum) {
-				delete${UC_NAME}(record);
+			public void delete(${MODEL_FILE_NAME} record, int rowNum) {
+				dao.update(${GROOVY_FILE_NAME}.delete${MODEL_FILE_NAME}(), record);
 			}
 		});
 	}
