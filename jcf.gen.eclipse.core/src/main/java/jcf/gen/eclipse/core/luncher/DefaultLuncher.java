@@ -133,6 +133,7 @@ public class DefaultLuncher {
 		}
 		
 		model.put(Constants.IMPORT_MATH_CLASS, (hasNumberType ? Constants.IMPORT_BIG_DECIMAL : Constants.IMPORT_NULL));
+		model.put(Constants.SCHEMA, (String) arg.get(Constants.SCHEMA));
 		model.put(Constants.BIZ_ABBR, (String) arg.get(Constants.BIZ_ABBR));
 		model.put(Constants.BIZ_NAME, (String) arg.get(Constants.BIZ_NAME));
 		model.put(Constants.AUTHOR, (String) arg.get(Constants.AUTHOR));

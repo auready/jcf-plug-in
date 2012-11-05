@@ -18,15 +18,15 @@ import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 
 public class DatabaseService {
 	
-	public DatabaseService(String schema) {
-		init(schema);
+	public DatabaseService() {
+		init();
 	}
 	
-	private void init(String schema) {
+	private void init() {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate();
 		
 		this.jdbcTemplate = jdbcTemplate;
-		this.jdbcTemplate.setDataSource(getDataSourceFromFile(schema));
+		this.jdbcTemplate.setDataSource(getDataSourceFromFile());
 		
 		this.dbms = this.getPreference(Constants.DB_CATEGORY_RADIO);
 	}
@@ -35,13 +35,13 @@ public class DatabaseService {
 
 	private String dbms;
 	
-	private DataSource getDataSourceFromFile(String schema) {
+	private DataSource getDataSourceFromFile() {
 		HashMap<String, String> dbFile = FileUtils.readPropertyFile(this.getPreference(Constants.DB_PROPERTY_FILE));
 		
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		
 		dataSource.setDriverClassName(dbFile.get("jdbc.driverClassName"));
-		dataSource.setUrl(dbFile.get("jdbc.url")+schema);
+		dataSource.setUrl(dbFile.get("jdbc.url"));
 		dataSource.setUsername(dbFile.get("jdbc.username"));
 		dataSource.setPassword(dbFile.get("jdbc.password"));
 		
@@ -52,8 +52,17 @@ public class DatabaseService {
 		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(keyProperty);
 	}
 	
-	public String[] getTableNames() {
-		List<String> list = this.jdbcTemplate.queryForList(this.createQuery("TABLE_NAME", null), String.class);
+	public String[] getSchmeaList() {
+		List<String> list = this.jdbcTemplate.queryForList(this.createQuery("SCHEMAS", null), String.class);
+		
+		return list.toArray(new String[list.size()]);
+	}
+	
+	public String[] getTableNames(String schema) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("SCHEMA", schema);
+		
+		List<String> list = this.jdbcTemplate.queryForList(this.createQuery("TABLE_NAME", map), String.class);
 		
 		return list.toArray(new String[list.size()]);
 	}
@@ -112,11 +121,14 @@ public class DatabaseService {
 		
 		if ("ORACLE".equals(dbms.toUpperCase())) {
 			if ("TABLE_NAME".equals(type)) {
+				String schema = (String) model.get("SCHEMA");
+				
 				sb.append("SELECT T.OBJECT_NAME AS TABLE_NAME \n");
-				sb.append("  FROM USER_OBJECTS T \n");
-				sb.append(" WHERE T.OBJECT_TYPE = 'TABLE' \n");
-				sb.append("   AND T.STATUS = 'VALID' \n");
-				sb.append(" ORDER BY 1 \n");
+				sb.append("  FROM ALL_OBJECTS T \n");
+				sb.append(" WHERE T.STATUS = 'VALID' \n");
+				sb.append("   AND T.OBJECT_TYPE = 'TABLE' \n");
+				sb.append("   AND T.OWNER = '" + schema + "' \n");
+				sb.append(" ORDER BY T.OBJECT_NAME \n");				
 				
 			} else if ("COLUMN_NAME".equals(type)) {
 				String tableName = (String) model.get("TABLE_NAME");
@@ -150,7 +162,13 @@ public class DatabaseService {
 				sb.append("  FROM USER_TAB_COLUMNS T \n");
 				sb.append(" WHERE T.TABLE_NAME = '" + tableName + "' \n");
 				sb.append(" ORDER BY T.COLUMN_ID \n");
-			}	
+				
+			} else if ("SCHEMAS".equals(type)) {
+				sb.append("SELECT USERNAME \n");
+				sb.append("  FROM ALL_USERS \n");
+				sb.append(" ORDER BY 1 \n");
+				
+			}
 		} 
 		
 		return sb.toString();

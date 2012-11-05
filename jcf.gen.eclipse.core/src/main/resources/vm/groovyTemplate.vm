@@ -46,12 +46,12 @@ public class ${GROOVY_FILE_NAME}{
 		SELECT
 		   #comma()
 
-		FROM ${TABLENAME}
+		FROM ${SCHEMA}.${TABLENAME}
 #where()
     '''
 
 	public static String insert${METHOD_NAME} = '''
-		INSERT INTO ${TABLENAME}
+		INSERT INTO ${SCHEMA}.${TABLENAME}
 			(
 		         #comma()
 
@@ -67,7 +67,7 @@ public class ${GROOVY_FILE_NAME}{
 	'''
 
 	public static String update${METHOD_NAME} = '''
-		UPDATE ${TABLENAME}
+		UPDATE ${SCHEMA}.${TABLENAME}
 		SET
 #foreach( ${column} in ${COLUMNS} )
 #if (!${column.PK})
@@ -78,7 +78,7 @@ public class ${GROOVY_FILE_NAME}{
     '''
 
 	public static String delete${METHOD_NAME} = '''
-		DELETE FROM ${TABLENAME}
+		DELETE FROM ${SCHEMA}.${TABLENAME}
 #if ( ${IS_PK_EXIST} == 'N' )
         #where()
 #else

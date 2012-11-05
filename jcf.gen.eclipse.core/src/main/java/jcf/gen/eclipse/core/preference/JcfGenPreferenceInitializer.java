@@ -13,7 +13,6 @@ public class JcfGenPreferenceInitializer extends AbstractPreferenceInitializer {
 		IPreferenceStore store = JcfGeneratorPlugIn.getDefault().getPreferenceStore();
 
 		store.setDefault(Constants.DB_PROPERTY_FILE, "");
-		store.setDefault(Constants.SCHEMA_PROPERTY_FILE, "");
 		
 		store.setDefault(Constants.DB_ID, "");
 		store.setDefault(Constants.DB_PATH, "");

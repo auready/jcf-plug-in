@@ -66,12 +66,6 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		dbGroup.setText(MessageUtil.getMessage("preference.group.db"));
 		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(dbGroup);
 		
-		FileFieldEditor schemaFileEditor = 
-				new FileFieldEditor(Constants.SCHEMA_PROPERTY_FILE, 
-						MessageUtil.getMessage("preference.db.schema"), dbGroup);
-		
-		addField(schemaFileEditor);
-		
 		FileFieldEditor dbFileEditor = 
 				new FileFieldEditor(Constants.DB_PROPERTY_FILE, 
 						MessageUtil.getMessage("preference.db.file"), dbGroup);

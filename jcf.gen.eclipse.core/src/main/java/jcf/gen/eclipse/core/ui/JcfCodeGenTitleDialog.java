@@ -207,9 +207,11 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		comboSchmea.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		if (StringUtils.isNotEmpty(getPreferenceStore(Constants.SCHEMA_PROPERTY_FILE))) {
+		if (StringUtils.isNotEmpty(getPreferenceStore(Constants.DB_PROPERTY_FILE))) {
+			databaseService = new DatabaseService();
+			
 			comboSchmea.setEnabled(true);
-			comboSchmea.setItems(FileUtils.readPropertyFiles(getPreferenceStore(Constants.SCHEMA_PROPERTY_FILE)));
+			comboSchmea.setItems(databaseService.getSchmeaList());
 		} else {
 			comboSchmea.setEnabled(false);
 		}
@@ -219,11 +221,11 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				schema = comboSchmea.getItem(comboSchmea.getSelectionIndex());
-			
-				databaseService = new DatabaseService(schema.substring(schema.indexOf("[") + 1, schema.length() - 1));
 				
 				comboTabName.setEnabled(true);
-				comboTabName.setItems(databaseService.getTableNames());
+				comboTabName.setItems(databaseService.getTableNames(schema));
+				
+				tableViewer.setInput(null);
 			}
 			
 			@Override
@@ -287,13 +289,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		comboTabName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboTabName.setEnabled(false);
-		
-		if (StringUtils.isNotEmpty(this.schema)) {
-			databaseService = new DatabaseService(schema);
-			
-			comboTabName.setEnabled(true);
-			comboTabName.setItems(databaseService.getTableNames());
-		}
 			
 		comboTabName.addSelectionListener(new SelectionListener() {
 			
@@ -821,6 +816,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			delArgument = null;
 		}
 		
+		argument.put(Constants.SCHEMA, schema);
 		argument.put(Constants.BIZ_ABBR, bizAbbr.toUpperCase());
 		argument.put(Constants.BIZ_NAME, bizName);
 		argument.put(Constants.AUTHOR, author);
