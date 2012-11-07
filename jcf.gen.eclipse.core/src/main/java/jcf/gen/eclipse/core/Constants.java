@@ -3,7 +3,6 @@ package jcf.gen.eclipse.core;
 public class Constants {
 	public static final String DB_CATEGORY_RADIO = "DB_CATEGORY_RADIO";
 	public static final String DB_ORACLE = "ORACLE";
-	public static final String DB_MYSQL = "MYSQL";
 	
 	public static final String DB_PROPERTY_FILE = "DB_PROPERTY_FILE";
 	
@@ -19,14 +18,14 @@ public class Constants {
 	public static final String CONTROLLER_FILE = "CONTROLLER_FILE";
 	public static final String SERVICE_FILE = "SERVICE_FILE";
 	public static final String MODEL_FILE = "MODEL_FILE";
+	public static final String TDO_FILE = "TDO_FILE";
 	public static final String SQLMAP_FILE = "SQLMAP_FILE";
-	public static final String GROOVY_FILE = "GROOVY_FILE";
 	
 	public static final String CONTROLLER = "CONTROLLER";
 	public static final String SERVICE = "SERVICE";
 	public static final String MODEL = "MODEL";
 	public static final String SQLMAP = "SQLMAP";
-	public static final String GROOVY = "GROOVY";
+	public static final String TDO = "TDO";
 	
 	public static final String IMPORT_MATH_CLASS = "IMPORT_MATH_CLASS";
 	public static final String IMPORT_NULL = "";

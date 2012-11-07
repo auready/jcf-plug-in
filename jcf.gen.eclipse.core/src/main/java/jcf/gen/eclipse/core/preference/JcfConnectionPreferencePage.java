@@ -2,7 +2,6 @@ package jcf.gen.eclipse.core.preference;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 
 import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.JcfGeneratorPlugIn;
@@ -11,7 +10,6 @@ import jcf.gen.eclipse.core.utils.MessageUtil;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -49,23 +47,6 @@ public class JcfConnectionPreferencePage extends FieldEditorPreferencePage imple
 		Composite main = getFieldEditorParent();
 		
 		GridLayoutFactory.swtDefaults().margins(0, 0).applyTo(main);
-		
-		Group dbCategoryGroup = new Group(main, SWT.NONE);
-		
-		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(dbCategoryGroup);
-		
-		String[][] dbCategory = {{Constants.DB_ORACLE, Constants.DB_ORACLE}, {Constants.DB_MYSQL, Constants.DB_MYSQL}};
-		
-		RadioGroupFieldEditor dbCategoryEditor = new RadioGroupFieldEditor(Constants.DB_CATEGORY_RADIO, 
-				MessageUtil.getMessage("preference.db.category.desc"),
-				dbCategory.length, 
-				dbCategory, 
-				dbCategoryGroup);
-		
-		addField(dbCategoryEditor);
-		
-		((GridLayout) dbCategoryGroup.getLayout()).marginWidth = 5;
-		((GridLayout) dbCategoryGroup.getLayout()).marginBottom = 5;
 		
 		Group dbGroup = new Group(main, SWT.NONE);
 		dbGroup.setText(MessageUtil.getMessage("preference.group.db"));

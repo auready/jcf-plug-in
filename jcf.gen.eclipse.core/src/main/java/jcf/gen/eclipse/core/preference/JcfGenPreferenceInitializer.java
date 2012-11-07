@@ -25,7 +25,7 @@ public class JcfGenPreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(Constants.SERVICE_FILE, true);
 		store.setDefault(Constants.MODEL_FILE, true);
 		store.setDefault(Constants.SQLMAP_FILE, true);
-		store.setDefault(Constants.GROOVY_FILE, true);
+		store.setDefault(Constants.TDO_FILE, true);
 	}
 
 }

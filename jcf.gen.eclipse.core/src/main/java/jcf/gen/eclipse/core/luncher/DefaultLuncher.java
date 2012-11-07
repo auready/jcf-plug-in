@@ -11,10 +11,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 
 import jcf.gen.eclipse.core.generator.controller.ControlGenerator;
-import jcf.gen.eclipse.core.generator.dao.GroovyGenerator;
 import jcf.gen.eclipse.core.generator.dao.SqlMapGenerator;
 import jcf.gen.eclipse.core.generator.service.ServiceGenerator;
 import jcf.gen.eclipse.core.generator.model.ModelGenerator;
+import jcf.gen.eclipse.core.generator.model.TdoGenerator;
 import jcf.gen.eclipse.core.jdbc.model.TableColumns;
 import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.utils.ColumnNameCamelCaseMap;
@@ -57,7 +57,7 @@ public class DefaultLuncher {
 				map.put(Constants.COL_COLUMN_NAME, col.getColumnName());
 				map.put(Constants.COL_COLUMN_COMMENT, col.getColumnCommnet());
 				map.put(Constants.COL_PK, col.getPk());
-				map.put(Constants.COL_DATA_TYPE, DbUtils.convertToDataType(col.getDataType()));
+				map.put(Constants.COLUMN_DATA_TYPE, DbUtils.convertToDataType(col.getDataType()));
 				map.put(Constants.COL_DATA_LENGTH, col.getDataLength());
 				map.put(Constants.COL_CHAR_LENGTH, col.getCharLength());
 				map.put(Constants.COL_DATA_PRECISION, col.getDataPrecision());
@@ -141,9 +141,9 @@ public class DefaultLuncher {
 			sqlMapGenerator.generatorFile(srcPath, packageName, userCaseName, model);
 		}
 		
-		if (createTemplateFile(Constants.GROOVY_FILE)) {
-			GroovyGenerator groovyGenerator = new GroovyGenerator();
-			groovyGenerator.generatorFile(srcPath, packageName, userCaseName, model);
+		if (createTemplateFile(Constants.TDO_FILE)) {
+			TdoGenerator tdoGenerator = new TdoGenerator();
+			tdoGenerator.generatorFile(srcPath, packageName, userCaseName, model);
 		}
 	}
 	
@@ -170,9 +170,9 @@ public class DefaultLuncher {
 			map.put(Constants.SQLMAP, sqlMapGenerator.generatorText(packageName, userCaseName, model));
 		}
 		
-		if (createTemplateFile(Constants.GROOVY_FILE)) {
-			GroovyGenerator groovyGenerator = new GroovyGenerator();
-			map.put(Constants.GROOVY, groovyGenerator.generatorText(packageName, userCaseName, model));
+		if (createTemplateFile(Constants.TDO_FILE)) {
+			TdoGenerator tdoGenerator = new TdoGenerator();
+			map.put(Constants.TDO, tdoGenerator.generatorText(packageName, userCaseName, model));
 		}
 		
 		return map;

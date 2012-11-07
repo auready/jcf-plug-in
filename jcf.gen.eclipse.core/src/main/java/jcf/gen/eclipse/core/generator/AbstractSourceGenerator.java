@@ -24,11 +24,6 @@ import jcf.gen.eclipse.core.utils.StrUtils;
 public abstract class AbstractSourceGenerator implements SourceGenerator {
 	
 	public AbstractSourceGenerator() {
-//		ClassPathXmlApplicationContext classPathXmlApplicationContext 
-//				= new ClassPathXmlApplicationContext("/config/applicationContext-generator.xml", AbstractSourceGenerator.class);
-//		classPathXmlApplicationContext.getAutowireCapableBeanFactory()
-//				.autowireBeanProperties(this, AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE, true);
-		
 		init();
 	}
 	
@@ -93,7 +88,6 @@ public abstract class AbstractSourceGenerator implements SourceGenerator {
 		
 		String fullPackagePath = getPackagePath(getBasePath(srcPath, packageName));
 		
-//		FileUtils.removeDirectories(fullPackagePath, true);
 		FileUtils.makeDirectories(fullPackagePath);
 		
 		String fileWithFullPath = new StringBuilder(fullPackagePath).append(getSeperator()).append(getFileName(model)).toString();

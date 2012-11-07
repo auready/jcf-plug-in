@@ -7,8 +7,6 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.FileFieldEditor;
-import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -39,19 +37,6 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		Composite main = getFieldEditorParent();
 		
 		GridLayoutFactory.swtDefaults().margins(0, 0).applyTo(main);
-		
-//		Group dbGroup = new Group(main, SWT.NONE);
-//		
-//		dbGroup.setText(MessageUtil.getMessage("preference.group.db"));
-//		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(dbGroup);
-//		
-//		FileFieldEditor dbFileEditor = 
-//				new FileFieldEditor(Constants.DB_PROPERTY_FILE, 
-//						MessageUtil.getMessage("preference.db.file"), dbGroup);
-//		
-//		addField(dbFileEditor);
-//		
-//		updateMargin(dbGroup);
 		
 		Group templateGroup = new Group(main, SWT.COLOR_DARK_GRAY);
 		
@@ -128,8 +113,8 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		addField(new BooleanFieldEditor(Constants.SQLMAP_FILE, 
 				MessageUtil.getMessage("preference.velocity.sqlmap"), vmFileGroup));
 		
-		addField(new BooleanFieldEditor(Constants.GROOVY_FILE, 
-				MessageUtil.getMessage("preference.velocity.groovy"), vmFileGroup));
+		addField(new BooleanFieldEditor(Constants.TDO_FILE, 
+				MessageUtil.getMessage("preference.velocity.tdo"), vmFileGroup));
 		
 		updateMargin(vmFileGroup);
 	}

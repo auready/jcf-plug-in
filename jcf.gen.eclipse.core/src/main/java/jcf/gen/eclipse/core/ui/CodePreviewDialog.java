@@ -109,7 +109,7 @@ public class CodePreviewDialog extends Dialog {
 		this.addTabItem(Constants.SERVICE);
 		this.addTabItem(Constants.CONTROLLER);
 		this.addTabItem(Constants.SQLMAP);
-		this.addTabItem(Constants.GROOVY);
+		this.addTabItem(Constants.TDO);
 	}
 	
 	private void addTabItem(String tabName) {

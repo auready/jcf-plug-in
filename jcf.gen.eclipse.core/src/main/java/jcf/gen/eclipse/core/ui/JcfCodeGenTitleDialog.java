@@ -103,7 +103,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		setTitleImage(JcfGeneratorPlugIn.getImageDescriptor("icons/jcf.png").createImage());
+		setTitleImage(JcfGeneratorPlugIn.getImageDescriptor("icons/dsme.png").createImage());
 		Composite area = (Composite) super.createDialogArea(parent);
 		
 		Composite container = new Composite(area, SWT.NONE);
@@ -303,7 +303,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		return -1;
 	}
 	
-	private String[] category = {Constants.CONTROLLER_FILE, Constants.SERVICE_FILE, Constants.MODEL_FILE, Constants.SQLMAP_FILE, Constants.GROOVY_FILE};
+	private String[] category = {Constants.CONTROLLER_FILE, Constants.SERVICE_FILE, Constants.MODEL_FILE, Constants.SQLMAP_FILE, Constants.TDO_FILE};
 	
 	protected void createTemplateGroup(Composite parent) {
 		final Group groupInfo = new Group(parent, SWT.NONE);
