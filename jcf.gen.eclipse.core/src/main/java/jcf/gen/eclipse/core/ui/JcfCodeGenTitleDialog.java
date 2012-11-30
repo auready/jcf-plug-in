@@ -190,13 +190,10 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		}
 			
 		comboTabName.addSelectionListener(new SelectionListener() {
-			
-			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setTableCombo(comboTabName.getSelectionIndex());
 			}
 			
-			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
@@ -228,8 +225,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		});
 		
 		comboTabName.addListener(SWT.CHANGED, new Listener() {
-			
-			@Override
 			public void handleEvent(Event event) {
 				String selectedObjName = comboTabName.getText().toUpperCase();
 				
@@ -424,14 +419,12 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		txtPackageName.setLayoutData(this.getTextLayout());
 		
 		txtPackageName.addKeyListener(new KeyListener() {
-			@Override
 			public void keyReleased(KeyEvent e) {
 				if (txtPackageName.getText().length() > 0) {
 					packageName = txtPackageName.getText();
 				}
 			}
 			
-			@Override
 			public void keyPressed(KeyEvent e) {
 			}
 		});
@@ -446,14 +439,12 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		txtUserCase.setLayoutData(this.getTextLayout());
 		
 		txtUserCase.addKeyListener(new KeyListener() {
-			@Override
 			public void keyReleased(KeyEvent e) {
 				if (txtUserCase.getText().length() > 0) {
 					userCaseName = txtUserCase.getText();
 				}
 			}
 			
-			@Override
 			public void keyPressed(KeyEvent e) {
 			}
 		});

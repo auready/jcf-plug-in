@@ -28,7 +28,6 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		setDescription(MessageUtil.getMessage("preference.title.description"));
 	}
 	
-	@Override
 	public void init(IWorkbench workbench) {
 	}
 
