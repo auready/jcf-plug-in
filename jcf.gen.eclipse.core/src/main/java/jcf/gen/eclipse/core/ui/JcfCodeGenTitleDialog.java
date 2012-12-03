@@ -218,7 +218,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		comboSchmea.addSelectionListener(new SelectionListener() {
 			
-			@Override
 			public void widgetSelected(SelectionEvent e) {
 				schema = comboSchmea.getItem(comboSchmea.getSelectionIndex());
 				
@@ -228,7 +227,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 				tableViewer.setInput(null);
 			}
 			
-			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
@@ -291,8 +289,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		comboTabName.setEnabled(false);
 			
 		comboTabName.addSelectionListener(new SelectionListener() {
-			
-			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ColumnNameCamelCaseMap camelCaseStr = new ColumnNameCamelCaseMap();
 				String tableName = comboTabName.getItem(comboTabName.getSelectionIndex());
@@ -316,7 +312,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 				}
 			}
 			
-			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
@@ -371,14 +366,12 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		txtSql.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		txtSql.addKeyListener(new KeyListener() {
-			@Override
 			public void keyReleased(KeyEvent e) {
 				if (txtSql.getText().length() > 0) {
 					query = txtSql.getText().trim();
 				}
 			}
 			
-			@Override
 			public void keyPressed(KeyEvent e) {
 			}
 		});
@@ -507,7 +500,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		comboTopCategory.setItems(this.TOP_CATEGORY);
 		comboTopCategory.addSelectionListener(new SelectionListener() {
 			
-			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String category = comboTopCategory.getItem(comboTopCategory.getSelectionIndex());
 				
@@ -518,7 +510,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 				}
 			}
 			
-			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
@@ -551,12 +542,10 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		txtShortCategory.setLayoutData(this.getOneSpanTextLayout());
 		txtShortCategory.addKeyListener(new KeyListener() {
 			
-			@Override
 			public void keyReleased(KeyEvent e) {
 				bizAbbr = txtShortCategory.getText();
 			}
 			
-			@Override
 			public void keyPressed(KeyEvent e) {
 			}
 		});
@@ -570,12 +559,10 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		txtBizNameCategory = new Text(groupInfo, SWT.BORDER);
 		txtBizNameCategory.setLayoutData(this.getOneSpanTextLayout());
 		txtBizNameCategory.addKeyListener(new KeyListener() {
-			@Override
 			public void keyReleased(KeyEvent e) {
 				bizName = txtBizNameCategory.getText();
 			}
 			
-			@Override
 			public void keyPressed(KeyEvent e) {
 			}
 		});
@@ -589,12 +576,10 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		txtAuthorCategory = new Text(groupInfo, SWT.BORDER);
 		txtAuthorCategory.setLayoutData(this.getOneSpanTextLayout());
 		txtAuthorCategory.addKeyListener(new KeyListener() {
-			@Override
 			public void keyReleased(KeyEvent e) {
 				author = txtAuthorCategory.getText();
 			}
 			
-			@Override
 			public void keyPressed(KeyEvent e) {
 			}
 		});
@@ -608,12 +593,10 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		txtMethodCategory = new Text(groupInfo, SWT.BORDER);
 		txtMethodCategory.setLayoutData(this.getOneSpanTextLayout());
 		txtMethodCategory.addKeyListener(new KeyListener() {
-			@Override
 			public void keyReleased(KeyEvent e) {
 				methodName = txtMethodCategory.getText();
 			}
 			
-			@Override
 			public void keyPressed(KeyEvent e) {
 			}
 		});
@@ -698,12 +681,10 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		txtActionClass.setLayoutData(this.getOneSpanTextLayout());
 		txtActionClass.setEditable(false);
 		txtActionClass.addKeyListener(new KeyListener() {
-			@Override
 			public void keyReleased(KeyEvent e) {
 				actionPkgName = txtActionClass.getText();
 			}
 			
-			@Override
 			public void keyPressed(KeyEvent e) {
 			}
 		});
@@ -718,12 +699,10 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		txtServiceClass.setLayoutData(this.getOneSpanTextLayout());
 		txtServiceClass.setEditable(false);
 		txtServiceClass.addKeyListener(new KeyListener() {
-			@Override
 			public void keyReleased(KeyEvent e) {
 				servicePkgName = txtServiceClass.getText();
 			}
 			
-			@Override
 			public void keyPressed(KeyEvent e) {
 			}
 		});
@@ -737,12 +716,10 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		txtModelClass = new Text(groupInfo, SWT.BORDER);
 		txtModelClass.setLayoutData(this.getOneSpanTextLayout());
 		txtModelClass.addKeyListener(new KeyListener() {
-			@Override
 			public void keyReleased(KeyEvent e) {
 				modelPkgName = txtModelClass.getText();
 			}
 			
-			@Override
 			public void keyPressed(KeyEvent e) {
 			}
 		});
@@ -757,12 +734,10 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		txtGroovyClass.setLayoutData(this.getOneSpanTextLayout());
 		txtGroovyClass.setEditable(false);
 		txtGroovyClass.addKeyListener(new KeyListener() {
-			@Override
 			public void keyReleased(KeyEvent e) {
 				groovyPkgName = txtGroovyClass.getText();
 			}
 			
-			@Override
 			public void keyPressed(KeyEvent e) {
 			}
 		});
