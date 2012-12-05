@@ -40,7 +40,6 @@ public class JcfConnectionPreferencePage extends FieldEditorPreferencePage imple
 		setDescription(MessageUtil.getMessage("preference.conn.description"));
 	}
 	
-	@Override
 	public void init(IWorkbench workbench) {
 	}
 	
