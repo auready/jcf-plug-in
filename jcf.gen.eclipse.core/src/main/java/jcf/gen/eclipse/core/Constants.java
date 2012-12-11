@@ -43,6 +43,7 @@ public class Constants {
 	public static final String SERVICE_FILE_NAME_CAMEL = "SERVICE_FILE_NAME_CAMEL";
 	
 	public static final String TEMPLATE_CHECK = "TEMPLATE_CHECK";
+	public static final String TAB_NAME = "TAB_NAME";
 	
 	public static final String DB_ID = "ID";
 	public static final String DB_PATH = "PATH";

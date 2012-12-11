@@ -19,6 +19,7 @@ import jcf.gen.eclipse.core.jdbc.model.TableColumns;
 import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.utils.ColumnNameCamelCaseMap;
 import jcf.gen.eclipse.core.utils.DbUtils;
+import jcf.gen.eclipse.core.utils.MessageUtil;
 import jcf.gen.eclipse.core.utils.StrUtils;
 
 public class DefaultLuncher {
@@ -60,6 +61,8 @@ public class DefaultLuncher {
 	
 	@SuppressWarnings("unchecked")
 	private Map<String, Object> makeMapData(Map<String, Object> arg, Set<String> delArg) {
+		if (((String) arg.get(Constants.TAB_NAME)).equals(MessageUtil.getMessage("tab.query.title"))) delArg = null;
+		
 		ColumnNameCamelCaseMap columnNameCamelCase = new ColumnNameCamelCaseMap();
 		
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();

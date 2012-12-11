@@ -1,5 +1,6 @@
 package jcf.gen.eclipse.core.jdbc;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,13 +28,9 @@ public class DatabaseService {
 		
 		this.jdbcTemplate = jdbcTemplate;
 		this.jdbcTemplate.setDataSource(getDataSourceFromFile());
-		
-		this.dbms = this.getPreference(Constants.DB_CATEGORY_RADIO);
 	}
 	
 	private JdbcTemplate jdbcTemplate;
-
-	private String dbms;
 	
 	private DataSource getDataSourceFromFile() {
 		HashMap<String, String> dbFile = FileUtils.readPropertyFile(this.getPreference(Constants.DB_PROPERTY_FILE));
@@ -99,7 +96,7 @@ public class DatabaseService {
 		return result;
 	}
 	
-	public List<TableColumns> getQueryMetaData(final String query) {
+	public List<TableColumns> getQueryMetaData(final String query) throws SQLException {
 		ArrayList<TableColumns> result = new ArrayList<TableColumns>();
 		
 		SqlRowSetMetaData metaData = (SqlRowSetMetaData) jdbcTemplate.queryForRowSet(query).getMetaData();
@@ -158,7 +155,7 @@ public class DatabaseService {
 			sb.append("       T.COLUMN_ID, \n");
 			sb.append("       T.DEFAULT_LENGTH, \n");
 			sb.append("       T.DATA_DEFAULT \n");
-			sb.append("  FROM ALL_TAB_COLS T \n");
+			sb.append("  FROM USER_TAB_COLUMNS T \n");
 			sb.append(" WHERE T.TABLE_NAME = '" + tableName + "' \n");
 			sb.append(" ORDER BY T.COLUMN_ID \n");
 			

@@ -1,5 +1,6 @@
 package jcf.gen.eclipse.core.ui;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -31,6 +32,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
@@ -113,7 +115,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	
 	@Override
 	protected Point getInitialSize() {
-		return new Point(550, 750);
+		return new Point(550, 800);
 	}
 	
 	@Override
@@ -184,14 +186,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		});
 	}
 	
-	protected void makeCodePreviewDialog(final Composite parent) {
-		this.addArgInfo();
-		
-		CodePreviewDialog preview = new CodePreviewDialog(parent.getShell());
-		
-		preview.open(argument, delArgument);
-	}
-	
 	protected void createSchemaGroup(Composite parent) {
 		Group groupSchema = new Group(parent, SWT.NONE);
 		
@@ -208,10 +202,12 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		comboSchmea.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		if (StringUtils.isNotEmpty(getPreferenceStore(Constants.DB_PROPERTY_FILE))) {
-			databaseService = new DatabaseService();
+			HashMap<String, String> schemaList = FileUtils.readPropertyFile(getPreferenceStore(Constants.DB_PROPERTY_FILE));
 			
 			comboSchmea.setEnabled(true);
-			comboSchmea.setItems(databaseService.getSchmeaList());
+			comboSchmea.setItems(schemaList.get("schmea").split(","));
+			
+			databaseService = new DatabaseService();
 		} else {
 			comboSchmea.setEnabled(false);
 		}
@@ -362,7 +358,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		labelDbTable.setLayoutData(this.getLabelLayout());
 		labelDbTable.setText(MessageUtil.getMessage("label.sql.text"));
 		
-		txtSql = new Text(groupSqlInfo, SWT.BORDER | SWT.MULTI);
+		txtSql = new Text(groupSqlInfo, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
 		
 		txtSql.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		txtSql.addKeyListener(new KeyListener() {
@@ -654,13 +650,15 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 				if (tabName.equals(MessageUtil.getMessage("tab.table.title"))) {
 					modelPkgName = topCategory + midCategory + smallCategory + ".model." + camelCaseTableName + "M01";
 				} else {
-					modelPkgName = topCategory + midCategory + smallCategory + ".model." + shortCategory + "0000M01";
+					modelPkgName = topCategory + midCategory + smallCategory + ".model" + shortCategory + "0000M01";
 				}
 				
 				txtActionClass.setText(actionPkgName);
 				txtServiceClass.setText(servicePkgName);
 				txtGroovyClass.setText(groovyPkgName);
 				txtModelClass.setText(modelPkgName);
+				
+				openMsgBox("Class Name Created", false);
 			}
 		});
 	}
@@ -773,23 +771,36 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(id);
 	}
 	
-	private void addArgInfo() {
-		if (tabName.equals(MessageUtil.getMessage("tab.table.title"))) {
-			argument.put(Constants.TEMPLATE_CHECK, templateArg);
-			
-		} else {
+	private void openMsgBox(String message, boolean isError) {
+		MessageBox msgBox = new MessageBox(Display.getCurrent().getActiveShell(), (isError ? (SWT.ICON_ERROR | SWT.ERROR) : (SWT.ICON_INFORMATION | SWT.OK)));
+		
+		msgBox.setText("JCF");
+		msgBox.setMessage(message);
+		msgBox.open();
+	}
+	
+	private boolean validateArg() {
+		String msg = "";
+		
+		if (tabName.equals(MessageUtil.getMessage("tab.query.title"))) {	
 			templateArg.put(Constants.CONTROLLER_FILE, false);
 			templateArg.put(Constants.SERVICE_FILE, false);
 			templateArg.put(Constants.MODEL_FILE, true);
 			templateArg.put(Constants.GROOVY_FILE, false);
 			
-			argument.put(Constants.TEMPLATE_CHECK, templateArg);
+			List<TableColumns> list = null;
 			
-			List<TableColumns> list = databaseService.getQueryMetaData(query.toUpperCase());
+			try {
+				list = databaseService.getQueryMetaData(query.toUpperCase());
+			} catch (SQLException e) {
+				msg = e.getMessage();
+			}
 			
 			argument.put(Constants.COLUMNS, list);
-			delArgument = null;
 		}
+		
+		argument.put(Constants.TAB_NAME, tabName);
+		argument.put(Constants.TEMPLATE_CHECK, templateArg);
 		
 		argument.put(Constants.SCHEMA, schema);
 		argument.put(Constants.BIZ_ABBR, bizAbbr.toUpperCase());
@@ -801,13 +812,31 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		argument.put(Constants.SERVICE_PKG_NAME, servicePkgName);
 		argument.put(Constants.MODEL_PKG_NAME, modelPkgName);
 		argument.put(Constants.GROOVY_PKG_NAME, groovyPkgName);
+		
+		if (StringUtils.isNotEmpty(msg)) {
+			openMsgBox(msg, true);
+			return false;
+		}
+		
+		if (StringUtils.isEmpty(modelPkgName)) {
+			openMsgBox("Class Name is requried", true);
+			return false;
+		}
+		
+		return true;
+	}
+	
+	protected void makeCodePreviewDialog(final Composite parent) {
+		if (validateArg()) {
+			CodePreviewDialog preview = new CodePreviewDialog(parent.getShell());	
+			preview.open(argument, delArgument);			
+		}
 	}
 	
 	private void generateSourceCode() {
-		this.addArgInfo();
-		
-		DefaultLuncher luncher = new DefaultLuncher();
-
-		luncher.execute(srcPath, argument, delArgument);
+		if (validateArg()) {
+			DefaultLuncher luncher = new DefaultLuncher();
+			luncher.execute(srcPath, argument, delArgument);						
+		}
 	}
 }
