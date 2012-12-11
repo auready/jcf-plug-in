@@ -36,11 +36,12 @@ public class DefaultLuncher {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private Map<String, Object> makeMapData(Map<String, Object> arg, Set<String> delArg) {
+	private Map<String, Object> makeMapData(Map<String, Object> arg) {
 		ColumnNameCamelCaseMap columnNameCamelCase = new ColumnNameCamelCaseMap();
 		
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		List<TableColumns> columnList = (List<TableColumns>) arg.get(Constants.COLUMNS);
+		Set<String> excludeCols = (Set<String>) arg.get(Constants.EXCLUDE_COLUMNS);
 		
 		Map<String, Object> model = new HashMap<String, Object>();
 		
@@ -49,7 +50,7 @@ public class DefaultLuncher {
 		for (TableColumns col : columnList) {
 			String colName = col.getColumnName();
 			
-			if (!delArg.contains(colName)) {
+			if (!excludeCols.contains(colName)) {
 				Map<String, Object> map = new HashMap<String, Object>();
 				
 				map.put(Constants.COL_TABLE_NAME, col.getTableName());
@@ -96,8 +97,8 @@ public class DefaultLuncher {
 		return model;
 	}
 	
-	public void execute(String srcPath, String packageName, String userCaseName, Map<String, Object> arg, Set<String> delArg) {
-		Map<String, Object> model = this.makeMapData(arg, delArg);
+	public void execute(String srcPath, String packageName, String userCaseName, Map<String, Object> arg) {
+		Map<String, Object> model = this.makeMapData(arg);
 		
 		this.run(srcPath, packageName, userCaseName, model);
 		
@@ -108,8 +109,8 @@ public class DefaultLuncher {
 		msg.open();
 	}
 	
-	public Map<String, String> execute(String packageName, String userCaseName, Map<String, Object> arg, Set<String> delArg) {
-		Map<String, Object> model = this.makeMapData(arg, delArg);
+	public Map<String, String> execute(String packageName, String userCaseName, Map<String, Object> arg) {
+		Map<String, Object> model = this.makeMapData(arg);
 		
 		return this.preview(packageName, userCaseName, model);
 	}

@@ -44,6 +44,7 @@ public class Constants {
 	public static final String TABLE_COMMENT = "TABLE_COMMENT";
 	public static final String TABLE_NAME_CAMEL = "TABLE_NAME_CAMEL";
 	public static final String TABLE_NAME_PASCAL = "TABLE_NAME_PASCAL";
+	public static final String EXCLUDE_COLUMNS = "EXCLUDE_COLUMNS";
 
 	public static final String PACKAGE = "PACKAGE";
 	public static final String SCHEMA = "SCHEMA";

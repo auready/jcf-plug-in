@@ -1,7 +1,6 @@
 package jcf.gen.eclipse.core.ui;
 
 import java.util.Map;
-import java.util.Set;
 
 import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.luncher.DefaultLuncher;
@@ -31,7 +30,6 @@ public class CodePreviewDialog extends Dialog {
 	private String packageName;
 	private String usercaseName;
 	private Map<String, Object> argument;
-	private Set<String> delArgument;
 	
 	private Map<String, String> retMap;
 	
@@ -92,11 +90,10 @@ public class CodePreviewDialog extends Dialog {
 		return area;
 	}
 	
-	public void open(String packageName, String userCaseName, Map<String, Object> arg, Set<String> delArg) {
+	public void open(String packageName, String userCaseName, Map<String, Object> arg) {
 		this.packageName = packageName;
 		this.usercaseName = userCaseName;
 		this.argument = arg;
-		this.delArgument = delArg;
 
 		super.open();
 	}
@@ -132,6 +129,6 @@ public class CodePreviewDialog extends Dialog {
 	private void generateSourceCode() {
 		DefaultLuncher luncher = new DefaultLuncher();
 		
-		retMap = luncher.execute(packageName, usercaseName, argument, delArgument);
+		retMap = luncher.execute(packageName, usercaseName, argument);
 	}
 }

@@ -56,7 +56,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	private DatabaseService databaseService;
 	
 	private Map<String, Object> argument = new HashMap<String, Object>();
-	private Set<String> delArgument = new HashSet<String>();
+	private Set<String> excludeCols = new HashSet<String>();
 	private Map<String, Boolean> template = new HashMap<String, Boolean>();
 	
 	private TableViewer tableViewer;
@@ -88,7 +88,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	
 	@Override
 	protected Point getInitialSize() {
-		return new Point(550, 600);
+		return new Point(500, 600);
 	}
 	
 	@Override
@@ -154,13 +154,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		});
 	}
 	
-	protected void makeCodePreviewDialog(final Composite parent) {
-		argument.put(Constants.TEMPLATE, template);
-		
-		CodePreviewDialog preview = new CodePreviewDialog(parent.getShell());
-		
-		preview.open(packageName, userCaseName, argument, delArgument);
-	}
 	
 	protected void createDbGroup(Composite parent) {
 		//Database Properties
@@ -190,20 +183,15 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		}
 			
 		comboTabName.addSelectionListener(new SelectionListener() {
-			
-			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setTableCombo(comboTabName.getSelectionIndex());
 			}
 			
-			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
 		
 		comboTabName.addKeyListener(new KeyAdapter() {
-			
-			@Override
 			public void keyReleased(KeyEvent ke) {
 				String tempObjName = comboTabName.getText().toUpperCase();
 				String[] objNames = databaseService.getTableNames(tempObjName);
@@ -228,8 +216,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		});
 		
 		comboTabName.addListener(SWT.CHANGED, new Listener() {
-			
-			@Override
 			public void handleEvent(Event event) {
 				String selectedObjName = comboTabName.getText().toUpperCase();
 				
@@ -258,10 +244,10 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 					String tempName = event.item.toString();
 					String colName = tempName.substring(tempName.indexOf("{") + 1, tempName.indexOf("}"));
 					
-					if (delArgument.contains(colName)) {
-						delArgument.remove(colName);
+					if (excludeCols.contains(colName)) {
+						excludeCols.remove(colName);
 					} else {
-						delArgument.add(colName);
+						excludeCols.add(colName);
 					}
 				}
 			}
@@ -421,17 +407,13 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		labelPackage.setText(MessageUtil.getMessage("label.code.src.package"));
 				
 		txtPackageName = new Text(groupInfo, SWT.BORDER);
-		txtPackageName.setLayoutData(this.getTextLayout());
 		
+		txtPackageName.setLayoutData(this.getTextLayout());
 		txtPackageName.addKeyListener(new KeyListener() {
-			@Override
 			public void keyReleased(KeyEvent e) {
-				if (txtPackageName.getText().length() > 0) {
-					packageName = txtPackageName.getText();
-				}
+				if (txtPackageName.getText().length() > 0) packageName = txtPackageName.getText();
 			}
 			
-			@Override
 			public void keyPressed(KeyEvent e) {
 			}
 		});
@@ -443,17 +425,13 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		labelUserCase.setText(MessageUtil.getMessage("label.code.src.usercase"));
 		
 		txtUserCase = new Text(groupInfo, SWT.BORDER);
-		txtUserCase.setLayoutData(this.getTextLayout());
 		
+		txtUserCase.setLayoutData(this.getTextLayout());
 		txtUserCase.addKeyListener(new KeyListener() {
-			@Override
 			public void keyReleased(KeyEvent e) {
-				if (txtUserCase.getText().length() > 0) {
-					userCaseName = txtUserCase.getText();
-				}
+				if (txtUserCase.getText().length() > 0) userCaseName = txtUserCase.getText();
 			}
 			
-			@Override
 			public void keyPressed(KeyEvent e) {
 			}
 		});
@@ -502,10 +480,22 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		return JcfGeneratorPlugIn.getDefault().getPreferenceStore();
 	}
 	
-	private void generateSourceCode() {
+	private void setDataArgument() {
+		argument.put(Constants.EXCLUDE_COLUMNS, excludeCols);
 		argument.put(Constants.TEMPLATE, template);
+	}
+
+	protected void makeCodePreviewDialog(final Composite parent) {
+		setDataArgument();
+		
+		CodePreviewDialog preview = new CodePreviewDialog(parent.getShell());
+		preview.open(packageName, userCaseName, argument);
+	}
+	
+	private void generateSourceCode() {
+		setDataArgument();
 		
 		DefaultLuncher luncher = new DefaultLuncher();
-		luncher.execute(srcPath, packageName, userCaseName, argument, delArgument);
+		luncher.execute(srcPath, packageName, userCaseName, argument);
 	}
 }
