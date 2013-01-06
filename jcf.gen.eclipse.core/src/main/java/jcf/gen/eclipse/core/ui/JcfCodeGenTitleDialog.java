@@ -205,7 +205,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			HashMap<String, String> schemaList = FileUtils.readPropertyFile(getPreferenceStore(Constants.DB_PROPERTY_FILE));
 			
 			comboSchmea.setEnabled(true);
-			comboSchmea.setItems(schemaList.get("schmea").split(","));
+			comboSchmea.setItems(schemaList.get("schema").split(","));
 			
 			databaseService = new DatabaseService();
 		} else {
