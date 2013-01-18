@@ -51,6 +51,8 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	private Text txtUserCase = null;
 	private Text txtBaseUrl = null;
 	
+	private Combo comboTableName = null;
+	
 	private DatabaseService databaseService;
 	
 	private Map<String, Object> argument = new HashMap<String, Object>();
@@ -150,7 +152,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		labelDbTable.setText(MessageUtil.getMessage("label.db.table"));
 		
 		//ComboViewer
-		final Combo comboTableName = new Combo(groupDbInfo, SWT.DROP_DOWN);
+		comboTableName = new Combo(groupDbInfo, SWT.DROP_DOWN);
 		
 		comboTableName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboTableName.setEnabled(false);
