@@ -97,6 +97,8 @@ public class DatabaseService {
 			if ("TABLE_NAME".equals(type)) {
 				String objName = (String) model.get("OBJECT_NAME");
 				
+				sb.append("SELECT TAB.TABLE_NAME \n");
+				sb.append("  FROM ( \n");
 				sb.append("SELECT (SELECT UTC.TABLE_NAME || ' [' || UTC.COMMENTS || ']' \n");
 				sb.append("		     FROM USER_TAB_COMMENTS UTC \n");
 				sb.append("		    WHERE UTC.TABLE_TYPE = UO.OBJECT_TYPE \n");
@@ -108,6 +110,9 @@ public class DatabaseService {
 				if (StringUtils.isNotEmpty(objName)) {
 					sb.append("   AND UO.OBJECT_NAME LIKE '" + objName + "%' \n");
 				}
+				
+				sb.append("       ) TAB \n");
+				sb.append(" WHERE TAB.TABLE_NAME IS NOT NULL \n");
 				
 				sb.append("	ORDER BY 1 \n");
 				
