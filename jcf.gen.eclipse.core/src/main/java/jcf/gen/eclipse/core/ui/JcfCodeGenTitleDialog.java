@@ -1,5 +1,6 @@
 package jcf.gen.eclipse.core.ui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -178,7 +179,18 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		if (StringUtils.isNotEmpty(getPreferenceStore().getString(Constants.DB_PASSWORD))) {
 			comboTabName.setEnabled(true);
 			
-			objItems = databaseService.getTableNames("");
+//			objItems = databaseService.getTableNames("");
+			String[] temp = databaseService.getTableNames("");
+			List<String> tmpList = new ArrayList<String>();
+			
+			for (int i = 0; i < temp.length; i++) {
+				String tableName = temp[i];
+				
+				if (StringUtils.isBlank(tableName)) continue;
+				tmpList.add(tableName);
+			}
+			
+			objItems = tmpList.toArray(new String[tmpList.size()]);
 			comboTabName.setItems(objItems);
 		}
 			
