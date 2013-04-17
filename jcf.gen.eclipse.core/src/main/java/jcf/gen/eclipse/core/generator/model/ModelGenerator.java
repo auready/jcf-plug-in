@@ -10,7 +10,7 @@ import jcf.gen.eclipse.core.utils.StrUtils;
 public class ModelGenerator extends AbstractSourceGenerator {
 
 	public String getFileName(Map<String,Object> infoMap) {
-		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.TABLE_NAME_PASCAL)).append("DO.java").toString());
+		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.TABLENAME)).append("DO.java").toString());
 	}
 
 	public String getPackagePath(String basePackPath) {
