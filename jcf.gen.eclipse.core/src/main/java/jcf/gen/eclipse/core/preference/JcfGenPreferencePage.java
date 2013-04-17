@@ -30,11 +30,9 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		setDescription(MessageUtil.getMessage("preference.title.description"));
 	}
 	
-	@Override
 	public void init(IWorkbench workbench) {
 	}
 
-	@Override
 	protected void createFieldEditors() {
 		Composite main = getFieldEditorParent();
 		
@@ -127,9 +125,6 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		
 		addField(new BooleanFieldEditor(Constants.SQLMAP_FILE, 
 				MessageUtil.getMessage("preference.velocity.sqlmap"), vmFileGroup));
-		
-		addField(new BooleanFieldEditor(Constants.GROOVY_FILE, 
-				MessageUtil.getMessage("preference.velocity.groovy"), vmFileGroup));
 		
 		updateMargin(vmFileGroup);
 	}

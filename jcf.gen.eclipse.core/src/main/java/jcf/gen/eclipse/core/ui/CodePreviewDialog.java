@@ -103,10 +103,11 @@ public class CodePreviewDialog extends Dialog {
 		tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		this.addTabItem(Constants.MODEL);
-		this.addTabItem(Constants.SERVICE);
 		this.addTabItem(Constants.CONTROLLER);
+		this.addTabItem(Constants.ISERVICE);
+		this.addTabItem(Constants.SERVICE);
 		this.addTabItem(Constants.SQLMAP);
-		this.addTabItem(Constants.GROOVY);
+		
 	}
 	
 	private void addTabItem(String tabName) {

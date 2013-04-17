@@ -23,11 +23,9 @@ public class JcfLicensePreferencePage extends FieldEditorPreferencePage implemen
 		setPreferenceStore(JcfGeneratorPlugIn.getDefault().getPreferenceStore());
 	}
 	
-	@Override
 	public void init(IWorkbench workbench) {
 	}
 	
-	@Override
 	protected void createFieldEditors() {
 		Composite main = getFieldEditorParent();
 		

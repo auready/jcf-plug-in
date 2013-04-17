@@ -11,8 +11,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 
 import jcf.gen.eclipse.core.generator.controller.ControlGenerator;
-import jcf.gen.eclipse.core.generator.dao.GroovyGenerator;
 import jcf.gen.eclipse.core.generator.dao.SqlMapGenerator;
+import jcf.gen.eclipse.core.generator.service.IServiceGenerator;
 import jcf.gen.eclipse.core.generator.service.ServiceGenerator;
 import jcf.gen.eclipse.core.generator.model.ModelGenerator;
 import jcf.gen.eclipse.core.jdbc.model.TableColumns;
@@ -130,6 +130,9 @@ public class DefaultLuncher {
 		if (createTemplateFile(Constants.SERVICE_FILE)) {
 			ServiceGenerator serviceGenerator = new ServiceGenerator();
 			serviceGenerator.generatorFile(srcPath, packageName, userCaseName, model);
+			
+			IServiceGenerator iServiceGenerator = new IServiceGenerator();
+			iServiceGenerator.generatorFile(srcPath, packageName, userCaseName, model);
 		}
 		
 		if (createTemplateFile(Constants.MODEL_FILE)) {
@@ -142,10 +145,6 @@ public class DefaultLuncher {
 			sqlMapGenerator.generatorFile(srcPath, packageName, userCaseName, model);
 		}
 		
-		if (createTemplateFile(Constants.GROOVY_FILE)) {
-			GroovyGenerator groovyGenerator = new GroovyGenerator();
-			groovyGenerator.generatorFile(srcPath, packageName, userCaseName, model);
-		}
 	}
 	
 	private Map<String, String> preview(String packageName, String userCaseName, Map<String, Object> model) {
@@ -159,6 +158,9 @@ public class DefaultLuncher {
 		if (createTemplateFile(Constants.SERVICE_FILE)) {
 			ServiceGenerator serviceGenerator = new ServiceGenerator();
 			map.put(Constants.SERVICE, serviceGenerator.generatorText(packageName, userCaseName, model));
+			
+			IServiceGenerator iServiceGenerator = new IServiceGenerator();
+			map.put(Constants.ISERVICE, iServiceGenerator.generatorText(packageName, userCaseName, model));
 		}
 		
 		if (createTemplateFile(Constants.MODEL_FILE)) {
@@ -169,11 +171,6 @@ public class DefaultLuncher {
 		if (createTemplateFile(Constants.SQLMAP_FILE)) {
 			SqlMapGenerator sqlMapGenerator = new SqlMapGenerator();
 			map.put(Constants.SQLMAP, sqlMapGenerator.generatorText(packageName, userCaseName, model));
-		}
-		
-		if (createTemplateFile(Constants.GROOVY_FILE)) {
-			GroovyGenerator groovyGenerator = new GroovyGenerator();
-			map.put(Constants.GROOVY, groovyGenerator.generatorText(packageName, userCaseName, model));
 		}
 		
 		return map;

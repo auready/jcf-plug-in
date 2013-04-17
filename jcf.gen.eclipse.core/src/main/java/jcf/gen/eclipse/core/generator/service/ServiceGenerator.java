@@ -9,7 +9,7 @@ import jcf.gen.eclipse.core.utils.StrUtils;
 public class ServiceGenerator extends AbstractSourceGenerator {
 
 	public String getFileName(Map<String, Object> infoMap) {
-		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.UC_NAME)).append("Service.java").toString());
+		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.UC_NAME)).append("ServiceImpl.java").toString());
 	}
 
 	public String getPackagePath(String basePackPath) {

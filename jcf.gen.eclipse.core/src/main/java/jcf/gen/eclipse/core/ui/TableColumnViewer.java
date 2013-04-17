@@ -91,16 +91,13 @@ public class TableColumnViewer {
 	
 	class TableColContentsProvider implements IStructuredContentProvider {
 		
-		@Override
 		public Object[] getElements(Object arg0) {
 			return ((List<TableColumns>) arg0).toArray();
 		}
 		
-		@Override
 		public void dispose() {
 		}
 		
-		@Override
 		public void inputChanged(Viewer arg0, Object arg1, Object arg2) {
 		}
 	}

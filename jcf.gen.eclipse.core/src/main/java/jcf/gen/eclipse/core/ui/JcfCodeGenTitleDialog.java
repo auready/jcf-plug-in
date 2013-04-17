@@ -301,7 +301,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		return -1;
 	}
 	
-	private String[] category = {Constants.CONTROLLER_FILE, Constants.SERVICE_FILE, Constants.MODEL_FILE, Constants.SQLMAP_FILE, Constants.GROOVY_FILE};
+	private String[] category = {Constants.CONTROLLER_FILE, Constants.SERVICE_FILE, Constants.MODEL_FILE, Constants.SQLMAP_FILE};
 	
 	protected void createTemplateGroup(Composite parent) {
 		final Group groupInfo = new Group(parent, SWT.NONE);
@@ -353,14 +353,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			}
 		});
 		
-		btnTemplate[4] = new Button(groupInfo, SWT.CHECK);
-		btnTemplate[4].setText(category[4].substring(0, category[4].indexOf("_")).toLowerCase());
-		btnTemplate[4].setSelection(getPreferenceStore().getBoolean(category[4]));
-		btnTemplate[4].addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				template.put(category[4], btnTemplate[4].getSelection());
-			}
-		});
 	}
 	
 	protected void createCodeGroup(Composite parent) {

@@ -13,7 +13,7 @@ public class ControlGenerator extends AbstractSourceGenerator {
 	}
 
 	public String getPackagePath(String basePackPath) {
-		return new StringBuilder(basePackPath).append(getSeperator()).append("controller").toString();
+		return new StringBuilder(basePackPath).append(getSeperator()).append("web").toString();
 	}
 
 	@Override
