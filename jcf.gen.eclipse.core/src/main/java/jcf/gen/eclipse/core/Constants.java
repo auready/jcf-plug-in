@@ -24,6 +24,7 @@ public class Constants {
 	
 	public static final String CONTROLLER = "CONTROLLER";
 	public static final String SERVICE = "SERVICE";
+	public static final String ISERVICE = "ISERVICE";
 	public static final String MODEL = "MODEL";
 	public static final String SQLMAP = "SQLMAP";
 	public static final String GROOVY = "GROOVY";
