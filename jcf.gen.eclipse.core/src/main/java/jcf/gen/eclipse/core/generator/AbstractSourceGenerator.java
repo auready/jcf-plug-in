@@ -100,7 +100,7 @@ public abstract class AbstractSourceGenerator implements SourceGenerator {
 		
 		try {
 			FileOutputStream fos = new FileOutputStream(fileWithFullPath);
-			Writer writer = new OutputStreamWriter(fos);
+			Writer writer = new OutputStreamWriter(fos, "UTF-8");
 			
 			VelocityEngineUtils.mergeTemplate(velocityEngine, getVmFileName(), model, writer);
 			
