@@ -46,6 +46,7 @@ import jcf.gen.eclipse.core.jdbc.model.TableColumns;
 import jcf.gen.eclipse.core.jdbc.DatabaseService;
 import jcf.gen.eclipse.core.luncher.DefaultLuncher;
 import jcf.gen.eclipse.core.utils.ColumnNameCamelCaseMap;
+import jcf.gen.eclipse.core.utils.PreferenceUtil;
 import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.utils.MessageUtil;
 
@@ -112,7 +113,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		container.setLayout(new GridLayout(1, true));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		if (StringUtils.isNotEmpty(getPreferenceStore().getString(Constants.DB_PASSWORD))) this.databaseService = new DatabaseService();
+		if (StringUtils.isNotEmpty(PreferenceUtil.getStringValue(Constants.DB_PASSWORD))) this.databaseService = new DatabaseService();
 		
 		this.createDbGroup(container);
 		
@@ -176,7 +177,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		comboTabName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboTabName.setEnabled(false);
 		
-		if (StringUtils.isNotEmpty(getPreferenceStore().getString(Constants.DB_PASSWORD))) {
+		if (StringUtils.isNotEmpty(PreferenceUtil.getStringValue(Constants.DB_PASSWORD))) {
 			comboTabName.setEnabled(true);
 			
 //			objItems = databaseService.getTableNames("");
@@ -301,7 +302,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		return -1;
 	}
 	
-	private String[] category = {Constants.CONTROLLER_FILE, Constants.SERVICE_FILE, Constants.MODEL_FILE, Constants.SQLMAP_FILE, Constants.GROOVY_FILE};
+	private String[] category = {Constants.CONTROLLER_FILE, Constants.SERVICE_FILE, Constants.MODEL_FILE, Constants.SQLMAP_FILE};
 	
 	protected void createTemplateGroup(Composite parent) {
 		final Group groupInfo = new Group(parent, SWT.NONE);
@@ -312,14 +313,14 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		// Initialize
 		for (int i = 0, len = category.length; i < len; i++) {
-			template.put(category[i], getPreferenceStore().getBoolean(category[i]));
+			template.put(category[i], PreferenceUtil.isBoolen(category[i]));
 		}
 		
 		final Button[] btnTemplate = new Button[5];
 		
 		btnTemplate[0] = new Button(groupInfo, SWT.CHECK);
 		btnTemplate[0].setText(category[0].substring(0, category[0].indexOf("_")).toLowerCase());
-		btnTemplate[0].setSelection(getPreferenceStore().getBoolean(category[0]));
+		btnTemplate[0].setSelection(PreferenceUtil.isBoolen(category[0]));
 		btnTemplate[0].addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				template.put(category[0], btnTemplate[0].getSelection());
@@ -328,7 +329,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		btnTemplate[1] = new Button(groupInfo, SWT.CHECK);
 		btnTemplate[1].setText(category[1].substring(0, category[1].indexOf("_")).toLowerCase());
-		btnTemplate[1].setSelection(getPreferenceStore().getBoolean(category[1]));
+		btnTemplate[1].setSelection(PreferenceUtil.isBoolen(category[1]));
 		btnTemplate[1].addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				template.put(category[1], btnTemplate[1].getSelection());
@@ -337,7 +338,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		btnTemplate[2] = new Button(groupInfo, SWT.CHECK);
 		btnTemplate[2].setText(category[2].substring(0, category[2].indexOf("_")).toLowerCase());
-		btnTemplate[2].setSelection(getPreferenceStore().getBoolean(category[2]));
+		btnTemplate[2].setSelection(PreferenceUtil.isBoolen(category[2]));
 		btnTemplate[2].addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				template.put(category[2], btnTemplate[2].getSelection());
@@ -346,21 +347,13 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		
 		btnTemplate[3] = new Button(groupInfo, SWT.CHECK);
 		btnTemplate[3].setText(category[3].substring(0, category[3].indexOf("_")).toLowerCase());
-		btnTemplate[3].setSelection(getPreferenceStore().getBoolean(category[3]));
+		btnTemplate[3].setSelection(PreferenceUtil.isBoolen(category[3]));
 		btnTemplate[3].addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				template.put(category[3], btnTemplate[3].getSelection());
 			}
 		});
 		
-		btnTemplate[4] = new Button(groupInfo, SWT.CHECK);
-		btnTemplate[4].setText(category[4].substring(0, category[4].indexOf("_")).toLowerCase());
-		btnTemplate[4].setSelection(getPreferenceStore().getBoolean(category[4]));
-		btnTemplate[4].addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				template.put(category[4], btnTemplate[4].getSelection());
-			}
-		});
 	}
 	
 	protected void createCodeGroup(Composite parent) {
@@ -404,7 +397,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			}
 		});
 		
-		String sourceDir = getPreferenceStore().getString(Constants.SOURCE_DIRECTORY);
+		String sourceDir = PreferenceUtil.getStringValue(Constants.SOURCE_DIRECTORY);
 		
 		if (StringUtils.isNotEmpty(sourceDir)) {
 			txtSrcFolder.setText(sourceDir);
@@ -488,10 +481,6 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		return gridData;
 	}
 	
-	private IPreferenceStore getPreferenceStore() {
-		return JcfGeneratorPlugIn.getDefault().getPreferenceStore();
-	}
-	
 	private void setDataArgument() {
 		argument.put(Constants.EXCLUDE_COLUMNS, excludeCols);
 		argument.put(Constants.TEMPLATE, template);
@@ -500,14 +489,18 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	protected void makeCodePreviewDialog(final Composite parent) {
 		setDataArgument();
 		
-		CodePreviewDialog preview = new CodePreviewDialog(parent.getShell());
-		preview.open(packageName, userCaseName, argument);
+		if (!StringUtils.isEmpty((String) argument.get(Constants.TABLENAME))) {
+			CodePreviewDialog preview = new CodePreviewDialog(parent.getShell());
+			preview.open(packageName, userCaseName, argument);			
+		}
 	}
 	
 	private void generateSourceCode() {
 		setDataArgument();
 		
-		DefaultLuncher luncher = new DefaultLuncher();
-		luncher.execute(srcPath, packageName, userCaseName, argument);
+		if (!StringUtils.isEmpty((String) argument.get(Constants.TABLENAME))) {
+			DefaultLuncher luncher = new DefaultLuncher();
+			luncher.execute(srcPath, packageName, userCaseName, argument);
+		}
 	}
 }

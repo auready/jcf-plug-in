@@ -20,14 +20,23 @@ public class Constants {
 	public static final String SERVICE_FILE = "SERVICE_FILE";
 	public static final String MODEL_FILE = "MODEL_FILE";
 	public static final String SQLMAP_FILE = "SQLMAP_FILE";
-	public static final String GROOVY_FILE = "GROOVY_FILE";
+	
+	public static final String CONTROLLER_PKG_NAME = "CONTROLLER_PKG_NAME";
+	public static final String SERVICE_PKG_NAME = "SERVICE_PKG_NAME";
+	public static final String MODEL_PKG_NAME = "MODEL_PKG_NAME";
+	public static final String SQLMAP_PKG_NAME = "SQLMAP_PKG_NAME";
+	
+	public static final String CONTROLLER_FILE_NAME = "CONTROLLER_FILE_NAME";
+	public static final String SERVICE_FILE_NAME = "SERVICE_FILE_NAME";
+	public static final String ISERVICE_FILE_NAME = "ISERVICE_FILE_NAME";
+	public static final String MODEL_FILE_NAME = "MODEL_FILE_NAME";
+	public static final String SQLMAP_FILE_NAME = "SQLMAP_FILE_NAME";
 	
 	public static final String CONTROLLER = "CONTROLLER";
 	public static final String SERVICE = "SERVICE";
 	public static final String ISERVICE = "ISERVICE";
 	public static final String MODEL = "MODEL";
 	public static final String SQLMAP = "SQLMAP";
-	public static final String GROOVY = "GROOVY";
 	
 	public static final String IMPORT_MATH_CLASS = "IMPORT_MATH_CLASS";
 	public static final String IMPORT_NULL = "";
@@ -47,6 +56,8 @@ public class Constants {
 	public static final String TABLE_NAME_PASCAL = "TABLE_NAME_PASCAL";
 	public static final String EXCLUDE_COLUMNS = "EXCLUDE_COLUMNS";
 
+	public static final String AUTHOR = "AUTHOR";
+	public static final String CREATE_DATE = "CREATE_DATE";
 	public static final String PACKAGE = "PACKAGE";
 	public static final String SCHEMA = "SCHEMA";
 	public static final String WORK_DIR = "WORK_DIR";

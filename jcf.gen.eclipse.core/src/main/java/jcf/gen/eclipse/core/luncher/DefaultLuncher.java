@@ -1,8 +1,11 @@
 package jcf.gen.eclipse.core.luncher;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -11,7 +14,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 
 import jcf.gen.eclipse.core.generator.controller.ControlGenerator;
-import jcf.gen.eclipse.core.generator.dao.GroovyGenerator;
 import jcf.gen.eclipse.core.generator.dao.SqlMapGenerator;
 import jcf.gen.eclipse.core.generator.service.IServiceGenerator;
 import jcf.gen.eclipse.core.generator.service.ServiceGenerator;
@@ -20,6 +22,7 @@ import jcf.gen.eclipse.core.jdbc.model.TableColumns;
 import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.utils.ColumnNameCamelCaseMap;
 import jcf.gen.eclipse.core.utils.DbUtils;
+import jcf.gen.eclipse.core.utils.PreferenceUtil;
 
 public class DefaultLuncher {
 	
@@ -89,6 +92,8 @@ public class DefaultLuncher {
 		model.put(Constants.DOLLOR, "$");
 		model.put(Constants.TABLE_COMMENT, (list.get(0)).get(Constants.COL_TABLE_COMMENT));
 		model.put(Constants.IMPORT_MATH_CLASS, (hasNumberType ? Constants.IMPORT_BIG_DECIMAL : Constants.IMPORT_NULL));
+		model.put(Constants.AUTHOR, PreferenceUtil.getStringValue(Constants.AUTHOR));
+		model.put(Constants.CREATE_DATE, new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA).format(new Date()));
 		
 		String isPkExist = hasPrimaryKeyInList(list) ? Constants.IS_PK_EXIST_Y : Constants.IS_PK_EXIST_N;
 		model.put(Constants.IS_PK_EXIST, isPkExist);
@@ -146,10 +151,6 @@ public class DefaultLuncher {
 			sqlMapGenerator.generatorFile(srcPath, packageName, userCaseName, model);
 		}
 		
-		if (createTemplateFile(Constants.GROOVY_FILE)) {
-			GroovyGenerator groovyGenerator = new GroovyGenerator();
-			groovyGenerator.generatorFile(srcPath, packageName, userCaseName, model);
-		}
 	}
 	
 	private Map<String, String> preview(String packageName, String userCaseName, Map<String, Object> model) {
@@ -176,11 +177,6 @@ public class DefaultLuncher {
 		if (createTemplateFile(Constants.SQLMAP_FILE)) {
 			SqlMapGenerator sqlMapGenerator = new SqlMapGenerator();
 			map.put(Constants.SQLMAP, sqlMapGenerator.generatorText(packageName, userCaseName, model));
-		}
-		
-		if (createTemplateFile(Constants.GROOVY_FILE)) {
-			GroovyGenerator groovyGenerator = new GroovyGenerator();
-			map.put(Constants.GROOVY, groovyGenerator.generatorText(packageName, userCaseName, model));
 		}
 		
 		return map;

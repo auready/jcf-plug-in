@@ -2,15 +2,12 @@ package jcf.gen.eclipse.core.preference;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 
 import jcf.gen.eclipse.core.Constants;
-import jcf.gen.eclipse.core.JcfGeneratorPlugIn;
 import jcf.gen.eclipse.core.utils.MessageUtil;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
@@ -22,26 +19,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPreferencePage;
 
-public class JcfConnectionPreferencePage extends FieldEditorPreferencePage implements
-		IWorkbenchPreferencePage {
+public class ConnectionPreferencePage extends AbstractJcfPreferencePage {
 	
 	StringFieldEditor driverClassNameEditor;
 	StringFieldEditor driverUrlEditor;
 	StringFieldEditor driverUsernameEditor;
 	StringFieldEditor driverPasswordEditor;
 	
-	public JcfConnectionPreferencePage() {
-		super(FLAT);
-		
-		setPreferenceStore(JcfGeneratorPlugIn.getDefault().getPreferenceStore());
+	public ConnectionPreferencePage() {
 		setDescription(MessageUtil.getMessage("preference.conn.description"));
-	}
-	
-	@Override
-	public void init(IWorkbench workbench) {
 	}
 	
 	@Override
@@ -112,13 +99,6 @@ public class JcfConnectionPreferencePage extends FieldEditorPreferencePage imple
 				connMsgBox(msg, connTest);
 			}
 		});
-	}
-	
-	private void updateMargin(Group group) {
-		GridLayout layout = (GridLayout) group.getLayout();
-		
-		layout.marginWidth = 5;
-		layout.marginHeight = 5;
 	}
 	
 	public void connMsgBox(String message, boolean isConn) {

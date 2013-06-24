@@ -12,6 +12,7 @@ import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.VelocityException;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.springframework.ui.velocity.VelocityEngineFactory;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
@@ -28,7 +29,6 @@ public abstract class AbstractSourceGenerator implements SourceGenerator {
 //				= new ClassPathXmlApplicationContext("/config/applicationContext-generator.xml", AbstractSourceGenerator.class);
 //		classPathXmlApplicationContext.getAutowireCapableBeanFactory()
 //				.autowireBeanProperties(this, AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE, true);
-		
 		init();
 	}
 	
@@ -42,7 +42,7 @@ public abstract class AbstractSourceGenerator implements SourceGenerator {
 		try {
 			VelocityEngineFactory vef = new VelocityEngineFactory();
 			
-			vef.setResourceLoaderPath("file:" + JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(Constants.TEMPLATE_DIRECTORY));
+			vef.setResourceLoaderPath("file:" + getPreferenceString(Constants.TEMPLATE_DIRECTORY));
 			setVelocityEngine(vef.createVelocityEngine());
 			
 		} catch (VelocityException ve) {
@@ -80,6 +80,14 @@ public abstract class AbstractSourceGenerator implements SourceGenerator {
 		}
 		
 		return model;
+	}
+	
+	private IPreferenceStore getPreferenceStore() {
+		return JcfGeneratorPlugIn.getDefault().getPreferenceStore();
+	}
+	
+	protected String getPreferenceString(String name) {
+		return getPreferenceStore().getString(name);
 	}
 	
 	private VelocityEngine velocityEngine;

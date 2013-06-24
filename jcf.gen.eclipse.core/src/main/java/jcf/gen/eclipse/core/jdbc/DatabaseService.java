@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.JcfGeneratorPlugIn;
 import jcf.gen.eclipse.core.jdbc.model.TableColumns;
+import jcf.gen.eclipse.core.utils.PreferenceUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -46,7 +47,7 @@ public class DatabaseService {
 	}
 	
 	public String getPreference(String keyProperty) {
-		return JcfGeneratorPlugIn.getDefault().getPreferenceStore().getString(keyProperty);
+		return PreferenceUtil.getStringValue(keyProperty);
 	}
 	
 	public String[] getTableNames(String objName) {

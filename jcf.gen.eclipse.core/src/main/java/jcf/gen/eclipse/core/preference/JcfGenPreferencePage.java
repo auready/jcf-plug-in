@@ -4,36 +4,22 @@ import java.io.File;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
-import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.FileFieldEditor;
-import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import jcf.gen.eclipse.core.JcfGeneratorPlugIn;
 import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.utils.MessageUtil;
 
-public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
-		IWorkbenchPreferencePage {
+public class JcfGenPreferencePage extends AbstractJcfPreferencePage {
 
 	public JcfGenPreferencePage() {
 		super(GRID);
 		
-		setPreferenceStore(JcfGeneratorPlugIn.getDefault().getPreferenceStore());
 		setDescription(MessageUtil.getMessage("preference.title.description"));
 	}
 	
-	@Override
-	public void init(IWorkbench workbench) {
-	}
-
 	@Override
 	protected void createFieldEditors() {
 		Composite main = getFieldEditorParent();
@@ -111,34 +97,24 @@ public class JcfGenPreferencePage extends FieldEditorPreferencePage implements
 		
 		addField(srcEditor);
 		
-		Group vmFileGroup = new Group(main, SWT.COLOR_DARK_GRAY);
-		
-		vmFileGroup.setText(MessageUtil.getMessage("preference.group.velocity"));
-		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(vmFileGroup);
-		
-		addField(new BooleanFieldEditor(Constants.CONTROLLER_FILE, 
-				MessageUtil.getMessage("preference.velocity.controller"), vmFileGroup));
-		
-		addField(new BooleanFieldEditor(Constants.SERVICE_FILE, 
-				MessageUtil.getMessage("preference.velocity.service"), vmFileGroup));
-		
-		addField(new BooleanFieldEditor(Constants.MODEL_FILE, 
-				MessageUtil.getMessage("preference.velocity.model"), vmFileGroup));
-		
-		addField(new BooleanFieldEditor(Constants.SQLMAP_FILE, 
-				MessageUtil.getMessage("preference.velocity.sqlmap"), vmFileGroup));
-		
-		addField(new BooleanFieldEditor(Constants.GROOVY_FILE, 
-				MessageUtil.getMessage("preference.velocity.groovy"), vmFileGroup));
-		
-		updateMargin(vmFileGroup);
-	}
-	
-	private void updateMargin(Group group) {
-		GridLayout layout = (GridLayout) group.getLayout();
-		
-		layout.marginWidth = 5;
-		layout.marginHeight = 5;
+//		Group vmFileGroup = new Group(main, SWT.COLOR_DARK_GRAY);
+//		
+//		vmFileGroup.setText(MessageUtil.getMessage("preference.group.velocity"));
+//		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(vmFileGroup);
+//		
+//		addField(new BooleanFieldEditor(Constants.CONTROLLER_FILE, 
+//				MessageUtil.getMessage("preference.velocity.controller"), vmFileGroup));
+//		
+//		addField(new BooleanFieldEditor(Constants.SERVICE_FILE, 
+//				MessageUtil.getMessage("preference.velocity.service"), vmFileGroup));
+//		
+//		addField(new BooleanFieldEditor(Constants.MODEL_FILE, 
+//				MessageUtil.getMessage("preference.velocity.model"), vmFileGroup));
+//		
+//		addField(new BooleanFieldEditor(Constants.SQLMAP_FILE, 
+//				MessageUtil.getMessage("preference.velocity.sqlmap"), vmFileGroup));
+//		
+//		updateMargin(vmFileGroup);
 	}
 	
 	public void createControl(Composite parent) {
