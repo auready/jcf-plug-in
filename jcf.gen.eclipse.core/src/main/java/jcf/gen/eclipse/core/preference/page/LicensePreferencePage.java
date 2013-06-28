@@ -1,5 +1,6 @@
-package jcf.gen.eclipse.core.preference;
+package jcf.gen.eclipse.core.preference.page;
 
+import jcf.gen.eclipse.core.preference.AbstractJcfPreferencePage;
 import jcf.gen.eclipse.core.utils.MessageUtil;
 
 import org.eclipse.jface.layout.GridDataFactory;

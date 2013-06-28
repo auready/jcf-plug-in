@@ -1,4 +1,4 @@
-package jcf.gen.eclipse.core.preference;
+package jcf.gen.eclipse.core.preference.page;
 
 import java.io.File;
 
@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
 import jcf.gen.eclipse.core.Constants;
+import jcf.gen.eclipse.core.preference.AbstractJcfPreferencePage;
 import jcf.gen.eclipse.core.utils.MessageUtil;
 
 public class JcfGenPreferencePage extends AbstractJcfPreferencePage {
@@ -96,25 +97,6 @@ public class JcfGenPreferencePage extends AbstractJcfPreferencePage {
 		srcEditor.getLabelControl(srcGroup).setToolTipText(MessageUtil.getMessage("preference.source.path.tooltip"));
 		
 		addField(srcEditor);
-		
-//		Group vmFileGroup = new Group(main, SWT.COLOR_DARK_GRAY);
-//		
-//		vmFileGroup.setText(MessageUtil.getMessage("preference.group.velocity"));
-//		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(vmFileGroup);
-//		
-//		addField(new BooleanFieldEditor(Constants.CONTROLLER_FILE, 
-//				MessageUtil.getMessage("preference.velocity.controller"), vmFileGroup));
-//		
-//		addField(new BooleanFieldEditor(Constants.SERVICE_FILE, 
-//				MessageUtil.getMessage("preference.velocity.service"), vmFileGroup));
-//		
-//		addField(new BooleanFieldEditor(Constants.MODEL_FILE, 
-//				MessageUtil.getMessage("preference.velocity.model"), vmFileGroup));
-//		
-//		addField(new BooleanFieldEditor(Constants.SQLMAP_FILE, 
-//				MessageUtil.getMessage("preference.velocity.sqlmap"), vmFileGroup));
-//		
-//		updateMargin(vmFileGroup);
 	}
 	
 	public void createControl(Composite parent) {

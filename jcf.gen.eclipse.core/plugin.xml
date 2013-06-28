@@ -61,25 +61,25 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            class="jcf.gen.eclipse.core.preference.JcfGenPreferencePage"
+            class="jcf.gen.eclipse.core.preference.page.JcfGenPreferencePage"
             id="jcf.gen.eclipse.core.codegen"
             name="JCF">
       </page>
       <page
             category="jcf.gen.eclipse.core.codegen"
-            class="jcf.gen.eclipse.core.preference.ConnectionPreferencePage"
+            class="jcf.gen.eclipse.core.preference.page.ConnectionPreferencePage"
             id="jcf.gen.eclipse.core.codegen.preference.connectionPreferencePage"
             name="Connection">
       </page>
       <page
             category="jcf.gen.eclipse.core.codegen"
-            class="jcf.gen.eclipse.core.preference.FormatPreferencePage"
+            class="jcf.gen.eclipse.core.preference.page.FormatPreferencePage"
             id="jcf.gen.eclipse.core.codegen.preference.formatPreferencePage"
             name="Format">
       </page>
       <page
       		category="jcf.gen.eclipse.core.codegen"
-      		class="jcf.gen.eclipse.core.preference.LicensePreferencePage"
+      		class="jcf.gen.eclipse.core.preference.page.LicensePreferencePage"
             id="jcf.gen.eclipse.core.codegen.preference.licensePreferencePage"
             name="License">
       </page>

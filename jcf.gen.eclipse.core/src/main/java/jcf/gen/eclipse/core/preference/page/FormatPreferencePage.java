@@ -1,8 +1,10 @@
-package jcf.gen.eclipse.core.preference;
+package jcf.gen.eclipse.core.preference.page;
 
 import jcf.gen.eclipse.core.Constants;
+import jcf.gen.eclipse.core.preference.AbstractJcfPreferencePage;
 import jcf.gen.eclipse.core.utils.MessageUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.BooleanFieldEditor;
@@ -51,9 +53,7 @@ public class FormatPreferencePage extends AbstractJcfPreferencePage {
 		Group authorGroup = new Group(main, SWT.NONE);
 		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(authorGroup);
 		
-		StringFieldEditor author = new StringFieldEditor(Constants.AUTHOR, 
-				MessageUtil.getMessage("preference.format.author"), authorGroup);
-		addField(author);
+		addField(getStringFieldEditor(Constants.AUTHOR, MessageUtil.getMessage("preference.format.author"), "", authorGroup));
 		
 		updateMargin(authorGroup);
 		
@@ -77,24 +77,13 @@ public class FormatPreferencePage extends AbstractJcfPreferencePage {
 		tabItem.setText(MessageUtil.getMessage("preference.group.package"));
 		tabItem.setControl(page);
 		
-		Group pkgNameGroup = new Group(page, SWT.NONE);
+		Group pkgNameGroup = new Group(page, SWT.COLOR_DARK_GRAY);
 		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(pkgNameGroup);
 		
-		StringFieldEditor controllerPkgName = new StringFieldEditor(Constants.CONTROLLER_PKG_NAME, 
-				MessageUtil.getMessage("preference.format.package.controller"), pkgNameGroup);
-		addField(controllerPkgName);
-		
-		StringFieldEditor servicePkgName = new StringFieldEditor(Constants.SERVICE_PKG_NAME, 
-				MessageUtil.getMessage("preference.format.package.service"), pkgNameGroup);
-		addField(servicePkgName);
-		
-		StringFieldEditor modelPkgName = new StringFieldEditor(Constants.MODEL_PKG_NAME, 
-				MessageUtil.getMessage("preference.format.package.model"), pkgNameGroup);
-		addField(modelPkgName);
-		
-		StringFieldEditor sqlmapPkgName = new StringFieldEditor(Constants.SQLMAP_PKG_NAME, 
-				MessageUtil.getMessage("preference.format.package.sqlmap"), pkgNameGroup);
-		addField(sqlmapPkgName);
+		addField(getStringFieldEditor(Constants.CONTROLLER_PKG_NAME, MessageUtil.getMessage("preference.format.package.controller"), "", pkgNameGroup));
+		addField(getStringFieldEditor(Constants.SERVICE_PKG_NAME, MessageUtil.getMessage("preference.format.package.service"), "", pkgNameGroup));
+		addField(getStringFieldEditor(Constants.MODEL_PKG_NAME, MessageUtil.getMessage("preference.format.package.model"), "", pkgNameGroup));
+		addField(getStringFieldEditor(Constants.SQLMAP_PKG_NAME, MessageUtil.getMessage("preference.format.package.sqlmap"), "", pkgNameGroup));
 		
 		updateMargin(pkgNameGroup);
 	}
@@ -110,34 +99,34 @@ public class FormatPreferencePage extends AbstractJcfPreferencePage {
 		tabItem.setText(MessageUtil.getMessage("preference.group.filename"));
 		tabItem.setControl(page);
 		
-		Group fileNameGroup = new Group(page, SWT.NONE);
+		Group fileNameGroup = new Group(page, SWT.COLOR_DARK_GRAY);
 		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(fileNameGroup);
 		
-		StringFieldEditor controllerFileName = new StringFieldEditor(Constants.CONTROLLER_FILE_NAME, 
-				MessageUtil.getMessage("preference.format.file.controller"), fileNameGroup);
-		controllerFileName.getLabelControl(fileNameGroup).setToolTipText(MessageUtil.getMessage("preference.format.file.controller.tooltip"));
-		addField(controllerFileName);
+		addField(getStringFieldEditor(Constants.CONTROLLER_FILE_NAME, 
+				MessageUtil.getMessage("preference.format.file.controller"), MessageUtil.getMessage("preference.format.file.controller.tooltip"), fileNameGroup));
 		
-		StringFieldEditor iServiceFileName = new StringFieldEditor(Constants.ISERVICE_FILE_NAME, 
-				MessageUtil.getMessage("preference.format.file.iservice"), fileNameGroup);
-		iServiceFileName.getLabelControl(fileNameGroup).setToolTipText(MessageUtil.getMessage("preference.format.file.iservice.tooltip"));
-		addField(iServiceFileName);
+		addField(getStringFieldEditor(Constants.ISERVICE_FILE_NAME, 
+				MessageUtil.getMessage("preference.format.file.iservice"), MessageUtil.getMessage("preference.format.file.iservice.tooltip"), fileNameGroup));
 		
-		StringFieldEditor serviceFileName = new StringFieldEditor(Constants.SERVICE_FILE_NAME, 
-				MessageUtil.getMessage("preference.format.file.service"), fileNameGroup);
-		serviceFileName.getLabelControl(fileNameGroup).setToolTipText(MessageUtil.getMessage("preference.format.file.service.tooltip"));
-		addField(serviceFileName);
+		addField(getStringFieldEditor(Constants.SERVICE_FILE_NAME, 
+				MessageUtil.getMessage("preference.format.file.service"), MessageUtil.getMessage("preference.format.file.service.tooltip"), fileNameGroup));
 		
-		StringFieldEditor modelFileName = new StringFieldEditor(Constants.MODEL_FILE_NAME, 
-				MessageUtil.getMessage("preference.format.file.model"), fileNameGroup);
-		modelFileName.getLabelControl(fileNameGroup).setToolTipText(MessageUtil.getMessage("preference.format.file.model.tooltip"));
-		addField(modelFileName);
+		addField(getStringFieldEditor(Constants.MODEL_FILE_NAME, 
+				MessageUtil.getMessage("preference.format.file.model"), MessageUtil.getMessage("preference.format.file.model.tooltip"), fileNameGroup));
 		
-		StringFieldEditor sqlmapFileName = new StringFieldEditor(Constants.SQLMAP_FILE_NAME, 
-				MessageUtil.getMessage("preference.format.file.sqlmap"), fileNameGroup);
-		sqlmapFileName.getLabelControl(fileNameGroup).setToolTipText(MessageUtil.getMessage("preference.format.file.sqlmap.tooltip"));
-		addField(sqlmapFileName);
+		addField(getStringFieldEditor(Constants.SQLMAP_FILE_NAME, 
+				MessageUtil.getMessage("preference.format.file.sqlmap"), MessageUtil.getMessage("preference.format.file.sqlmap.tooltip"), fileNameGroup));
 		
 		updateMargin(fileNameGroup);
+	}
+	
+	private StringFieldEditor getStringFieldEditor(String name, String label, String toolTip, Composite parent) {
+		StringFieldEditor fieldEditor = new StringFieldEditor(name, label, parent);
+		
+		if (StringUtils.isNotEmpty(toolTip)) {
+			fieldEditor.getLabelControl(parent).setToolTipText(toolTip);
+		}
+		
+		return fieldEditor;
 	}
 }

@@ -1,9 +1,10 @@
-package jcf.gen.eclipse.core.preference;
+package jcf.gen.eclipse.core.preference.page;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 
 import jcf.gen.eclipse.core.Constants;
+import jcf.gen.eclipse.core.preference.AbstractJcfPreferencePage;
 import jcf.gen.eclipse.core.utils.MessageUtil;
 
 import org.eclipse.jface.layout.GridDataFactory;
@@ -22,10 +23,10 @@ import org.eclipse.swt.widgets.MessageBox;
 
 public class ConnectionPreferencePage extends AbstractJcfPreferencePage {
 	
-	StringFieldEditor driverClassNameEditor;
-	StringFieldEditor driverUrlEditor;
-	StringFieldEditor driverUsernameEditor;
-	StringFieldEditor driverPasswordEditor;
+	private StringFieldEditor driverClassNameEditor;
+	private StringFieldEditor driverUrlEditor;
+	private StringFieldEditor driverUsernameEditor;
+	private StringFieldEditor driverPasswordEditor;
 	
 	public ConnectionPreferencePage() {
 		setDescription(MessageUtil.getMessage("preference.conn.description"));

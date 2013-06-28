@@ -15,7 +15,6 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.fieldassist.ComboContentAdapter;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -316,43 +315,20 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 			template.put(category[i], PreferenceUtil.isBoolen(category[i]));
 		}
 		
-		final Button[] btnTemplate = new Button[5];
+		final Button[] btnTemplate = new Button[4];
 		
-		btnTemplate[0] = new Button(groupInfo, SWT.CHECK);
-		btnTemplate[0].setText(category[0].substring(0, category[0].indexOf("_")).toLowerCase());
-		btnTemplate[0].setSelection(PreferenceUtil.isBoolen(category[0]));
-		btnTemplate[0].addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				template.put(category[0], btnTemplate[0].getSelection());
-			}
-		});
-		
-		btnTemplate[1] = new Button(groupInfo, SWT.CHECK);
-		btnTemplate[1].setText(category[1].substring(0, category[1].indexOf("_")).toLowerCase());
-		btnTemplate[1].setSelection(PreferenceUtil.isBoolen(category[1]));
-		btnTemplate[1].addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				template.put(category[1], btnTemplate[1].getSelection());
-			}
-		});
-		
-		btnTemplate[2] = new Button(groupInfo, SWT.CHECK);
-		btnTemplate[2].setText(category[2].substring(0, category[2].indexOf("_")).toLowerCase());
-		btnTemplate[2].setSelection(PreferenceUtil.isBoolen(category[2]));
-		btnTemplate[2].addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				template.put(category[2], btnTemplate[2].getSelection());
-			}
-		});
-		
-		btnTemplate[3] = new Button(groupInfo, SWT.CHECK);
-		btnTemplate[3].setText(category[3].substring(0, category[3].indexOf("_")).toLowerCase());
-		btnTemplate[3].setSelection(PreferenceUtil.isBoolen(category[3]));
-		btnTemplate[3].addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				template.put(category[3], btnTemplate[3].getSelection());
-			}
-		});
+		for (int i = 0; i < category.length; i++) {
+			final int idx = i;
+			
+			btnTemplate[idx] = new Button(groupInfo, SWT.CHECK);
+			btnTemplate[idx].setText(category[idx].substring(0, category[idx].indexOf("_")).toLowerCase());
+			btnTemplate[idx].setSelection(PreferenceUtil.isBoolen(category[idx]));
+			btnTemplate[idx].addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent event) {
+					template.put(category[idx], btnTemplate[idx].getSelection());
+				}
+			});
+		}
 		
 	}
 	
