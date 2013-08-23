@@ -2,7 +2,7 @@ package jcf.gen.eclipse.core.ui;
 
 import java.util.List;
 
-import jcf.gen.eclipse.core.jdbc.model.TableColumns;
+import jcf.gen.eclipse.core.jdbc.TableColumns;
 
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ColumnLabelProvider;

@@ -10,12 +10,12 @@ public class ServiceGenerator extends AbstractSourceGenerator {
 
 	public String getFileName(Map<String, Object> infoMap) {
 		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.UC_NAME)).
-				append(getPreferenceString(Constants.SERVICE_FILE_NAME)).append(".java").toString());
+				append("Service.java").toString());
 	}
 
 	public String getPackagePath(String basePackPath) {
 		return new StringBuilder(basePackPath).append(getSeperator()).
-				append(getPreferenceString(Constants.SERVICE_PKG_NAME)).toString();
+				append("service").toString();
 	}
 
 	public String getVmFileName() {

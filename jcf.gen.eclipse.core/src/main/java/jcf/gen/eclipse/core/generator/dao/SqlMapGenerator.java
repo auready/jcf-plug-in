@@ -9,16 +9,16 @@ import jcf.gen.eclipse.core.utils.StrUtils;
 public class SqlMapGenerator extends AbstractSourceGenerator {
 
 	public String getFileName(Map<String,Object> infoMap) {
-		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.TABLE_NAME_PASCAL)).
-				append(getPreferenceString(Constants.SQLMAP_FILE_NAME)).append(".xml").toString());
+		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.UC_NAME)).
+				append("SqlMap.xml").toString());
 	}
 
 	public String getPackagePath(String basePackPath) {
 		return new StringBuilder(basePackPath).append(getSeperator())
-				.append(getPreferenceString(Constants.SQLMAP_PKG_NAME)).toString();
+				.append("service").toString();
 	}
 
 	public String getVmFileName() {
-		return "sqlMapTemplate.vm";
+		return "sqlmapTemplate.vm";
 	}
 }

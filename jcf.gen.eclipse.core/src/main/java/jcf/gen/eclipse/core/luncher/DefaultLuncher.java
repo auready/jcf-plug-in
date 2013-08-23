@@ -15,14 +15,14 @@ import org.eclipse.swt.widgets.MessageBox;
 
 import jcf.gen.eclipse.core.generator.controller.ControlGenerator;
 import jcf.gen.eclipse.core.generator.dao.SqlMapGenerator;
-import jcf.gen.eclipse.core.generator.service.IServiceGenerator;
 import jcf.gen.eclipse.core.generator.service.ServiceGenerator;
 import jcf.gen.eclipse.core.generator.model.ModelGenerator;
-import jcf.gen.eclipse.core.jdbc.model.TableColumns;
+import jcf.gen.eclipse.core.jdbc.TableColumns;
 import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.utils.ColumnNameCamelCaseMap;
 import jcf.gen.eclipse.core.utils.DbUtils;
 import jcf.gen.eclipse.core.utils.PreferenceUtil;
+import jcf.gen.eclipse.core.utils.StrUtils;
 
 public class DefaultLuncher {
 	
@@ -35,7 +35,6 @@ public class DefaultLuncher {
 				return true;
 			}
 		}
-		
 		return false;
 	}
 	
@@ -58,9 +57,9 @@ public class DefaultLuncher {
 				Map<String, Object> map = new HashMap<String, Object>();
 				
 				map.put(Constants.COL_TABLE_NAME, col.getTableName());
-				map.put(Constants.COL_TABLE_COMMENT, col.getTableComment());
+				map.put(Constants.COL_TABLE_COMMENT, StrUtils.nvl(col.getTableComment()));
 				map.put(Constants.COL_COLUMN_NAME, col.getColumnName());
-				map.put(Constants.COL_COLUMN_COMMENT, col.getColumnCommnet());
+				map.put(Constants.COL_COLUMN_COMMENT, StrUtils.makeColumnComment(col.getColumnCommnet()));
 				map.put(Constants.COL_PK, col.getPk());
 				map.put(Constants.COL_DATA_TYPE, DbUtils.convertToDataType(col.getDataType()));
 				map.put(Constants.COL_DATA_LENGTH, col.getDataLength());
@@ -71,8 +70,8 @@ public class DefaultLuncher {
 				map.put(Constants.COL_COLUMN_ID, col.getColumnId());
 				map.put(Constants.COL_DEFAULT_LENGTH, col.getDefaultLength());
 				map.put(Constants.COL_DATA_DEFAULT, col.getDataDefault());
-				map.put(Constants.COLUMN_NAME_CAMEL, columnNameCamelCase.camelCaseConverter(col.getColumnName()));
-				map.put(Constants.COLUMN_NAME_PASCAL, columnNameCamelCase.pascalCaseConverter(col.getColumnName()));
+				map.put(Constants.COLUMN_NAME_CAMEL, StrUtils.nvl(columnNameCamelCase.camelCaseConverter(col.getColumnName())));
+				map.put(Constants.COLUMN_NAME_PASCAL, StrUtils.nvl(columnNameCamelCase.pascalCaseConverter(col.getColumnName())));
 				
 				if (!hasNumberType) {
 					if (DbUtils.hasNumberType(col.getDataType())) hasNumberType = true;
@@ -86,12 +85,14 @@ public class DefaultLuncher {
 		
 		model.put(Constants.TABLENAME, tableName);
 		model.put(Constants.TABLE_NAME_CAMEL, columnNameCamelCase.camelCaseConverter(tableName));
-		model.put(Constants.TABLE_NAME_PASCAL, columnNameCamelCase.pascalCaseConverter(tableName));
+		model.put(Constants.TABLE_NAME_PASCAL, columnNameCamelCase.tableNameConvert(tableName));
 		model.put(Constants.COLUMNS, list);
 		model.put(Constants.SHARP, "#");
 		model.put(Constants.DOLLOR, "$");
-		model.put(Constants.TABLE_COMMENT, (list.get(0)).get(Constants.COL_TABLE_COMMENT));
-		model.put(Constants.IMPORT_MATH_CLASS, (hasNumberType ? Constants.IMPORT_BIG_DECIMAL : Constants.IMPORT_NULL));
+		model.put(Constants.TABLE_COMMENT, StrUtils.nvl(String.valueOf((list.get(0)).get(Constants.COL_TABLE_COMMENT))));
+//		model.put(Constants.IMPORT_MATH_CLASS, (hasNumberType ? Constants.IMPORT_BIG_DECIMAL : Constants.IMPORT_NULL));
+//		model.put(Constants.PACKAGE_PATH, PreferenceUtil.getStringValue(Constants.PACKAGE_PATH));
+		model.put(Constants.SERVICE_MAPPING, StrUtils.getServicePath((String) arg.get(Constants.SERVICE_MAPPING)));
 		model.put(Constants.AUTHOR, PreferenceUtil.getStringValue(Constants.AUTHOR));
 		model.put(Constants.CREATE_DATE, new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA).format(new Date()));
 		
@@ -106,19 +107,19 @@ public class DefaultLuncher {
 	public void execute(String srcPath, String packageName, String userCaseName, Map<String, Object> arg) {
 		Map<String, Object> model = this.makeMapData(arg);
 		
-		this.run(srcPath, packageName, userCaseName, model);
+		run(srcPath, packageName, userCaseName, model);
 		
 		MessageBox msg = new MessageBox(Display.getCurrent().getActiveShell(), SWT.ICON_INFORMATION | SWT.OK);
 		
-		msg.setText("JCF");
-		msg.setMessage("JCF Source Generate");
+		msg.setText("KEIS");
+		msg.setMessage("KEIS Source Generate");
 		msg.open();
 	}
 	
 	public Map<String, String> execute(String packageName, String userCaseName, Map<String, Object> arg) {
 		Map<String, Object> model = this.makeMapData(arg);
 		
-		return this.preview(packageName, userCaseName, model);
+		return preview(packageName, userCaseName, model);
 	}
 	
 	private Map<String, Boolean> template;
@@ -136,9 +137,6 @@ public class DefaultLuncher {
 		if (createTemplateFile(Constants.SERVICE_FILE)) {
 			ServiceGenerator serviceGenerator = new ServiceGenerator();
 			serviceGenerator.generatorFile(srcPath, packageName, userCaseName, model);
-			
-			IServiceGenerator iServiceGenerator = new IServiceGenerator();
-			iServiceGenerator.generatorFile(srcPath, packageName, userCaseName, model);
 		}
 		
 		if (createTemplateFile(Constants.MODEL_FILE)) {
@@ -164,9 +162,6 @@ public class DefaultLuncher {
 		if (createTemplateFile(Constants.SERVICE_FILE)) {
 			ServiceGenerator serviceGenerator = new ServiceGenerator();
 			map.put(Constants.SERVICE, serviceGenerator.generatorText(packageName, userCaseName, model));
-			
-			IServiceGenerator iServiceGenerator = new IServiceGenerator();
-			map.put(Constants.ISERVICE, iServiceGenerator.generatorText(packageName, userCaseName, model));
 		}
 		
 		if (createTemplateFile(Constants.MODEL_FILE)) {
@@ -181,4 +176,5 @@ public class DefaultLuncher {
 		
 		return map;
 	}
+	
 }

@@ -26,17 +26,7 @@ public class JcfGenPreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(Constants.MODEL_FILE, true);
 		store.setDefault(Constants.SQLMAP_FILE, true);
 		
-		store.setDefault(Constants.CONTROLLER_PKG_NAME, "controller");
-		store.setDefault(Constants.SERVICE_PKG_NAME, "service");
-		store.setDefault(Constants.MODEL_PKG_NAME, "model");
-		store.setDefault(Constants.SQLMAP_PKG_NAME, "sqlmap");
-		
-		store.setDefault(Constants.CONTROLLER_FILE_NAME, "Controller");
-		store.setDefault(Constants.ISERVICE_FILE_NAME, "Service");
-		store.setDefault(Constants.SERVICE_FILE_NAME, "ServiceImpl");
-		store.setDefault(Constants.MODEL_FILE_NAME, "Model");
-		store.setDefault(Constants.SQLMAP_FILE_NAME, "-sqlMap");
-		
+		store.setDefault(Constants.PACKAGE_PATH, "");
 		store.setDefault(Constants.AUTHOR, "");
 	}
 

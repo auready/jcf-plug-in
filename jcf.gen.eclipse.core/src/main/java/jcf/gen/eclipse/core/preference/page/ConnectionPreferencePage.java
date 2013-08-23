@@ -1,15 +1,12 @@
 package jcf.gen.eclipse.core.preference.page;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-
 import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.preference.AbstractJcfPreferencePage;
+import jcf.gen.eclipse.core.utils.DbUtils;
 import jcf.gen.eclipse.core.utils.MessageUtil;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -38,23 +35,6 @@ public class ConnectionPreferencePage extends AbstractJcfPreferencePage {
 		
 		GridLayoutFactory.swtDefaults().margins(0, 0).applyTo(main);
 		
-		Group dbCategoryGroup = new Group(main, SWT.NONE);
-		
-		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(dbCategoryGroup);
-		
-		String[][] dbCategory = {{Constants.DB_ORACLE, Constants.DB_ORACLE}, {Constants.DB_MYSQL, Constants.DB_MYSQL}};
-		
-		RadioGroupFieldEditor dbCategoryEditor = new RadioGroupFieldEditor(Constants.DB_CATEGORY_RADIO, 
-				MessageUtil.getMessage("preference.db.category.desc"),
-				dbCategory.length, 
-				dbCategory, 
-				dbCategoryGroup);
-		
-		addField(dbCategoryEditor);
-		
-		((GridLayout) dbCategoryGroup.getLayout()).marginWidth = 5;
-		((GridLayout) dbCategoryGroup.getLayout()).marginBottom = 5;
-		
 		Group dbGroup = new Group(main, SWT.NONE);
 		dbGroup.setText(MessageUtil.getMessage("preference.group.db"));
 		
@@ -82,7 +62,6 @@ public class ConnectionPreferencePage extends AbstractJcfPreferencePage {
 		updateMargin(dbGroup);
 		
 		Composite buttonPanel = new Composite(main, SWT.NONE);
-		
 		buttonPanel.setLayout(new GridLayout(1, false));
 		
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(buttonPanel);
@@ -94,8 +73,8 @@ public class ConnectionPreferencePage extends AbstractJcfPreferencePage {
 		dbConnTestBtn.setText("Database Connection Test");
 		dbConnTestBtn.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				boolean connTest = dbConnetionTest();
-				String msg = connTest ? "Connection OK" : "Connection FAIL";
+				boolean connTest = DbUtils.isDbConn();
+				String msg = connTest ? "Connection Ok" : "Connection Fail";
 				
 				connMsgBox(msg, connTest);
 			}
@@ -110,28 +89,5 @@ public class ConnectionPreferencePage extends AbstractJcfPreferencePage {
 		msg.setText("Database Connection");
 		msg.setMessage(message);
 		msg.open();
-	}
-	
-	public boolean dbConnetionTest() {
-		boolean result = true;
-		
-		String className = driverClassNameEditor.getStringValue();
-		String url = driverUrlEditor.getStringValue();
-		String username = driverUsernameEditor.getStringValue();
-		String password = driverPasswordEditor.getStringValue();
-		
-		Connection conn = null;
-		
-		try {		
-			Class.forName(className);
-	
-			conn = DriverManager.getConnection(url, username, password);
-			conn.close();
-			
-		} catch (Exception e) {
-			result = false;
-		} 
-		
-		return result;
 	}
 }

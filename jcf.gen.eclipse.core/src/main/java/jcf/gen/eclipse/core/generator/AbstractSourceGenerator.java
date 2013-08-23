@@ -15,20 +15,16 @@ import org.apache.velocity.exception.VelocityException;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.springframework.ui.velocity.VelocityEngineFactory;
 import org.springframework.ui.velocity.VelocityEngineUtils;
+import org.springframework.util.Assert;
 
 import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.JcfGeneratorPlugIn;
 import jcf.gen.eclipse.core.utils.FileUtils;
-import jcf.gen.eclipse.core.utils.MessageUtil;
 import jcf.gen.eclipse.core.utils.StrUtils;
 
 public abstract class AbstractSourceGenerator implements SourceGenerator {
 	
 	public AbstractSourceGenerator() {
-//		ClassPathXmlApplicationContext classPathXmlApplicationContext 
-//				= new ClassPathXmlApplicationContext("/config/applicationContext-generator.xml", AbstractSourceGenerator.class);
-//		classPathXmlApplicationContext.getAutowireCapableBeanFactory()
-//				.autowireBeanProperties(this, AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE, true);
 		init();
 	}
 	
@@ -41,8 +37,15 @@ public abstract class AbstractSourceGenerator implements SourceGenerator {
 	protected void init() {
 		try {
 			VelocityEngineFactory vef = new VelocityEngineFactory();
+
+			Properties prop = new Properties();
+			
+			prop.put("input.encoding", "utf-8");
+			prop.put("output.encoding", "utf-8");
 			
 			vef.setResourceLoaderPath("file:" + getPreferenceString(Constants.TEMPLATE_DIRECTORY));
+			vef.setVelocityProperties(prop);
+			
 			setVelocityEngine(vef.createVelocityEngine());
 			
 		} catch (VelocityException ve) {
@@ -66,18 +69,13 @@ public abstract class AbstractSourceGenerator implements SourceGenerator {
 	}
 	
 	private Map<String, Object> initMapData(String packageName, String userCaseName, Map<String, Object> model) {
-		if (StringUtils.isNotEmpty(packageName)) {
-			model.put(Constants.PACKAGE, packageName);
-		} else {
-			throw new RuntimeException(MessageUtil.getMessage("exception.runtime.package"));
-		}
+		Assert.hasText(packageName, "Package name must not be null or empty");
+		Assert.hasText(userCaseName, "Vo name must not be null or empty");
 		
-		if (StringUtils.isNotEmpty(userCaseName)) {
-			model.put(Constants.UC_NAME, userCaseName);
-			model.put(Constants.UC_NAME_CAMEL, StringUtils.uncapitalize(userCaseName));
-		} else {
-			throw new RuntimeException(MessageUtil.getMessage("exception.runtime.usercase"));
-		}
+		model.put(Constants.PACKAGE, packageName);
+//		model.put(Constants.SERVICE_MAPPING, StrUtils.getServicePath(packageName));
+		model.put(Constants.UC_NAME, StringUtils.capitalize(userCaseName));
+		model.put(Constants.UC_NAME_CAMEL, StringUtils.uncapitalize(userCaseName));
 		
 		return model;
 	}
@@ -97,7 +95,7 @@ public abstract class AbstractSourceGenerator implements SourceGenerator {
 	}
 	
 	public void generatorFile(String srcPath, String packageName, String userCaseName, Map<String, Object> model) {
-		model = this.initMapData(packageName, userCaseName, model);
+		model = initMapData(packageName, userCaseName, model);
 		
 		String fullPackagePath = getPackagePath(getBasePath(srcPath, packageName));
 		
@@ -121,7 +119,7 @@ public abstract class AbstractSourceGenerator implements SourceGenerator {
 	}
 	
 	public String generatorText(String packageName, String userCaseName, Map<String, Object> model) {
-		model = this.initMapData(packageName, userCaseName, model);
+		model = initMapData(packageName, userCaseName, model);
 		
 		String result = "";
 		

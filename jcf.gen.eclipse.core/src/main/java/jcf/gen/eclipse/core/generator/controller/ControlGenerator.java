@@ -10,15 +10,15 @@ public class ControlGenerator extends AbstractSourceGenerator {
 
 	public String getFileName(Map<String,Object> infoMap) {
 		return StrUtils.nts(new StringBuilder((String)infoMap.get(Constants.UC_NAME)).
-				append(getPreferenceString(Constants.CONTROLLER_FILE_NAME)).append(".java").toString());
+				append("Controller.java").toString());
 	}
 
 	public String getPackagePath(String basePackPath) {
 		return new StringBuilder(basePackPath).append(getSeperator()).
-				append(getPreferenceString(Constants.CONTROLLER_PKG_NAME)).toString();
+				append("controller").toString();
 	}
 
 	public String getVmFileName() {
-		return "controlTemplate.vm";
+		return "controllerTemplate.vm";
 	}
 }

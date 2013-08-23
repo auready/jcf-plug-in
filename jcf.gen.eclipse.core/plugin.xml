@@ -35,7 +35,7 @@
       <menuContribution
             locationURI="menu:org.eclipse.ui.main.menu?after=additions">
          <menu
-               label="JCF"
+               label="Keis"
                mnemonic="M"
                id="jcf.gen.eclipse.core.menus.sampleMenu">
             <command
@@ -51,8 +51,8 @@
                id="jcf.gen.eclipse.core.toolbars.sampleToolbar">
             <command
                   commandId="jcf.gen.eclipse.core.commands.sampleCommand"
-                  icon="icons/sample.gif"
-                  tooltip="JCF Code Generator"
+                  icon="icons/keis_sample.gif"
+                  tooltip="KEIS Code Generator"
                   id="jcf.gen.eclipse.core.toolbars.sampleCommand">
             </command>
          </toolbar>
@@ -63,7 +63,7 @@
       <page
             class="jcf.gen.eclipse.core.preference.page.JcfGenPreferencePage"
             id="jcf.gen.eclipse.core.codegen"
-            name="JCF">
+            name="Keis">
       </page>
       <page
             category="jcf.gen.eclipse.core.codegen"

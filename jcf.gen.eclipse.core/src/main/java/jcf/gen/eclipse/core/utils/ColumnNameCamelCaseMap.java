@@ -64,7 +64,7 @@ public class ColumnNameCamelCaseMap extends AbstractColumnNameConvertMap {
     	String newColumnName = null;
 
         if (columnName.indexOf("_") == -1)
-            newColumnName = columnName.toLowerCase();
+            newColumnName = StringUtils.capitalize(columnName.toLowerCase());
         else {
             StringBuffer sb = new StringBuffer();
             StringTokenizer tokenizer = new StringTokenizer(columnName, "_");

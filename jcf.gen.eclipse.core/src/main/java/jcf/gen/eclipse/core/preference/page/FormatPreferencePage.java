@@ -50,6 +50,14 @@ public class FormatPreferencePage extends AbstractJcfPreferencePage {
 		updateMargin(vmFileGroup);
 		
 		// author
+		Group packageGroup = new Group(main, SWT.NONE);
+		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(packageGroup);
+		
+		addField(getStringFieldEditor(Constants.PACKAGE_PATH, MessageUtil.getMessage("preference.format.default.package"), "", packageGroup));
+		
+		updateMargin(packageGroup);
+		
+		// author
 		Group authorGroup = new Group(main, SWT.NONE);
 		GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(authorGroup);
 		
@@ -58,21 +66,21 @@ public class FormatPreferencePage extends AbstractJcfPreferencePage {
 		updateMargin(authorGroup);
 		
 		// tab
-		TabFolder tabFolder = new TabFolder(main, SWT.NONE);
-		tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
-		
-		addPkgNameTab(tabFolder);
-		
-		addFileNameTab(tabFolder);
+//		TabFolder tabFolder = new TabFolder(main, SWT.NONE);
+//		tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
+//		
+//		addPkgNameTab(tabFolder);
+//		
+//		addFileNameTab(tabFolder);
 	}
-	
+	/*
 	private void addPkgNameTab(TabFolder tabFolder) {
-		Composite page = new Composite(tabFolder, SWT.NONE);
+		Composite page = new Composite(tabFolder, SWT.COLOR_DARK_GRAY);
 		
 		page.setLayout(new GridLayout(1, false));
 		page.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		TabItem tabItem = new TabItem(tabFolder, SWT.NONE);
+		TabItem tabItem = new TabItem(tabFolder, SWT.COLOR_DARK_GRAY);
 		
 		tabItem.setText(MessageUtil.getMessage("preference.group.package"));
 		tabItem.setControl(page);
@@ -89,12 +97,12 @@ public class FormatPreferencePage extends AbstractJcfPreferencePage {
 	}
 	
 	private void addFileNameTab(TabFolder tabFolder) {
-		Composite page = new Composite(tabFolder, SWT.NONE);
+		Composite page = new Composite(tabFolder, SWT.COLOR_DARK_GRAY);
 		
 		page.setLayout(new GridLayout(1, false));
 		page.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		TabItem tabItem = new TabItem(tabFolder, SWT.NONE);
+		TabItem tabItem = new TabItem(tabFolder, SWT.COLOR_DARK_GRAY);
 		
 		tabItem.setText(MessageUtil.getMessage("preference.group.filename"));
 		tabItem.setControl(page);
@@ -104,9 +112,6 @@ public class FormatPreferencePage extends AbstractJcfPreferencePage {
 		
 		addField(getStringFieldEditor(Constants.CONTROLLER_FILE_NAME, 
 				MessageUtil.getMessage("preference.format.file.controller"), MessageUtil.getMessage("preference.format.file.controller.tooltip"), fileNameGroup));
-		
-		addField(getStringFieldEditor(Constants.ISERVICE_FILE_NAME, 
-				MessageUtil.getMessage("preference.format.file.iservice"), MessageUtil.getMessage("preference.format.file.iservice.tooltip"), fileNameGroup));
 		
 		addField(getStringFieldEditor(Constants.SERVICE_FILE_NAME, 
 				MessageUtil.getMessage("preference.format.file.service"), MessageUtil.getMessage("preference.format.file.service.tooltip"), fileNameGroup));
@@ -119,7 +124,7 @@ public class FormatPreferencePage extends AbstractJcfPreferencePage {
 		
 		updateMargin(fileNameGroup);
 	}
-	
+	*/
 	private StringFieldEditor getStringFieldEditor(String name, String label, String toolTip, Composite parent) {
 		StringFieldEditor fieldEditor = new StringFieldEditor(name, label, parent);
 		

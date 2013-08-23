@@ -6,6 +6,7 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.util.Assert;
 
 /**
  * <p>내용          : 문자열 처리에 필요한 Util Class</p>
@@ -748,6 +749,56 @@ public class StrUtils {
         }
 
         return newColumnName;
+    }
+    
+    /**
+     * @description SQL 주석을 생성한다.
+     * @param commnet
+     * @return
+     */
+    public static String makeColumnComment(String commnet) {
+    	String temp = StrUtils.nvl(commnet);
+    	
+    	if (StringUtils.isEmpty(temp)) {
+    		return "";
+    	} else {
+    		StringBuffer sb = new StringBuffer();
+    		return sb.append("/* ").append(commnet).append(" */").toString();    		
+    	}
+    }
+    
+    /**
+     * @description Service Mapping Path 의 경로를 가져온다.
+     * @param packagePath 
+     * @return
+     */
+    public static String getServicePath(String packagePath) {
+    	Assert.hasText(packagePath, "Package Path must not be null or empty");
+    	
+    	String[] path = stringToArray(packagePath, ".");
+    	int len = path.length;
+    	
+    	StringBuffer sb = new StringBuffer();
+    	
+    	if (len > 1) {
+    		sb.append(path[len - 2]).append("/").append(path[len - 1]);    		
+    	} else {
+    		sb.append(path[len - 1]);
+    	}
+    	
+    	return sb.toString();
+    }
+    
+    /**
+     * @description 첫글자를 대문자로 시작하는 문자열을 리턴한다.
+     * @param input
+     * @return
+     */
+    public static String convertPascalName(String input) {
+    	Assert.hasText(input, "Input String must not be null or empty");
+    	
+    	String result = pascalCaseConverter(input);
+    	return StringUtils.capitalize(result);
     }
 }
 

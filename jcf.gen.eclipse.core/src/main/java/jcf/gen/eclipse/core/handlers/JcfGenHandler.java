@@ -5,7 +5,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.jface.dialogs.MessageDialog;
 
 import jcf.gen.eclipse.core.ui.JcfCodeGenTitleDialog;
 
@@ -27,11 +26,7 @@ public class JcfGenHandler extends AbstractHandler {
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
-//		MessageDialog.openInformation(
-//				window.getShell(),
-//				"JCF-DEV",
-//				"Hello");
-		
+
 		JcfCodeGenTitleDialog dialog = new JcfCodeGenTitleDialog(window.getShell());
 		dialog.open();
 		

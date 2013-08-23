@@ -1,10 +1,6 @@
 package jcf.gen.eclipse.core;
 
 public class Constants {
-	public static final String DB_CATEGORY_RADIO = "DB_CATEGORY_RADIO";
-	public static final String DB_ORACLE = "ORACLE";
-	public static final String DB_MYSQL = "MYSQL";
-	
 	public static final String DB_PROPERTY_FILE = "DB_PROPERTY_FILE";
 	
 	public static final String DB_DRIVER_CLASS = "DB_DRIVER_CLASS";
@@ -18,24 +14,22 @@ public class Constants {
 	public static final String TEMPLATE = "TEMPLATE";
 	public static final String CONTROLLER_FILE = "CONTROLLER_FILE";
 	public static final String SERVICE_FILE = "SERVICE_FILE";
-	public static final String MODEL_FILE = "MODEL_FILE";
+	public static final String MODEL_FILE = "VO_FILE";
 	public static final String SQLMAP_FILE = "SQLMAP_FILE";
 	
 	public static final String CONTROLLER_PKG_NAME = "CONTROLLER_PKG_NAME";
 	public static final String SERVICE_PKG_NAME = "SERVICE_PKG_NAME";
-	public static final String MODEL_PKG_NAME = "MODEL_PKG_NAME";
+	public static final String MODEL_PKG_NAME = "VO_PKG_NAME";
 	public static final String SQLMAP_PKG_NAME = "SQLMAP_PKG_NAME";
 	
 	public static final String CONTROLLER_FILE_NAME = "CONTROLLER_FILE_NAME";
 	public static final String SERVICE_FILE_NAME = "SERVICE_FILE_NAME";
-	public static final String ISERVICE_FILE_NAME = "ISERVICE_FILE_NAME";
-	public static final String MODEL_FILE_NAME = "MODEL_FILE_NAME";
+	public static final String MODEL_FILE_NAME = "VO_FILE_NAME";
 	public static final String SQLMAP_FILE_NAME = "SQLMAP_FILE_NAME";
 	
 	public static final String CONTROLLER = "CONTROLLER";
 	public static final String SERVICE = "SERVICE";
-	public static final String ISERVICE = "ISERVICE";
-	public static final String MODEL = "MODEL";
+	public static final String MODEL = "VO";
 	public static final String SQLMAP = "SQLMAP";
 	
 	public static final String IMPORT_MATH_CLASS = "IMPORT_MATH_CLASS";
@@ -65,6 +59,7 @@ public class Constants {
 	public static final String UC_NAME = "UC_NAME";
 	public static final String UC_NAME_CAMEL = "UC_NAME_CAMEL";
 	public static final String PACKAGE_PATH = "PACKAGE_PATH";
+	public static final String SERVICE_MAPPING = "SERVICE_MAPPING";
 	public static final String REQUEST_URL = "REQUEST_URL";
 	
 	public static final String COL_TABLE_NAME = "TABLE_NAME";

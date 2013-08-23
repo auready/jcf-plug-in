@@ -104,7 +104,6 @@ public class CodePreviewDialog extends Dialog {
 		
 		this.addTabItem(Constants.MODEL);
 		this.addTabItem(Constants.CONTROLLER);
-		this.addTabItem(Constants.ISERVICE);
 		this.addTabItem(Constants.SERVICE);
 		this.addTabItem(Constants.SQLMAP);
 	}

@@ -1,4 +1,4 @@
-package jcf.gen.eclipse.core.jdbc.model;
+package jcf.gen.eclipse.core.jdbc;
 
 public class TableColumns {
 	private String tableName;

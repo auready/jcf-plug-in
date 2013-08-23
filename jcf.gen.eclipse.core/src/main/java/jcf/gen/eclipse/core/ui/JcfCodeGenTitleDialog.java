@@ -41,10 +41,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import jcf.gen.eclipse.core.JcfGeneratorPlugIn;
-import jcf.gen.eclipse.core.jdbc.model.TableColumns;
-import jcf.gen.eclipse.core.jdbc.DatabaseService;
+import jcf.gen.eclipse.core.jdbc.DatabaseAccessor;
+import jcf.gen.eclipse.core.jdbc.TableColumns;
 import jcf.gen.eclipse.core.luncher.DefaultLuncher;
-import jcf.gen.eclipse.core.utils.ColumnNameCamelCaseMap;
+import jcf.gen.eclipse.core.utils.DbUtils;
 import jcf.gen.eclipse.core.utils.PreferenceUtil;
 import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.utils.MessageUtil;
@@ -54,7 +54,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	private Text txtPackageName = null;
 	private Text txtUserCase = null;
 	
-	private DatabaseService databaseService;
+	private DatabaseAccessor dao = null;
 	
 	private Map<String, Object> argument = new HashMap<String, Object>();
 	private Set<String> excludeCols = new HashSet<String>();
@@ -66,6 +66,10 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	private String srcPath = "";
 	private String packageName = "";
 	private String userCaseName = "";
+	
+	private String serviePath = "";
+	
+	private boolean isDbConn = false;
 	
 	public JcfCodeGenTitleDialog(Shell parent) {
 		super(parent);
@@ -104,7 +108,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		setTitleImage(JcfGeneratorPlugIn.getImageDescriptor("icons/jcf.png").createImage());
+		setTitleImage(JcfGeneratorPlugIn.getImageDescriptor("icons/keis.png").createImage());
 		Composite area = (Composite) super.createDialogArea(parent);
 		
 		Composite container = new Composite(area, SWT.NONE);
@@ -112,13 +116,16 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		container.setLayout(new GridLayout(1, true));
 		container.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		if (StringUtils.isNotEmpty(PreferenceUtil.getStringValue(Constants.DB_PASSWORD))) this.databaseService = new DatabaseService();
+		if (DbUtils.isDbConn()) {
+			isDbConn = true;
+			dao = new DatabaseAccessor();
+		}
 		
-		this.createDbGroup(container);
+		createDbGroup(container);
 		
-		this.createTemplateGroup(container);
+		createTemplateGroup(container);
 		
-		this.createCodeGroup(container);
+		createCodeGroup(container);
 		
 		//Separator
 		Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL);
@@ -176,11 +183,10 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		comboTabName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboTabName.setEnabled(false);
 		
-		if (StringUtils.isNotEmpty(PreferenceUtil.getStringValue(Constants.DB_PASSWORD))) {
+		if (isDbConn) {
 			comboTabName.setEnabled(true);
 			
-//			objItems = databaseService.getTableNames("");
-			String[] temp = databaseService.getTableNames("");
+			String[] temp = dao.getTableNames("");
 			List<String> tmpList = new ArrayList<String>();
 			
 			for (int i = 0; i < temp.length; i++) {
@@ -206,7 +212,7 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		comboTabName.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent ke) {
 				String tempObjName = comboTabName.getText().toUpperCase();
-				String[] objNames = databaseService.getTableNames(tempObjName);
+				String[] objNames = dao.getTableNames(tempObjName);
 				
 				try {
 					SimpleContentProposalProvider scp = new SimpleContentProposalProvider(objNames);
@@ -267,17 +273,16 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	}
 	
 	private void setTableCombo(int index) {
-		ColumnNameCamelCaseMap camelCaseStr = new ColumnNameCamelCaseMap();
-		
 		String tempTableName = objItems[index];
 		String tableName = tempTableName.substring(0, tempTableName.indexOf(" ["));
-		String camelCaseTableName = camelCaseStr.tableNameConvert(tableName);
 		
-		txtUserCase.setText(camelCaseTableName);
-		userCaseName = camelCaseTableName;
+//		ColumnNameCamelCaseMap camelCaseStr = new ColumnNameCamelCaseMap();
+//		String camelCaseTableName = camelCaseStr.tableNameConvert(tableName);		
+//		txtUserCase.setText(camelCaseTableName);
+//		userCaseName = camelCaseTableName;
 		
 		//Table Contents Change
-		List<TableColumns> list = databaseService.getColumnList(tableName);
+		List<TableColumns> list = dao.getColumnList(tableName);
 		
 		tableViewer.getTable().setEnabled(true);
 		tableViewer.setInput(list);
@@ -392,7 +397,9 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 		txtPackageName.setLayoutData(this.getTextLayout());
 		txtPackageName.addKeyListener(new KeyListener() {
 			public void keyReleased(KeyEvent e) {
-				if (txtPackageName.getText().length() > 0) packageName = txtPackageName.getText();
+				if (txtPackageName.getText().length() > 0) {
+					serviePath = txtPackageName.getText();
+				}
 			}
 			
 			public void keyPressed(KeyEvent e) {
@@ -458,8 +465,11 @@ public class JcfCodeGenTitleDialog extends TitleAreaDialog {
 	}
 	
 	private void setDataArgument() {
+		packageName = PreferenceUtil.getStringValue(Constants.PACKAGE_PATH) + "." + serviePath;
+		
 		argument.put(Constants.EXCLUDE_COLUMNS, excludeCols);
 		argument.put(Constants.TEMPLATE, template);
+		argument.put(Constants.SERVICE_MAPPING, serviePath);
 	}
 
 	protected void makeCodePreviewDialog(final Composite parent) {
