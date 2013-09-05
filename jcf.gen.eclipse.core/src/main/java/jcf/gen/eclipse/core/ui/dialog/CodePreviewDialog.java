@@ -1,4 +1,4 @@
-package jcf.gen.eclipse.core.ui;
+package jcf.gen.eclipse.core.ui.dialog;
 
 import java.util.Map;
 

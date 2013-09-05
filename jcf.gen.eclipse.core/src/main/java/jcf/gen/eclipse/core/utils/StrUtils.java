@@ -763,7 +763,7 @@ public class StrUtils {
     		return "";
     	} else {
     		StringBuffer sb = new StringBuffer();
-    		return sb.append("/* ").append(commnet).append(" */").toString();    		
+    		return sb.append("// ").append(commnet).toString();    		
     	}
     }
     

@@ -1,4 +1,4 @@
-package jcf.gen.eclipse.core.ui;
+package jcf.gen.eclipse.core.ui.viewer;
 
 import java.util.List;
 

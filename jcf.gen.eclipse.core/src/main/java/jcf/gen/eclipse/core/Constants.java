@@ -80,4 +80,6 @@ public class Constants {
 	public static final String IS_PK_EXIST = "IS_PK_EXIST";
 	public static final String IS_PK_EXIST_Y = "Y";
 	public static final String IS_PK_EXIST_N = "N";
+	
+	public static final String TAB = "TAB";
 }

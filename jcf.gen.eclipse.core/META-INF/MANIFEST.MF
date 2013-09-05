@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KEIS
 Bundle-SymbolicName: jcf.gen.eclipse.core;singleton:=true
-Bundle-Version: 1.0.0.20130823
+Bundle-Version: 1.0.0.20130905
 Bundle-Activator: jcf.gen.eclipse.core.JcfGeneratorPlugIn
-Bundle-Vendor: DISC
+Bundle-Vendor: Daewoo Information Systems
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

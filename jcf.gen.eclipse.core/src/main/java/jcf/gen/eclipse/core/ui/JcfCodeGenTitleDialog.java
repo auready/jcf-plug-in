@@ -44,6 +44,8 @@ import jcf.gen.eclipse.core.JcfGeneratorPlugIn;
 import jcf.gen.eclipse.core.jdbc.DatabaseAccessor;
 import jcf.gen.eclipse.core.jdbc.TableColumns;
 import jcf.gen.eclipse.core.luncher.DefaultLuncher;
+import jcf.gen.eclipse.core.ui.dialog.CodePreviewDialog;
+import jcf.gen.eclipse.core.ui.viewer.TableColumnViewer;
 import jcf.gen.eclipse.core.utils.DbUtils;
 import jcf.gen.eclipse.core.utils.PreferenceUtil;
 import jcf.gen.eclipse.core.Constants;

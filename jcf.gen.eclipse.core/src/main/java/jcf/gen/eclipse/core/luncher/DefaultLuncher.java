@@ -95,6 +95,9 @@ public class DefaultLuncher {
 		model.put(Constants.SERVICE_MAPPING, StrUtils.getServicePath((String) arg.get(Constants.SERVICE_MAPPING)));
 		model.put(Constants.AUTHOR, PreferenceUtil.getStringValue(Constants.AUTHOR));
 		model.put(Constants.CREATE_DATE, new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA).format(new Date()));
+		model.put(Constants.SCHEMA, PreferenceUtil.getStringValue(Constants.DB_USERNAME).toUpperCase());
+		
+		model.put(Constants.TAB, "\t");
 		
 		String isPkExist = hasPrimaryKeyInList(list) ? Constants.IS_PK_EXIST_Y : Constants.IS_PK_EXIST_N;
 		model.put(Constants.IS_PK_EXIST, isPkExist);
