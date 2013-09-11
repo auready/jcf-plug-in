@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -89,15 +90,17 @@ public class DefaultLuncher {
 		model.put(Constants.COLUMNS, list);
 		model.put(Constants.SHARP, "#");
 		model.put(Constants.DOLLOR, "$");
-		model.put(Constants.TABLE_COMMENT, StrUtils.nvl(String.valueOf((list.get(0)).get(Constants.COL_TABLE_COMMENT))));
+//		model.put(Constants.TABLE_COMMENT, StrUtils.nvl(String.valueOf((list.get(0)).get(Constants.COL_TABLE_COMMENT))));
 //		model.put(Constants.IMPORT_MATH_CLASS, (hasNumberType ? Constants.IMPORT_BIG_DECIMAL : Constants.IMPORT_NULL));
 //		model.put(Constants.PACKAGE_PATH, PreferenceUtil.getStringValue(Constants.PACKAGE_PATH));
 		model.put(Constants.SERVICE_MAPPING, StrUtils.getServicePath((String) arg.get(Constants.SERVICE_MAPPING)));
 		model.put(Constants.AUTHOR, PreferenceUtil.getStringValue(Constants.AUTHOR));
 		model.put(Constants.CREATE_DATE, new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA).format(new Date()));
 		model.put(Constants.SCHEMA, PreferenceUtil.getStringValue(Constants.DB_USERNAME).toUpperCase());
-		
 		model.put(Constants.TAB, "\t");
+		
+		String tableCommnet = StrUtils.nvl(String.valueOf((list.get(0)).get(Constants.COL_TABLE_COMMENT)));
+		model.put(Constants.TABLE_COMMENT, StringUtils.isEmpty(tableCommnet) ? tableName : tableCommnet);
 		
 		String isPkExist = hasPrimaryKeyInList(list) ? Constants.IS_PK_EXIST_Y : Constants.IS_PK_EXIST_N;
 		model.put(Constants.IS_PK_EXIST, isPkExist);
