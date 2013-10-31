@@ -1,11 +1,13 @@
 package jcf.gen.eclipse.core.ui.dialog;
 
 import java.util.Map;
+import java.util.Map.Entry;
 
 import jcf.gen.eclipse.core.Constants;
 import jcf.gen.eclipse.core.luncher.DefaultLuncher;
 import jcf.gen.eclipse.core.utils.MessageUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -98,14 +100,20 @@ public class CodePreviewDialog extends Dialog {
 		super.open();
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected void createPreviewTabContents(Composite parent) {
 		tabFolder = new TabFolder(parent, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		this.addTabItem(Constants.MODEL);
-		this.addTabItem(Constants.CONTROLLER);
-		this.addTabItem(Constants.SERVICE);
-		this.addTabItem(Constants.SQLMAP);
+		Map<String, Boolean> template = (Map<String, Boolean>) argument.get((Constants.TEMPLATE));
+		
+		for (Entry<String, Boolean> entry : template.entrySet()) {
+			if (entry.getValue()) {
+				int endIdx = entry.getKey().indexOf('_');
+				
+				addTabItem(entry.getKey().substring(0, endIdx));
+			}
+		}
 	}
 	
 	private void addTabItem(String tabName) {
@@ -122,7 +130,7 @@ public class CodePreviewDialog extends Dialog {
 		Text content = new Text(page, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
 		
 		content.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		content.setText(retMap.get(tabName));
+		content.setText(StringUtils.isEmpty(retMap.get(tabName)) ? "" : retMap.get(tabName));
 	}
 	
 	private void generateSourceCode() {
